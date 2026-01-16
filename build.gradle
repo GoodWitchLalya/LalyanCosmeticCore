@@ -4,7 +4,7 @@ plugins {
 }
 
 ext {
-    hytaleHome = "${System.getProperty("user.home")}/AppData/Roaming/Hytale"
+    hytaleHome = "D:\\Hytale"
 }
 
 java {

@@ -1,14 +1,14 @@
 {
-    "Group": "Example",
-    "Name": "ExamplePlugin",
-    "Version": "0.0.2",
-    "Description": "An example plugin for HyTale!",
+    "Group": "GoodWitchLalya",
+    "Name": "Lalyan Cosmetic Core",
+    "Version": "0.0.1",
+    "Description": "A core that permits to change the caracter's body and cosmetics",
     "Authors": [
         {
-            "Name": "It's you!"
+            "Name": "GoodWitchLalya"
         }
     ],
-    "Website": "example.org",
+    "Website": "",
     "ServerVersion": "*",
     "Dependencies": {
         
@@ -17,6 +17,6 @@
         
     },
     "DisabledByDefault": false,
-    "Main": "org.example.plugin.ExamplePlugin",
+    "Main": "com.goodwitchlalya.lalyan_cosmetic_core.CosmeticCore",
     "IncludesAssetPack": true
 }
