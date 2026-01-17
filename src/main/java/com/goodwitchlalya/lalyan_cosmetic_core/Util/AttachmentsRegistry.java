@@ -53,17 +53,14 @@ public class AttachmentsRegistry {
         if(INSTANCE == null) INSTANCE = new AttachmentsRegistry();
         
         return INSTANCE;
+    
     }
     
     public Map<String, Attachment> getAttachmentsRegistry() {
         return attachmentsRegistry;
     }
     
-    private AttachmentsRegistry() {
-    }
-    
-    public record Attachment(String name, ModelAttachment modelAttachment, Slot slot, String icon) {
-    }
+    public record Attachment(String name, ModelAttachment modelAttachment, Slot slot, String icon) {}
     
     private void restoreSkin(List<ModelAttachment> list, Map<String, Boolean> changes, PlayerSkin playerSkin) {
         CosmeticRegistry registry = CosmeticsModule.get().getRegistry();
@@ -417,13 +414,18 @@ public class AttachmentsRegistry {
         store.replaceComponent(ref, CosmeticData.INSTANCE, data);
         
         CosmeticCore.log(
-            String.format("\nCosmetics applied to %s:\n", player.getDisplayName()) +
-                changes.keySet().stream()
-                    .map(attachmentsRegistry::get)
-                    .filter(record -> record != null)
-                    .map(record -> "- " + record.name())
-                    .collect(Collectors.joining("\n"))
+            changes.isEmpty() ?
+                String.format("\nCosmetics applied to %s:\nNone (Default Skin)", player.getDisplayName()):
+                String.format("\nCosmetics applied to %s:\n", player.getDisplayName()) +
+                    changes.keySet().stream()
+                        .map(attachmentsRegistry::get)
+                        .filter(record -> record != null)
+                        .map(record -> String.format("- %s (override: %s)", record.name(),  overrides.get(record.slot.toString())))
+                        .collect(Collectors.joining("\n"))
         );
+    }
+    public void applyChanges(Ref<EntityStore> ref) {
+        applyChanges(ref, new HashMap<String, Boolean>());
     }
     
     public void register(String name, Slot slot) {

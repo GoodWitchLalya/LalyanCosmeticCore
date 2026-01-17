@@ -15,30 +15,25 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * This is an example command that will simply print the name of the plugin in chat when used.
  */
-public class CosmeticCommand extends AbstractPlayerCommand {
+public class CosmeticResetCommand extends AbstractPlayerCommand {
     
-    private final String pluginName;
-    private final String pluginVersion;
     private final Universe universe = Universe.get();
-    private RequiredArg<String> action;
     
-    public CosmeticCommand(String pluginName, String pluginVersion) {
-        super("cosmetic", "Prints a test message from the " + pluginName + " plugin.");
-        this.action = this.withRequiredArg("action", "", ArgTypes.STRING);
-        this.addSubCommand(new CosmeticApplyCommand());
-        this.addSubCommand(new CosmeticResetCommand());
+    public CosmeticResetCommand() {
+        super("reset", "");
         this.setPermissionGroup(GameMode.Adventure); // Allows the command to be used by anyone, not just OP
-        this.pluginName = pluginName;
-        this.pluginVersion = pluginVersion;
     }
     
     @Override
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
+        universe.getWorld(playerRef.getWorldUuid()).execute(() -> {
+            AttachmentsRegistry.applyChanges(ref);
+            
+        });
     }
     
 }

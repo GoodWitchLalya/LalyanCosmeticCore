@@ -1,12 +1,13 @@
 package com.goodwitchlalya.lalyan_cosmetic_core;
 
 import com.goodwitchlalya.lalyan_cosmetic_core.Util.AttachmentsRegistry;
-import com.goodwitchlalya.lalyan_cosmetic_core.component.CosmeticData;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.command.system.CommandManager;
 import com.hypixel.hytale.server.core.console.ConsoleSender;
+import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
+import com.hypixel.hytale.server.core.universe.Universe;
 
 import javax.annotation.Nonnull;
 
@@ -18,7 +19,10 @@ import javax.annotation.Nonnull;
  *
  */
 public class CosmeticCore extends JavaPlugin {
+
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+
+    private final Universe universe = Universe.get();
     
     public CosmeticCore(@Nonnull JavaPluginInit init) {
         super(init);
@@ -61,7 +65,7 @@ public class CosmeticCore extends JavaPlugin {
     }
 
     @Override
-    protected void shutdown() {
+    protected void shutdown() {//Plugin shutting down!
 
     }
 }
