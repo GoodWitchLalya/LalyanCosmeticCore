@@ -12,13 +12,13 @@ import javax.annotation.Nonnull;
 /**
  * This is an example command that will simply print the name of the plugin in chat when used.
  */
-public class ExampleCommand extends CommandBase {
+public class CosmeticCommand extends CommandBase {
 
     private final String pluginName;
     private final String pluginVersion;
     private final Universe universe = Universe.get();
 
-    public ExampleCommand(String pluginName, String pluginVersion) {
+    public CosmeticCommand(String pluginName, String pluginVersion) {
         super("test", "Prints a test message from the " + pluginName + " plugin.");
         this.setPermissionGroup(GameMode.Adventure); // Allows the command to be used by anyone, not just OP
         this.pluginName = pluginName;

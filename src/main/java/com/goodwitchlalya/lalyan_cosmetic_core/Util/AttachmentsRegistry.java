@@ -1,5 +1,11 @@
 package com.goodwitchlalya.lalyan_cosmetic_core.Util;
 
+import com.goodwitchlalya.lalyan_cosmetic_core.CosmeticCore;
+
+import java.util.stream.Collectors;
+import java.util.*;
+
+import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.PlayerSkin;
@@ -7,12 +13,12 @@ import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAttachment;
 import com.hypixel.hytale.server.core.cosmetics.CosmeticRegistry;
 import com.hypixel.hytale.server.core.cosmetics.CosmeticsModule;
+import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.player.PlayerSkinComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
-import java.util.*;
 
 public class AttachmentsRegistry {
     
@@ -45,7 +51,8 @@ public class AttachmentsRegistry {
     private static final record Attachment(
             String name,
             ModelAttachment modelAttachment,
-            Slot slot
+            Slot slot,
+            String icon
             ) {};
     
     public AttachmentsRegistry() {
@@ -57,23 +64,20 @@ public class AttachmentsRegistry {
         }
     }
     
-    public static void finalizeRegister(PlayerReadyEvent event) {
-        Ref<EntityStore> ref = event.getPlayerRef();
-        Store<EntityStore> store;
-        ModelComponent modelComponent;
-        PlayerSkinComponent playerSkincomponent;
+    
+    
+    public static void applyChange(Ref<EntityStore> ref, List<String> changes, boolean override) {
+        
+        Store<EntityStore> store = ref.getStore();
+        ModelComponent modelComponent = store.getComponent(ref, ModelComponent.getComponentType());
+        PlayerSkinComponent playerSkincomponent = store.getComponent(ref, PlayerSkinComponent.getComponentType());
         CosmeticRegistry cosmeticRegistry = CosmeticsModule.get().getRegistry();
-        
-        store = ref.getStore();
-        modelComponent = store.getComponent(ref, ModelComponent.getComponentType());
-        playerSkincomponent = store.getComponent(ref, PlayerSkinComponent.getComponentType());
-        
         PlayerSkin playerSkinComponent = playerSkincomponent.getPlayerSkin();
         PlayerSkin playerSkin = playerSkinComponent.clone();
-        
         Model playerModel = store.getComponent(ref, ModelComponent.getComponentType()).getModel();
+        Player player = store.getComponent(ref, Player.getComponentType());
         
-        String modelName = event.getPlayer().getDisplayName();
+        String modelName = player.getDisplayName();
         
         List<ModelAttachment> list = ListUtil.mutable(Arrays.asList(playerModel.getAttachments()));
         
@@ -237,13 +241,16 @@ public class AttachmentsRegistry {
             }
         }
         
-        list.addAll(attachmentsRegistry.values().stream()
-                .map(Attachment::modelAttachment)
-                .toList()
+        list.addAll(
+                changes.stream()
+                        .map(attachmentsRegistry::get)
+                        .filter(record -> record != null)
+                        .map(Attachment::modelAttachment)
+                        .toList()
         );
         
         Model newModel = new Model(
-                event.getPlayer().getDisplayName() + "CustomModel",
+                player.getDisplayName() + "CustomModel",
                 playerModel.getScale(),
                 playerModel.getRandomAttachmentIds(),
                 list.toArray(new ModelAttachment[0]),
@@ -267,23 +274,50 @@ public class AttachmentsRegistry {
         
         store.replaceComponent(ref, ModelComponent.getComponentType(), new ModelComponent(newModel));
         
-        
+        CosmeticCore.log(
+                String.format("\nCosmetics applied to %s:\n", player.getDisplayName()) +
+                        changes.stream()
+                                .map(attachmentsRegistry::get)
+                                .filter(record -> record != null)
+                                .map(record -> "- " + record.name())
+                                .collect(Collectors.joining("\n"))
+        );
         
     }
     
+    public static void applyChange(Ref<EntityStore> ref, List<String> changes) {
+        applyChange(ref, changes, true);
+    }
+    public static void applyChange(Ref<EntityStore> ref, String change, boolean override) {
+        applyChange(ref, new ArrayList<String>(Collections.singleton(change)), override);
+    }
+    public static void applyChange(Ref<EntityStore> ref, String change) {
+        applyChange(ref, new ArrayList<String>(Collections.singleton(change)));
+    }
     public static void register(String name, Slot slot) {
+        String attachmentPath = "Resources/";
+        
+        if (slot.getType() == SlotType.CHARACTER) {
+            attachmentPath += "Characters/";
+        } else if (slot.getType() == SlotType.COSMETIC) {
+            attachmentPath += "Cosmetics/";
+        }
+        
+        attachmentPath += String.format("%s/%s", slot, name);
+        
         attachmentsRegistry.put(
                 name,
                 new Attachment(
                         name,
                         new ModelAttachment(
-                                String.format("Resources/Cosmetics/%s/%s/%s.blockymodel",  slot, name, name),
-                                String.format("Resources/Cosmetics/%s/%s/%s.png",  slot, name, name),
+                                String.format("%s/%s.blockymodel", attachmentPath, name),
+                                String.format("%s/%s.png", attachmentPath, name),
                                 "",
                                 "",
                                 1
                         ),
-                        slot
+                        slot,
+                        String.format("%s/Icon/%s.png", attachmentPath, name)
                 )
         );
     }
