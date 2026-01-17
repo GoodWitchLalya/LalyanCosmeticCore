@@ -1,0 +1,45 @@
+$C = "../../Common.ui";
+$Sounds = "../../Sounds.ui";
+
+Group {
+    LayoutMode: Left;
+    Anchor: (Width: 64, Height: 64, Right: 5);
+
+    Button #Button {
+        Anchor: (Width: 64, Height: 64);
+        Visible: true;
+        Style: (
+            Sounds: $Sounds.@ButtonsLight,
+            Default: (
+                Background: "../../Common/SlotDefault.png"
+            ),
+            Hovered: (
+                Background: "../../Common/SlotSelected.png"
+            )
+        );
+        FlexWeight: 1;
+    }
+
+    Button #ButtonEnabled {
+        Anchor: (Width: 64, Height: 64);
+        Visible: false;
+        Style: (
+            Sounds: $Sounds.@ButtonsLight,
+            Default: (
+                Background: "../../Common/SlotSelected.png"
+            ),
+            Hovered: (
+                Background: "../../Common/SlotDefault.png"
+            )
+        );
+        FlexWeight: 1;
+    }
+
+    Group {
+        LayoutMode: Middle;
+        AssetImage #Icon {
+            Anchor: (Left: -56, Width: 48, Height: 48);
+            AssetPath: "Icons/ItemsGenerated/Bone_Pile.png";
+        }
+    }
+}

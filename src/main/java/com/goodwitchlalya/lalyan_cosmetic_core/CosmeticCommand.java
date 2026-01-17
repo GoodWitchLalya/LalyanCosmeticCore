@@ -33,7 +33,7 @@ public class CosmeticCommand extends AbstractPlayerCommand {
     @Override
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
         universe.getWorld(playerRef.getWorldUuid()).execute(() -> {
-            AttachmentsRegistry.applyChange(ref, Map.of("Alien_Antenna", true));
+            AttachmentsRegistry.get().applyChange(ref, Map.of("Alien_Antenna", true));
         });
     }
     

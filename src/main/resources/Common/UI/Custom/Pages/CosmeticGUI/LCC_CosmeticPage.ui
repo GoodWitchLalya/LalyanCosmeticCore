@@ -1,0 +1,308 @@
+$C = "../../Common.ui";
+$Sounds = "../../Sounds.ui";
+
+$C.@PageOverlay {
+    $C.@Container {
+        Anchor: (Width: 600, Height: 800);
+
+        #Title {
+            Group {
+                $C.@Title {
+                    @Text = "Customize Cosmetics";
+                }
+            }
+        }
+
+        #Content {
+            Group {
+                Anchor: (Top: -485);
+                FlexWeight: 1;
+                Group #CosmeticGrid {
+                    FlexWeight: 1;
+                    LayoutMode: TopScrolling;
+                    ScrollbarStyle: $C.@DefaultScrollbarStyle;
+                }
+            }
+        }
+    }
+
+    $C.@Container #LeftSidePanel {
+        Anchor: (Width: 200, Height: 800, Left: 200);
+
+        #Content {
+            Group #CCBL {
+                Anchor: (Left: -680, Top: 0);
+                FlexWeight: 1;
+
+                Group #SideButtons {
+                    LayoutMode: Top;
+
+                    Group #Capes {
+                        Anchor: (Top: 0);
+                        Padding: (Bottom: 10);
+
+                        Group {
+                            AssetImage #Image {
+                                Anchor: (Width: 64, Height: 64);
+                                AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+                            }
+                        }
+
+                        Button #CategoryButton {
+                            Anchor: (Width: 64, Height: 64);
+                            Style: (
+                                Sounds: $Sounds.@ButtonsLight,
+                                Default: (
+                                    Background: "../../Common/Categories/Cosmetics/Cape.png"
+                                ),
+                                Hovered: (
+                                    Background: "../../Common/Categories/Cosmetics/Activated/Cape.png"
+                                )
+                            );
+                        }
+                    }
+
+                    Group #FaceAccessories {
+                        Anchor: (Top: 0);
+                        Padding: (Bottom: 10);
+                        AssetImage #Image {
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+                        }
+
+                        Button #CategoryButton {
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            Style: (
+                                Sounds: $Sounds.@ButtonsLight,
+                                Default: (
+                                    Background: "../../Common/Categories/Cosmetics/Face_Accessories.png"
+                                ),
+                                Hovered: (
+                                    Background: "../../Common/Categories/Cosmetics/Activated/Face_Accessories.png"
+                                )
+                            );
+                            FlexWeight: 1;
+                        }
+                    }
+
+                    Group #Gloves {
+                        Anchor: (Top: 0);
+                        Padding: (Bottom: 10);
+                        AssetImage #Image {
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+                        }
+
+                        Button #CategoryButton {
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            Style: (
+                                Sounds: $Sounds.@ButtonsLight,
+                                Default: (
+                                    Background: "../../Common/Categories/Cosmetics/Gloves.png"
+                                ),
+                                Hovered: (
+                                    Background: "../../Common/Categories/Cosmetics/Activated/Gloves.png"
+                                )
+                            );
+                            FlexWeight: 1;
+                        }
+                    }
+
+                    Group #Head {
+                        Anchor: (Top: 0);
+                        Padding: (Bottom: 10);
+                        AssetImage #Image {
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+                        }
+
+                        Button #CategoryButton {
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            Style: (
+                                Sounds: $Sounds.@ButtonsLight,
+                                Default: (
+                                    Background: "../../Common/Categories/Cosmetics/Head.png"
+                                ),
+                                Hovered: (
+                                    Background: "../../Common/Categories/Cosmetics/Activated/Head.png"
+                                )
+                            );
+                            FlexWeight: 1;
+                        }
+                    }
+
+                    Group #EarsAccessories {
+                        Anchor: (Top: 0);
+                        Padding: (Bottom: 10);
+                        AssetImage #Image {
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+                        }
+
+                        Button #CategoryButton {
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            Style: (
+                                Sounds: $Sounds.@ButtonsLight,
+                                Default: (
+                                    Background: "../../Common/Categories/Cosmetics/Ears_Accessories.png"
+                                ),
+                                Hovered: (
+                                    Background: "../../Common/Categories/Cosmetics/Activated/Ears_Accessories.png"
+                                )
+                            );
+                            FlexWeight: 1;
+                        }
+                    }
+
+                    Group #Overpants {
+                        Anchor: (Top: 0);
+                        Padding: (Bottom: 10);
+                        AssetImage #Image {
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+                        }
+
+                        Button #CategoryButton {
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            Style: (
+                                Sounds: $Sounds.@ButtonsLight,
+                                Default: (
+                                    Background: "../../Common/Categories/Cosmetics/Overpants.png"
+                                ),
+                                Hovered: (
+                                    Background: "../../Common/Categories/Cosmetics/Activated/Overpants.png"
+                                )
+                            );
+                            FlexWeight: 1;
+                        }
+                    }
+
+                    Group #Overtops {
+                        Anchor: (Top: 0);
+                        Padding: (Bottom: 10);
+                        AssetImage #Image {
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+                        }
+
+                        Button #CategoryButton {
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            Style: (
+                                Sounds: $Sounds.@ButtonsLight,
+                                Default: (
+                                    Background: "../../Common/Categories/Cosmetics/Overtops.png"
+                                ),
+                                Hovered: (
+                                    Background: "../../Common/Categories/Cosmetics/Activated/Overtops.png"
+                                )
+                            );
+                            FlexWeight: 1;
+                        }
+                    }
+
+                    Group #Pants {
+                        Anchor: (Top: 0);
+                        Padding: (Bottom: 10);
+                        AssetImage #Image {
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+                        }
+
+                        Button #CategoryButton {
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            Style: (
+                                Sounds: $Sounds.@ButtonsLight,
+                                Default: (
+                                    Background: "../../Common/Categories/Cosmetics/Pants.png"
+                                ),
+                                Hovered: (
+                                    Background: "../../Common/Categories/Cosmetics/Activated/Pants.png"
+                                )
+                            );
+                            FlexWeight: 1;
+                        }
+                    }
+
+                    Group #Shoes {
+                        Anchor: (Top: 0);
+                        Padding: (Bottom: 10);
+                        AssetImage #Image {
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+                        }
+
+                        Button #CategoryButton {
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            Style: (
+                                Sounds: $Sounds.@ButtonsLight,
+                                Default: (
+                                    Background: "../../Common/Categories/Cosmetics/Shoes.png"
+                                ),
+                                Hovered: (
+                                    Background: "../../Common/Categories/Cosmetics/Activated/Shoes.png"
+                                )
+                            );
+                            FlexWeight: 1;
+                        }
+                    }
+                }
+            }
+
+            Group #CCBR {
+                Anchor: (Right: -680, Top: -250);
+                FlexWeight: 1;
+
+                Group #SideButtons {
+                    LayoutMode: Top;
+
+                    Group #Undertops {
+                        Anchor: (Top: 0);
+                        Padding: (Bottom: 10);
+                        AssetImage #Image {
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+                        }
+
+                        Button #CategoryButton {
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            Style: (
+                                Sounds: $Sounds.@ButtonsLight,
+                                Default: (
+                                    Background: "../../Common/Categories/Cosmetics/Undertops.png"
+                                ),
+                                Hovered: (
+                                    Background: "../../Common/Categories/Cosmetics/Activated/Undertops.png"
+                                )
+                            );
+                            FlexWeight: 1;
+                        }
+                    }
+
+                    Group #Underwears {
+                        Anchor: (Top: 0);
+                        Padding: (Bottom: 10);
+                        AssetImage #Image {
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+                        }
+
+                        Button #CategoryButton {
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            Style: (
+                                Sounds: $Sounds.@ButtonsLight,
+                                Default: (
+                                    Background: "../../Common/Categories/Cosmetics/Underwears.png"
+                                ),
+                                Hovered: (
+                                    Background: "../../Common/Categories/Cosmetics/Activated/Underwears.png"
+                                )
+                            );
+                            FlexWeight: 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+$C.@BackButton {}

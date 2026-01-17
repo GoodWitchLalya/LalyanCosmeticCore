@@ -1,0 +1,9 @@
+Group #CosmeticRow {
+    LayoutMode: Left;
+    Anchor: (Width: 600, Height: 64, Top: 0, Left: 5);
+
+    Group #CosmeticSlot {
+        LayoutMode: Left;
+
+    }
+}
