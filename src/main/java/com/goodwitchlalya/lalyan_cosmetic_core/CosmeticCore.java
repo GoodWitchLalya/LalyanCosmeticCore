@@ -49,7 +49,7 @@ public class CosmeticCore extends JavaPlugin {
             /* Adding custom attachments */
             AttachmentsRegistry.register("Alien_Antenna", AttachmentsRegistry.CosmeticSlot.Head);
             
-            //AttachmentsRegistry.applyChange(event.getPlayerRef(), Map.of("Alien_Antenna", true));
+            
         });
     }
 

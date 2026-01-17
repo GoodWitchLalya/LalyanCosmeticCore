@@ -39,8 +39,6 @@ public class AttachmentsRegistry {
         }
     }
     
-    ;
-    
     public enum CosmeticSlot implements Slot {
         Capes, Face_Accessories, Gloves, Head, Ears_Accessories, Overpants, Overtops, Pants, Shoes, Undertops, Underwears;
         
@@ -50,8 +48,6 @@ public class AttachmentsRegistry {
         }
     }
     
-    ;
-    
     private static final record Attachment(
         String name,
         ModelAttachment modelAttachment,
@@ -59,8 +55,6 @@ public class AttachmentsRegistry {
         String icon
     ) {
     }
-    
-    ;
     
     public AttachmentsRegistry() {
         if (instance == null) {
@@ -71,8 +65,7 @@ public class AttachmentsRegistry {
         }
     }
     
-    
-    public static void applyChange(Ref<EntityStore> ref, Map<String, Boolean> changes) {
+    public static void applyChanges(Ref<EntityStore> ref, Map<String, Boolean> changes) {
         Store<EntityStore> store = ref.getStore();
         PlayerSkinComponent playerSkincomponent = store.getComponent(ref, PlayerSkinComponent.getComponentType());
         CosmeticRegistry cosmeticRegistry = CosmeticsModule.get().getRegistry();
@@ -305,14 +298,6 @@ public class AttachmentsRegistry {
             list.add(attachment.modelAttachment);
         }
         
-        /*list.addAll(
-                changes.keySet().stream()
-                        .map(attachmentsRegistry::get)
-                        .filter(record -> record != null)
-                        .map(Attachment::modelAttachment)
-                        .toList()
-        );*/
-        
         Model newModel = new Model(
             player.getDisplayName() + "CustomModel",
             playerModel.getScale(),
@@ -339,13 +324,18 @@ public class AttachmentsRegistry {
         store.replaceComponent(ref, ModelComponent.getComponentType(), new ModelComponent(newModel));
         
         CosmeticCore.log(
-            String.format("\nCosmetics applied to %s:\n", player.getDisplayName()) +
-                changes.keySet().stream()
-                    .map(attachmentsRegistry::get)
-                    .filter(record -> record != null)
-                    .map(record -> "- " + record.name())
-                    .collect(Collectors.joining("\n"))
+            changes.isEmpty() ?
+                String.format("\nCosmetics applied to %s:\nNone (Default Skin)", player.getDisplayName()):
+                String.format("\nCosmetics applied to %s:\n", player.getDisplayName()) +
+                    changes.keySet().stream()
+                        .map(attachmentsRegistry::get)
+                        .filter(record -> record != null)
+                        .map(record -> String.format("- %s (override: %s)", record.name(),  overrides.get(record.slot.toString())))
+                        .collect(Collectors.joining("\n"))
         );
+    }
+    public static void applyChanges(Ref<EntityStore> ref) {
+        applyChanges(ref, new HashMap<String, Boolean>());
     }
     
     public static void register(String name, Slot slot) {
