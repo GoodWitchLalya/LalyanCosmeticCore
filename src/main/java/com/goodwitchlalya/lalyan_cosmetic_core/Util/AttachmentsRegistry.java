@@ -4,8 +4,8 @@ import com.goodwitchlalya.lalyan_cosmetic_core.CosmeticCore;
 
 import java.util.stream.Collectors;
 import java.util.*;
+import java.util.stream.Stream;
 
-import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.PlayerSkin;
@@ -14,7 +14,6 @@ import com.hypixel.hytale.server.core.asset.type.model.config.ModelAttachment;
 import com.hypixel.hytale.server.core.cosmetics.CosmeticRegistry;
 import com.hypixel.hytale.server.core.cosmetics.CosmeticsModule;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.player.PlayerSkinComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -32,7 +31,7 @@ public class AttachmentsRegistry {
     }
     
     public enum CharacterSlot implements Slot {
-        Beard, Ears, Eyebrows, Eyes, Face, Mouth, Haircut;
+        Beards, Ears, Eyebrows, Eyes, Faces, Mouths, Haircuts;
         
         @Override
         public SlotType getType() {
@@ -40,7 +39,7 @@ public class AttachmentsRegistry {
         }
     };
     public enum CosmeticSlot implements Slot {
-        Arms, Cape, Face_Accessory, Gloves, Head, Overpant, Overtop, Pants, Shoes, Undertop, Underwear;
+        Capes, Face_Accessories, Gloves, Head, Ears_Accessories, Overpants, Overtops, Pants, Shoes, Undertops, Underwears;
         
         @Override
         public SlotType getType() {
@@ -66,7 +65,7 @@ public class AttachmentsRegistry {
     
     
     
-    public static void applyChange(Ref<EntityStore> ref, List<String> changes, boolean override) {
+    public static void applyChange(Ref<EntityStore> ref, Map<String, Boolean> changes) {
         
         Store<EntityStore> store = ref.getStore();
         ModelComponent modelComponent = store.getComponent(ref, ModelComponent.getComponentType());
@@ -80,169 +79,224 @@ public class AttachmentsRegistry {
         String modelName = player.getDisplayName();
         
         List<ModelAttachment> list = ListUtil.mutable(Arrays.asList(playerModel.getAttachments()));
-        
         String gradientId = playerSkin.bodyCharacteristic.split("\\.")[1];
-        
         String[] bodyCharacteristicParts = playerSkin.bodyCharacteristic.split("\\.");
+        
         var bodyCharacteristic = cosmeticRegistry.getBodyCharacteristics().get(bodyCharacteristicParts[0]);
         if (bodyCharacteristic != null) {
             list.add(ModelUtils.resolveAttachment(bodyCharacteristic, bodyCharacteristicParts, gradientId));
         }
         
-        if (playerSkin.underwear != null) {
-            String[] underwearParts = playerSkin.underwear.split("\\.");
-            var underwear = cosmeticRegistry.getUnderwear().get(underwearParts[0]);
-            if (underwear != null) {
-                list.add(ModelUtils.resolveAttachment(underwear, underwearParts, gradientId));
-            }
-        }
+        Map<String, Boolean> overrides = new HashMap<>(Stream.concat(
+                Arrays.stream(CharacterSlot.values()),
+                Arrays.stream(CosmeticSlot.values())
+        ).collect(Collectors.toMap(
+                slot -> slot.name(),
+                slot -> false
+        )));
         
-        if (playerSkin.eyebrows != null) {
-            String[] eyebrowsParts = playerSkin.eyebrows.split("\\.");
-            var eyebrows = cosmeticRegistry.getEyebrows().get(eyebrowsParts[0]);
-            if (eyebrows != null) {
-                list.add(ModelUtils.resolveAttachment(eyebrows, eyebrowsParts, gradientId));
+        changes.forEach((cosmeticName, override) -> {
+            Attachment attachment = attachmentsRegistry.get(cosmeticName);
+            
+            if (attachment != null) {
+                
+                if (override) {
+                    overrides.put(attachment.slot.toString(), true);
+                }
+            
             }
-        }
+            else {
+                CosmeticCore.log("Attempting to apply changes to " + cosmeticName);
+            }
+            
+            
+            
+        });
         
-        if (playerSkin.eyes != null) {
-            String[] eyesParts = playerSkin.eyes.split("\\.");
-            var eyes = cosmeticRegistry.getEyes().get(eyesParts[0]);
-            if (eyes != null) {
-                list.add(ModelUtils.resolveAttachment(eyes, eyesParts, gradientId));
-            }
-        }
-        
-        if (playerSkin.ears != null) {
-            String[] earsParts = playerSkin.ears.split("\\.");
-            var ears = cosmeticRegistry.getEars().get(earsParts[0]);
-            if (ears != null) {
-                list.add(ModelUtils.resolveAttachment(ears, earsParts, playerSkin.bodyCharacteristic.split("\\.")[1]));
-            }
-        }
-        
-        if (playerSkin.face != null) {
-            String[] faceParts = playerSkin.face.split("\\.");
-            var face = cosmeticRegistry.getFaces().get(faceParts[0]);
-            if (face != null) {
-                list.add(ModelUtils.resolveAttachment(face, faceParts, playerSkin.bodyCharacteristic.split("\\.")[1]));
-            }
-        }
-        
-        if (playerSkin.mouth != null) {
-            String[] mouthsParts = playerSkin.mouth.split("\\.");
-            var mouths = cosmeticRegistry.getMouths().get(mouthsParts[0]);
-            if (mouths != null) {
-                list.add(ModelUtils.resolveAttachment(mouths, mouthsParts, gradientId));
-            }
-        }
-        
-        if (playerSkin.facialHair != null) {
-            String[] facialHairsParts = playerSkin.facialHair.split("\\.");
-            var facialHairs = cosmeticRegistry.getFacialHairs().get(facialHairsParts[0]);
-            if (facialHairs != null) {
-                list.add(ModelUtils.resolveAttachment(facialHairs, facialHairsParts, gradientId));
-            }
-        }
-        
-        if (playerSkin.pants != null) {
-            String[] pantsParts = playerSkin.pants.split("\\.");
-            var pants = cosmeticRegistry.getPants().get(pantsParts[0]);
-            if (pants != null) {
-                list.add(ModelUtils.resolveAttachment(pants, pantsParts, gradientId));
-            }
-        }
-        
-        if (playerSkin.overpants != null) {
-            String[] overpantsParts = playerSkin.overpants.split("\\.");
-            var overpants = cosmeticRegistry.getOverpants().get(overpantsParts[0]);
-            if (overpants != null) {
-                list.add(ModelUtils.resolveAttachment(overpants, overpantsParts, gradientId));
-            }
-        }
-        
-        if (playerSkin.undertop != null) {
-            String[] undertopsParts = playerSkin.undertop.split("\\.");
-            var undertops = cosmeticRegistry.getUndertops().get(undertopsParts[0]);
-            if (undertops != null) {
-                list.add(ModelUtils.resolveAttachment(undertops, undertopsParts, gradientId));
-            }
-        }
-        
-        if (playerSkin.overtop != null) {
-            String[] overtopsParts = playerSkin.overtop.split("\\.");
-            var overtops = cosmeticRegistry.getOvertops().get(overtopsParts[0]);
-            if (overtops != null) {
-                list.add(ModelUtils.resolveAttachment(overtops, overtopsParts, gradientId));
-            }
-        }
-        
-        if (playerSkin.haircut != null) {
-            String[] haircutsParts = playerSkin.haircut.split("\\.");
-            var haircuts = cosmeticRegistry.getHaircuts().get(haircutsParts[0]);
-            if (haircuts != null) {
-                list.add(ModelUtils.resolveAttachment(haircuts, haircutsParts, gradientId));
-            }
-        }
-        
-        if (playerSkin.shoes != null) {
-            String[] shoesParts = playerSkin.shoes.split("\\.");
-            var shoes = cosmeticRegistry.getShoes().get(shoesParts[0]);
-            if (shoes != null) {
-                list.add(ModelUtils.resolveAttachment(shoes, shoesParts, gradientId));
-            }
-        }
-        
-        if (playerSkin.headAccessory != null) {
-            String[] headAccessoriesParts = playerSkin.headAccessory.split("\\.");
-            var headAccessories = cosmeticRegistry.getHeadAccessories().get(headAccessoriesParts[0]);
-            if (headAccessories != null) {
-                list.add(ModelUtils.resolveAttachment(headAccessories, headAccessoriesParts, gradientId));
-            }
-        }
-        
-        if (playerSkin.faceAccessory != null) {
-            String[] faceAccessoriesParts = playerSkin.faceAccessory.split("\\.");
-            var faceAccessories = cosmeticRegistry.getFaceAccessories().get(faceAccessoriesParts[0]);
-            if (faceAccessories != null) {
-                list.add(ModelUtils.resolveAttachment(faceAccessories, faceAccessoriesParts, gradientId));
-            }
-        }
-        
-        if (playerSkin.earAccessory != null) {
-            String[] earAccessoriesParts = playerSkin.earAccessory.split("\\.");
-            var earAccessories = cosmeticRegistry.getEarAccessories().get(earAccessoriesParts[0]);
-            if (earAccessories != null) {
-                list.add(ModelUtils.resolveAttachment(earAccessories, earAccessoriesParts, gradientId));
-            }
-        }
-        
-        if (playerSkin.gloves != null) {
-            String[] glovesParts = playerSkin.gloves.split("\\.");
-            var gloves = cosmeticRegistry.getGloves().get(glovesParts[0]);
-            if (gloves != null) {
-                list.add(ModelUtils.resolveAttachment(gloves, glovesParts, gradientId));
-            }
-        }
-        
-        if (playerSkin.cape != null) {
-            String[] capesParts = playerSkin.cape.split("\\.");
-            var capes = cosmeticRegistry.getCapes().get(capesParts[0]);
-            if (capes != null) {
-                list.add(ModelUtils.resolveAttachment(capes, capesParts, gradientId));
-            }
-        }
-        
-        if (playerSkin.skinFeature != null) {
-            String[] skinFeaturesParts = playerSkin.skinFeature.split("\\.");
-            var skinFeatures = cosmeticRegistry.getSkinFeatures().get(skinFeaturesParts[0]);
-            if (skinFeatures != null) {
-                list.add(ModelUtils.resolveAttachment(skinFeatures, skinFeaturesParts, gradientId));
-            }
-        }
+        Stream.concat(
+                Arrays.stream(CharacterSlot.values()),
+                Arrays.stream(CosmeticSlot.values())
+        ).forEach(
+                slot -> {
+                    /* Characters Slots */
+                    if (!overrides.get(CharacterSlot.Beards.name())) {
+                        if (playerSkin.facialHair != null) {
+                            String[] facialHairsParts = playerSkin.facialHair.split("\\.");
+                            var facialHairs = cosmeticRegistry.getFacialHairs().get(facialHairsParts[0]);
+                            if (facialHairs != null) {
+                                list.add(ModelUtils.resolveAttachment(facialHairs, facialHairsParts, gradientId));
+                            }
+                        }
+                    }
+                    if (!overrides.get(CharacterSlot.Ears.name())) {
+                        if (playerSkin.ears != null) {
+                            String[] earsParts = playerSkin.ears.split("\\.");
+                            var ears = cosmeticRegistry.getEars().get(earsParts[0]);
+                            if (ears != null) {
+                                list.add(ModelUtils.resolveAttachment(ears, earsParts, playerSkin.bodyCharacteristic.split("\\.")[1]));
+                            }
+                        }
+                    }
+                    if (!overrides.get(CharacterSlot.Eyebrows.name())) {
+                        if (playerSkin.eyebrows != null) {
+                            String[] eyebrowsParts = playerSkin.eyebrows.split("\\.");
+                            var eyebrows = cosmeticRegistry.getEyebrows().get(eyebrowsParts[0]);
+                            if (eyebrows != null) {
+                                list.add(ModelUtils.resolveAttachment(eyebrows, eyebrowsParts, gradientId));
+                            }
+                        }
+                    }
+                    if (!overrides.get(CharacterSlot.Eyes.name())) {
+                        if (playerSkin.eyes != null) {
+                            String[] eyesParts = playerSkin.eyes.split("\\.");
+                            var eyes = cosmeticRegistry.getEyes().get(eyesParts[0]);
+                            if (eyes != null) {
+                                list.add(ModelUtils.resolveAttachment(eyes, eyesParts, gradientId));
+                            }
+                        }
+                    }
+                    if (!overrides.get(CharacterSlot.Faces.name())) {
+                        if (playerSkin.face != null) {
+                            String[] faceParts = playerSkin.face.split("\\.");
+                            var face = cosmeticRegistry.getFaces().get(faceParts[0]);
+                            if (face != null) {
+                                list.add(ModelUtils.resolveAttachment(face, faceParts, playerSkin.bodyCharacteristic.split("\\.")[1]));
+                            }
+                        }
+                    }
+                    if (!overrides.get(CharacterSlot.Mouths.name())) {
+                        if (playerSkin.mouth != null) {
+                            String[] mouthsParts = playerSkin.mouth.split("\\.");
+                            var mouths = cosmeticRegistry.getMouths().get(mouthsParts[0]);
+                            if (mouths != null) {
+                                list.add(ModelUtils.resolveAttachment(mouths, mouthsParts, gradientId));
+                            }
+                        }
+                    }
+                    if (!overrides.get(CharacterSlot.Haircuts.name())) {
+                        if (playerSkin.haircut != null) {
+                            String[] haircutsParts = playerSkin.haircut.split("\\.");
+                            var haircuts = cosmeticRegistry.getHaircuts().get(haircutsParts[0]);
+                            if (haircuts != null) {
+                                list.add(ModelUtils.resolveAttachment(haircuts, haircutsParts, gradientId));
+                            }
+                        }
+                    }
+                    
+                    /* Cosmetics Slots */
+                    if (!overrides.get(CosmeticSlot.Capes.name())) {
+                        if (playerSkin.cape != null) {
+                            String[] capesParts = playerSkin.cape.split("\\.");
+                            var capes = cosmeticRegistry.getCapes().get(capesParts[0]);
+                            if (capes != null) {
+                                list.add(ModelUtils.resolveAttachment(capes, capesParts, gradientId));
+                            }
+                        }
+                    }
+                    if (!overrides.get(CosmeticSlot.Face_Accessories.name())) {
+                        if (playerSkin.faceAccessory != null) {
+                            String[] faceAccessoriesParts = playerSkin.faceAccessory.split("\\.");
+                            var faceAccessories = cosmeticRegistry.getFaceAccessories().get(faceAccessoriesParts[0]);
+                            if (faceAccessories != null) {
+                                list.add(ModelUtils.resolveAttachment(faceAccessories, faceAccessoriesParts, gradientId));
+                            }
+                        }
+                    }
+                    if (!overrides.get(CosmeticSlot.Gloves.name())) {
+                        if (playerSkin.gloves != null) {
+                            String[] glovesParts = playerSkin.gloves.split("\\.");
+                            var gloves = cosmeticRegistry.getGloves().get(glovesParts[0]);
+                            if (gloves != null) {
+                                list.add(ModelUtils.resolveAttachment(gloves, glovesParts, gradientId));
+                            }
+                        }
+                    }
+                    if (!overrides.get(CosmeticSlot.Head.name())) {
+                        if (playerSkin.headAccessory != null) {
+                            String[] headAccessoriesParts = playerSkin.headAccessory.split("\\.");
+                            var headAccessories = cosmeticRegistry.getHeadAccessories().get(headAccessoriesParts[0]);
+                            if (headAccessories != null) {
+                                list.add(ModelUtils.resolveAttachment(headAccessories, headAccessoriesParts, gradientId));
+                            }
+                        }
+                    }
+                    if (!overrides.get(CosmeticSlot.Overpants.name())) {
+                        if (playerSkin.overpants != null) {
+                            String[] overpantsParts = playerSkin.overpants.split("\\.");
+                            var overpants = cosmeticRegistry.getOverpants().get(overpantsParts[0]);
+                            if (overpants != null) {
+                                list.add(ModelUtils.resolveAttachment(overpants, overpantsParts, gradientId));
+                            }
+                        }
+                    }
+                    if (!overrides.get(CosmeticSlot.Overtops.name())) {
+                        if (playerSkin.overtop != null) {
+                            String[] overtopsParts = playerSkin.overtop.split("\\.");
+                            var overtops = cosmeticRegistry.getOvertops().get(overtopsParts[0]);
+                            if (overtops != null) {
+                                list.add(ModelUtils.resolveAttachment(overtops, overtopsParts, gradientId));
+                            }
+                        }
+                    }
+                    if (!overrides.get(CosmeticSlot.Pants.name())) {
+                        if (playerSkin.pants != null) {
+                            String[] pantsParts = playerSkin.pants.split("\\.");
+                            var pants = cosmeticRegistry.getPants().get(pantsParts[0]);
+                            if (pants != null) {
+                                list.add(ModelUtils.resolveAttachment(pants, pantsParts, gradientId));
+                            }
+                        }
+                    }
+                    if (!overrides.get(CosmeticSlot.Shoes.name())) {
+                        if (playerSkin.shoes != null) {
+                            String[] shoesParts = playerSkin.shoes.split("\\.");
+                            var shoes = cosmeticRegistry.getShoes().get(shoesParts[0]);
+                            if (shoes != null) {
+                                list.add(ModelUtils.resolveAttachment(shoes, shoesParts, gradientId));
+                            }
+                        }
+                    }
+                    if (!overrides.get(CosmeticSlot.Undertops.name())) {
+                        if (playerSkin.undertop != null) {
+                            String[] undertopsParts = playerSkin.undertop.split("\\.");
+                            var undertops = cosmeticRegistry.getUndertops().get(undertopsParts[0]);
+                            if (undertops != null) {
+                                list.add(ModelUtils.resolveAttachment(undertops, undertopsParts, gradientId));
+                            }
+                        }
+                    }
+                    if (!overrides.get(CosmeticSlot.Underwears.name())) {
+                        if (playerSkin.underwear != null) {
+                            String[] underwearParts = playerSkin.underwear.split("\\.");
+                            var underwear = cosmeticRegistry.getUnderwear().get(underwearParts[0]);
+                            if (underwear != null) {
+                                list.add(ModelUtils.resolveAttachment(underwear, underwearParts, gradientId));
+                            }
+                        }
+                    }
+                    if (!overrides.get(CosmeticSlot.Ears_Accessories.name())) {
+                        if (playerSkin.earAccessory != null) {
+                            String[] earAccessoriesParts = playerSkin.earAccessory.split("\\.");
+                            var earAccessories = cosmeticRegistry.getEarAccessories().get(earAccessoriesParts[0]);
+                            if (earAccessories != null) {
+                                list.add(ModelUtils.resolveAttachment(earAccessories, earAccessoriesParts, gradientId));
+                            }
+                        }
+                    }
+                    
+                    if (playerSkin.skinFeature != null) {
+                        String[] skinFeaturesParts = playerSkin.skinFeature.split("\\.");
+                        var skinFeatures = cosmeticRegistry.getSkinFeatures().get(skinFeaturesParts[0]);
+                        if (skinFeatures != null) {
+                            list.add(ModelUtils.resolveAttachment(skinFeatures, skinFeaturesParts, gradientId));
+                        }
+                    }
+                    
+                }
+        );
         
         list.addAll(
-                changes.stream()
+                changes.keySet().stream()
                         .map(attachmentsRegistry::get)
                         .filter(record -> record != null)
                         .map(Attachment::modelAttachment)
@@ -276,7 +330,7 @@ public class AttachmentsRegistry {
         
         CosmeticCore.log(
                 String.format("\nCosmetics applied to %s:\n", player.getDisplayName()) +
-                        changes.stream()
+                        changes.keySet().stream()
                                 .map(attachmentsRegistry::get)
                                 .filter(record -> record != null)
                                 .map(record -> "- " + record.name())
@@ -285,15 +339,6 @@ public class AttachmentsRegistry {
         
     }
     
-    public static void applyChange(Ref<EntityStore> ref, List<String> changes) {
-        applyChange(ref, changes, true);
-    }
-    public static void applyChange(Ref<EntityStore> ref, String change, boolean override) {
-        applyChange(ref, new ArrayList<String>(Collections.singleton(change)), override);
-    }
-    public static void applyChange(Ref<EntityStore> ref, String change) {
-        applyChange(ref, new ArrayList<String>(Collections.singleton(change)));
-    }
     public static void register(String name, Slot slot) {
         String attachmentPath = "Resources/";
         

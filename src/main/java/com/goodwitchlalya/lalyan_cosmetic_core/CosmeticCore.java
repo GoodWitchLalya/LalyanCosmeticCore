@@ -12,6 +12,10 @@ import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.Universe;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This class serves as the entrypoint for your plugin. Use the setup method to register into game registries or add
@@ -54,7 +58,7 @@ public class CosmeticCore extends JavaPlugin {
             /* Adding custom attachments */
             AttachmentsRegistry.register("Alien_Antenna", AttachmentsRegistry.CosmeticSlot.Head);
             
-            AttachmentsRegistry.applyChange(event.getPlayerRef(), "Alien_Antenna");
+            //AttachmentsRegistry.applyChange(event.getPlayerRef(), Map.of("Alien_Antenna", true));
             
         });
         
