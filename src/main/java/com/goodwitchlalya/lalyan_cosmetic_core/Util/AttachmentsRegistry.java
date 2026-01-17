@@ -360,7 +360,7 @@ public class AttachmentsRegistry {
         store.replaceComponent(ref, CosmeticData.INSTANCE, data);
     }
     
-    public void applyChange(Ref<EntityStore> ref, Map<String, Boolean> changes) {
+    public void applyChanges(Ref<EntityStore> ref, Map<String, Boolean> changes) {
         Store<EntityStore> store = ref.getStore();
         PlayerSkinComponent playerSkincomponent = store.getComponent(ref, PlayerSkinComponent.getComponentType());
         
@@ -413,6 +413,14 @@ public class AttachmentsRegistry {
         store.replaceComponent(ref, ModelComponent.getComponentType(), new ModelComponent(newModel));
         store.replaceComponent(ref, CosmeticData.INSTANCE, data);
         
+        Map<String, Boolean> overrides = new HashMap<>(
+            Stream.concat(
+                    Arrays.stream(CharacterSlot.values()),
+                    Arrays.stream(CosmeticSlot.values())
+                )
+                .collect(Collectors.toMap(Enum::name, _ -> false))
+        );
+        
         CosmeticCore.log(
             changes.isEmpty() ?
                 String.format("\nCosmetics applied to %s:\nNone (Default Skin)", player.getDisplayName()):
@@ -424,8 +432,9 @@ public class AttachmentsRegistry {
                         .collect(Collectors.joining("\n"))
         );
     }
+    
     public void applyChanges(Ref<EntityStore> ref) {
-        applyChanges(ref, new HashMap<String, Boolean>());
+        applyChanges(ref, Map.of());
     }
     
     public void register(String name, Slot slot) {

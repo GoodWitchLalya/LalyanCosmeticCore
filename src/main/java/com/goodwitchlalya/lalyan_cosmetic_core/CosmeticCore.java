@@ -1,10 +1,10 @@
 package com.goodwitchlalya.lalyan_cosmetic_core;
 
 import com.goodwitchlalya.lalyan_cosmetic_core.Util.AttachmentsRegistry;
+import com.goodwitchlalya.lalyan_cosmetic_core.component.CosmeticData;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.command.system.CommandManager;
 import com.hypixel.hytale.server.core.console.ConsoleSender;
-import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.Universe;
@@ -43,6 +43,7 @@ public class CosmeticCore extends JavaPlugin {
     @Override
     protected void setup() {
         CosmeticData.INSTANCE = getEntityStoreRegistry().registerComponent(CosmeticData.class, "CCL_CosmeticData", CosmeticData.CODEC);
+        
         this.getCommandRegistry().registerCommand(new OpenCosmeticPage());
         this.getCommandRegistry().registerCommand(new CosmeticCommand(this.getName(), this.getManifest().getVersion().toString()));
         

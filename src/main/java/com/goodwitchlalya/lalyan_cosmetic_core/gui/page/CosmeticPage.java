@@ -109,7 +109,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             return;
         }
         
-        AttachmentsRegistry.get().applyChange(ref, Map.of(data.cosmeticId, true));
+        AttachmentsRegistry.get().applyChanges(ref, Map.of(data.cosmeticId, true));
         this.sendUpdate();
         this.rebuild();
     }
