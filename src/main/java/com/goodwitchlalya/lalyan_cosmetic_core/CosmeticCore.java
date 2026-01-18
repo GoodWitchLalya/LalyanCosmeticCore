@@ -15,9 +15,6 @@ import javax.annotation.Nonnull;
 /**
  * This class serves as the entrypoint for your plugin. Use the setup method to register into game registries or add
  * event listeners.
- *
- * AssetPackRegisterEvent
- *
  */
 public class CosmeticCore extends JavaPlugin {
 
@@ -38,6 +35,7 @@ public class CosmeticCore extends JavaPlugin {
     protected void start() {
         CommandManager.get().handleCommand(ConsoleSender.INSTANCE, "auth login device");
         CommandManager.get().handleCommand(ConsoleSender.INSTANCE, "auth persistence Encrypted");
+        
     }
 
     @Override
@@ -68,6 +66,14 @@ public class CosmeticCore extends JavaPlugin {
         AttachmentsRegistry.get().register("Jacket_Violet", AttachmentsRegistry.CosmeticSlot.Overtops);
         AttachmentsRegistry.get().register("Overalls", AttachmentsRegistry.CosmeticSlot.Overtops);
         AttachmentsRegistry.get().register("Sweater", AttachmentsRegistry.CosmeticSlot.Overtops);
+        FileManager.wakeUp();
+        
+        getEventRegistry().registerGlobal(PlayerReadyEvent.class, (event) -> {
+        
+        
+        
+        });
+        
     }
 
     @Override

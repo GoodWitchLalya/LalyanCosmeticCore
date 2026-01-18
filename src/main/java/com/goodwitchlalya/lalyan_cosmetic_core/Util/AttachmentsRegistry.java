@@ -55,7 +55,6 @@ public class AttachmentsRegistry {
         return INSTANCE;
     }
     
-    
     public boolean isEmptySlot(Ref<EntityStore> ref, CosmeticSlot currentSlot) {
         Store<EntityStore> store = ref.getStore();
         CosmeticData data = store.getComponent(ref, CosmeticData.INSTANCE);
@@ -585,4 +584,13 @@ public class AttachmentsRegistry {
         
         return null;
     }
+    
+    public void clear() {
+        attachmentsRegistry.clear();
+    }
+    
+    public List<String> getAttachmentsList() {
+        return attachmentsRegistry.keySet().stream().sorted().collect(Collectors.toList());
+    }
+    
 }
