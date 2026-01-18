@@ -113,7 +113,9 @@ Questo plugin permette ai giocatori di personalizzare quale cosmetico hanno equi
 
 Permette anche ai creatori di plugin di creare i loro cosmetici personalizzati, senza aver bisogno di alcun codice Java!
 
-Il plugin presenta una GUI personalizzata per personalizzare i cosmetici, che può essere aperta tramite comando o, in un modo più immersivo, interagendo con qualsiasi armadio vanilla
+Il plugin fornisce una GUI per personalizzare i cosmetici, che può essere aperta tramite comando o, in un modo più immersivo, interagendo con qualsiasi armadio vanilla
+
+Nella GUI, puoi selezionare con Click Sinitro i cosmetici da equipaggiare o, se lo slot ha l'icona delle varianti, puoi fare Click Destro per aprire la tab delle varianti
 
 ## Comandi
 
@@ -168,9 +170,9 @@ Il percorso base è `Common/Resources/Cosmetics`, quindi la cartella basata sull
 
 Quindi la cartella che hai creato prima.
 
-Quindi, per un cosmetico chiamato Custom\_Cape, che si trova nello slot del mantello, sarebbe così:
+Quindi, per un cosmetico chiamato Custom_Cape, che si trova nello slot del mantello, sarebbe così:
 
-`Common/Resources/Cosmetics/Capes/Custom_Cape` e all'interno della cartella Custom\_Cape:
+`Common/Resources/Cosmetics/Capes/Custom_Cape` e all'interno della cartella Custom_Cape:
 
 ```
 Custom_Cape/
@@ -178,4 +180,25 @@ Custom_Cape/
 ├── Custom_Cape.png
 └── Icon/
     └── Custom_Cape.png
+```
+
+
+## Cosmetici Avanzati
+
+Nella cartella del cosmetico, puoi creare un file `Cosmetic_Id.json`. Questo file permette di customizzare ancora di più i tuoi cosmetici!
+
+Nel file json potrai cambiare il nome e il percorso del modello, della texture e dell'icona del tuo cosmetico. E non solo, potrai anche definire varianti!
+
+```json
+{
+    "model": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat.blockymodel",
+    "texture": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat.png",
+    "icon": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat_Icon.png",
+    "variants": {
+        "Variant": {
+            "texture": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant.png",
+            "icon": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant_Icon.png"
+        }
+    }
+}
 ```
