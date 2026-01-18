@@ -1,0 +1,41 @@
+$C = "../../../Common.ui";
+$Sounds = "../../../Sounds.ui";
+
+Group {
+    Anchor: (Top: 0);
+    Padding: (Bottom: 10);
+    AssetImage #Image {
+        Anchor: (Width: 64, Height: 64, Top: 0);
+        AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+    }
+
+    Button #CategoryButton {
+        Visible: true;
+        Anchor: (Width: 64, Height: 64, Top: 0);
+        Style: (
+            Sounds: $Sounds.@ButtonsLight,
+            Default: (
+                Background: "../../../Common/Categories/Top/Legs.png"
+            ),
+            Hovered: (
+                Background: "../../../Common/Categories/Top/Selected/Legs.png"
+            )
+        );
+        FlexWeight: 1;
+    }
+
+    Button #CategoryButtonEnabled {
+        Visible: false;
+        Anchor: (Width: 64, Height: 64, Top: 0);
+        Style: (
+            Sounds: $Sounds.@ButtonsLight,
+            Default: (
+                Background: "../../../Common/Categories/Top/Selected/Legs.png"
+            ),
+            Hovered: (
+                Background: "../../../Common/Categories/Top/Legs.png"
+            )
+        );
+        FlexWeight: 1;
+    }
+}

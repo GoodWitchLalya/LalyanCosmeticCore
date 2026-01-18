@@ -1,0 +1,286 @@
+$C = "../../../Common.ui";
+$Sounds = "../../../Sounds.ui";
+
+Group {
+    LayoutMode: Top;
+
+    Group #Haircut {
+        Anchor: (Top: 0);
+        Padding: (Bottom: 10);
+
+        Group {
+            AssetImage #Image {
+                Anchor: (Width: 64, Height: 64);
+                AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+            }
+        }
+
+        Button #CategoryButton {
+            Visible: true;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Haircut.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Selected/Haircut.png"
+                )
+            );
+        }
+
+        Button #CategoryButtonEnabled {
+            Visible: false;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Selected/Haircut.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Haircut.png"
+                )
+            );
+        }
+    }
+
+    Group #Eyebrows {
+        Anchor: (Top: 0);
+        Padding: (Bottom: 10);
+
+        Group {
+            AssetImage #Image {
+                Anchor: (Width: 64, Height: 64);
+                AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+            }
+        }
+
+        Button #CategoryButton {
+            Visible: true;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Eyebrows.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Selected/Eyebrows.png"
+                )
+            );
+        }
+
+        Button #CategoryButtonEnabled {
+            Visible: false;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Selected/Eyebrows.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Eyebrows.png"
+                )
+            );
+        }
+    }
+
+    Group #Eyes {
+        Anchor: (Top: 0);
+        Padding: (Bottom: 10);
+
+        Group {
+            AssetImage #Image {
+                Anchor: (Width: 64, Height: 64);
+                AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+            }
+        }
+
+        Button #CategoryButton {
+            Visible: true;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Eyes.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Selected/Eyes.png"
+                )
+            );
+        }
+
+        Button #CategoryButtonEnabled {
+            Visible: false;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Selected/Eyes.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Eyes.png"
+                )
+            );
+        }
+    }
+
+    Group #FacialHair {
+        Anchor: (Top: 0);
+        Padding: (Bottom: 10);
+
+        Group {
+            AssetImage #Image {
+                Anchor: (Width: 64, Height: 64);
+                AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+            }
+        }
+
+        Button #CategoryButton {
+            Visible: true;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/FacialHair.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Selected/FacialHair.png"
+                )
+            );
+        }
+
+        Button #CategoryButtonEnabled {
+            Visible: false;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Selected/FacialHair.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/FacialHair.png"
+                )
+            );
+        }
+    }
+
+    Group #HeadAccessories {
+        Anchor: (Top: 0);
+        Padding: (Bottom: 10);
+
+        Group {
+            AssetImage #Image {
+                Anchor: (Width: 64, Height: 64);
+                AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+            }
+        }
+
+        Button #CategoryButton {
+            Visible: true;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/HeadAccessories.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Selected/HeadAccessories.png"
+                )
+            );
+        }
+
+        Button #CategoryButtonEnabled {
+            Visible: false;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Selected/HeadAccessories.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/HeadAccessories.png"
+                )
+            );
+        }
+    }
+
+    Group #FaceAccessories {
+        Anchor: (Top: 0);
+        Padding: (Bottom: 10);
+
+        Group {
+            AssetImage #Image {
+                Anchor: (Width: 64, Height: 64);
+                AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+            }
+        }
+
+        Button #CategoryButton {
+            Visible: true;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/FaceAccessories.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Selected/FaceAccessories.png"
+                )
+            );
+        }
+
+        Button #CategoryButtonEnabled {
+            Visible: false;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Selected/FaceAccessories.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/FaceAccessories.png"
+                )
+            );
+        }
+    }
+
+    Group #EarAccessories {
+        Anchor: (Top: 0);
+        Padding: (Bottom: 10);
+
+        Group {
+            AssetImage #Image {
+                Anchor: (Width: 64, Height: 64);
+                AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+            }
+        }
+
+        Button #CategoryButton {
+            Visible: true;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/EarAccessories.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Selected/EarAccessories.png"
+                )
+            );
+        }
+
+        Button #CategoryButtonEnabled {
+            Visible: false;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Selected/EarAccessories.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/EarAccessories.png"
+                )
+            );
+        }
+    }
+}

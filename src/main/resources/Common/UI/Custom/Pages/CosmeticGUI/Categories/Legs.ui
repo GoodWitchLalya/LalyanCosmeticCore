@@ -1,0 +1,126 @@
+$C = "../../../Common.ui";
+$Sounds = "../../../Sounds.ui";
+
+Group {
+    LayoutMode: Top;
+
+    Group #Pants {
+        Anchor: (Top: 0);
+        Padding: (Bottom: 10);
+
+        Group {
+            AssetImage #Image {
+                Anchor: (Width: 64, Height: 64);
+                AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+            }
+        }
+
+        Button #CategoryButton {
+            Visible: true;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Pants.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Selected/Pants.png"
+                )
+            );
+        }
+
+        Button #CategoryButtonEnabled {
+            Visible: false;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Selected/Pants.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Pants.png"
+                )
+            );
+        }
+    }
+
+    Group #Overpants {
+        Anchor: (Top: 0);
+        Padding: (Bottom: 10);
+
+        Group {
+            AssetImage #Image {
+                Anchor: (Width: 64, Height: 64);
+                AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+            }
+        }
+
+        Button #CategoryButton {
+            Visible: true;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Overpants.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Selected/Overpants.png"
+                )
+            );
+        }
+
+        Button #CategoryButtonEnabled {
+            Visible: false;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Selected/Overpants.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Overpants.png"
+                )
+            );
+        }
+    }
+
+    Group #Shoes {
+        Anchor: (Top: 0);
+        Padding: (Bottom: 10);
+
+        Group {
+            AssetImage #Image {
+                Anchor: (Width: 64, Height: 64);
+                AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+            }
+        }
+
+        Button #CategoryButton {
+            Visible: true;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Shoes.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Selected/Shoes.png"
+                )
+            );
+        }
+
+        Button #CategoryButtonEnabled {
+            Visible: false;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Selected/Shoes.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Shoes.png"
+                )
+            );
+        }
+    }
+}

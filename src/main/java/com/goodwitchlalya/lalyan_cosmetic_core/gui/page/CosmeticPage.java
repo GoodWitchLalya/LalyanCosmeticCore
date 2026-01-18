@@ -24,7 +24,8 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         super(playerRef, CustomPageLifetime.CanDismiss, Data.CODEC);
     }
     
-    private AttachmentsRegistry.CosmeticSlot currentSlot = AttachmentsRegistry.CosmeticSlot.Capes;
+    private AttachmentsRegistry.Slot currentSlot = AttachmentsRegistry.CharacterSlot.Haircuts;
+    private AttachmentsRegistry.TopLevelTypes tlt = AttachmentsRegistry.TopLevelTypes.Head;
     
     @Override
     public void build(@NonNullDecl Ref<EntityStore> ref, @NonNullDecl UICommandBuilder cmd, @NonNullDecl UIEventBuilder evt, @NonNullDecl Store<EntityStore> store) {
@@ -35,29 +36,59 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
     }
     
     private void buildCosmeticButtons(UICommandBuilder cmd, UIEventBuilder evt) {
-        AttachmentsRegistry.CosmeticSlot[] values = AttachmentsRegistry.CosmeticSlot.values();
-        
-        for (int i = 0, valuesLength = values.length; i < valuesLength; i++) {
-            AttachmentsRegistry.CosmeticSlot slot = values[i];
-            String name = slot.name();
+        for (AttachmentsRegistry.TopLevelTypes tlt : AttachmentsRegistry.TopLevelTypes.values()) {
+            String selector = "#TL" + tlt.name();
             
-            if (name.contains("_")) {
-                String[] split = name.split("_");
-                name = split[0] + split[1];
+            cmd.append("#LLSidePanel #Content " + selector, "Pages/CosmeticGUI/TLButtons/" + tlt.name() + ".ui");
+            evt.addEventBinding(CustomUIEventBindingType.Activating, "#LLSidePanel #Content " + selector + " #CategoryButton", EventData.of("TLT", tlt.name()));
+            
+            if(this.tlt != tlt) continue;
+            
+            cmd.append("#LSidePanel #Content #CategoryButton", "Pages/CosmeticGUI/Categories/" + tlt.name() + ".ui");
+            
+            switch (tlt) {
+                case Head -> {
+                    setupCategoryButton(cmd, evt, "Haircut", AttachmentsRegistry.CharacterSlot.Haircuts);
+                    setupCategoryButton(cmd, evt, "Eyebrows", AttachmentsRegistry.CharacterSlot.Eyebrows);
+                    setupCategoryButton(cmd, evt, "Eyes", AttachmentsRegistry.CharacterSlot.Eyes);
+                    setupCategoryButton(cmd, evt, "FacialHair", AttachmentsRegistry.CharacterSlot.Beards);
+                    setupCategoryButton(cmd, evt, "HeadAccessories", AttachmentsRegistry.CosmeticSlot.Head);
+                    setupCategoryButton(cmd, evt, "FaceAccessories", AttachmentsRegistry.CosmeticSlot.Face_Accessories);
+                    setupCategoryButton(cmd, evt, "EarAccessories", AttachmentsRegistry.CosmeticSlot.Ears_Accessories);
+                }
+                case General -> {
+                    setupCategoryButton(cmd, evt, "Underwear", AttachmentsRegistry.CosmeticSlot.Underwears);
+                    setupCategoryButton(cmd, evt, "Face", AttachmentsRegistry.CharacterSlot.Faces);
+                    setupCategoryButton(cmd, evt, "Mouth", AttachmentsRegistry.CharacterSlot.Mouths);
+                    setupCategoryButton(cmd, evt, "Ears", AttachmentsRegistry.CharacterSlot.Ears);
+                }
+                case Torso -> {
+                    setupCategoryButton(cmd, evt, "Undertops", AttachmentsRegistry.CosmeticSlot.Undertops);
+                    setupCategoryButton(cmd, evt, "Overtops", AttachmentsRegistry.CosmeticSlot.Overtops);
+                    setupCategoryButton(cmd, evt, "Gloves", AttachmentsRegistry.CosmeticSlot.Gloves);
+                }
+                case Legs -> {
+                    setupCategoryButton(cmd, evt, "Pants", AttachmentsRegistry.CosmeticSlot.Pants);
+                    setupCategoryButton(cmd, evt, "Overpants", AttachmentsRegistry.CosmeticSlot.Overpants);
+                    setupCategoryButton(cmd, evt, "Shoes", AttachmentsRegistry.CosmeticSlot.Shoes);
+                }
+                case Capes -> {
+                    setupCategoryButton(cmd, evt, "Capes", AttachmentsRegistry.CosmeticSlot.Capes);
+                }
             }
-            
-            evt.addEventBinding(CustomUIEventBindingType.Activating, "#LeftSidePanel #Content #SideButtons #" + name + " #CategoryButton", EventData.of("Slot", slot.name()));
-            
-            if (slot != currentSlot) {
-                cmd.set("#LeftSidePanel #Content #SideButtons #" + name + " #CategoryButtonEnabled.Visible", false);
-                cmd.set("#LeftSidePanel #Content #SideButtons #" + name + " #CategoryButton.Visible", true);
-                
-                continue;
-            }
-            
-            cmd.set("#LeftSidePanel #Content #SideButtons #" + name + " #CategoryButtonEnabled.Visible", true);
-            cmd.set("#LeftSidePanel #Content #SideButtons #" + name + " #CategoryButton.Visible", false);
         }
+    }
+    
+    private void setupCategoryButton(UICommandBuilder cmd, UIEventBuilder evt, String groupName, AttachmentsRegistry.Slot slot) {
+        if (this.currentSlot == slot) {
+            cmd.set("#LSidePanel #Content #CategoryButton #" + groupName + " #CategoryButton.Visible", false);
+            cmd.set("#LSidePanel #Content #CategoryButton #" + groupName + " #CategoryButtonEnabled.Visible", true);
+        } else {
+            cmd.set("#LSidePanel #Content #CategoryButton #" + groupName + " #CategoryButton.Visible", true);
+            cmd.set("#LSidePanel #Content #CategoryButton #" + groupName + " #CategoryButtonEnabled.Visible", false);
+        }
+        
+        evt.addEventBinding(CustomUIEventBindingType.Activating, "#LSidePanel #Content #CategoryButton #" + groupName + " #CategoryButton", EventData.of("Slot", slot.name()));
     }
     
     private void buildCosmetics(Ref<EntityStore> ref, UICommandBuilder cmd, UIEventBuilder evt) {
@@ -78,7 +109,8 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             .filter(Objects::nonNull)
             .toArray(String[]::new);
         
-        int totalItems = entries.length + 1;
+        boolean showVanish = currentSlot.getType() != AttachmentsRegistry.SlotType.CHARACTER;
+        int totalItems = entries.length + (showVanish ? 1 : 0);
         
         for (int i = 0; i < totalItems; i++) {
             int rowIndex = i / itemsPerRow;
@@ -93,7 +125,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             
             String slotSelector = rowSelector + " #CosmeticSlot[" + colIndex + "]";
             
-            if (i == 0) {
+            if (showVanish && i == 0) {
                 cmd.set(slotSelector + " #Icon.AssetPath", "UI/Custom/Common/Categories/VanishPart.png");
                 
                 if (AttachmentsRegistry.get().isEmptySlot(ref, currentSlot)) {
@@ -104,7 +136,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
                 evt.addEventBinding(CustomUIEventBindingType.Activating, slotSelector + " #Button", EventData.of("CosmeticId", "No" + currentSlot.name()).append("Enabled", "false"));
                 evt.addEventBinding(CustomUIEventBindingType.Activating, slotSelector + " #ButtonEnabled", EventData.of("CosmeticId", "No" + currentSlot.name()).append("Enabled", "true"));
             } else {
-                int entryIndex = i - 1;
+                int entryIndex = showVanish ? i - 1 : i;
                 AttachmentsRegistry.Attachment entry = entries[entryIndex];
                 String cosmeticId = keys[entryIndex];
                 
@@ -125,8 +157,16 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
     public void handleDataEvent(@NonNullDecl Ref<EntityStore> ref, @NonNullDecl Store<EntityStore> store, @NonNullDecl Data data) {
         super.handleDataEvent(ref, store, data);
         
+        if(data.tlt != null) {
+            this.tlt = AttachmentsRegistry.TopLevelTypes.valueOf(data.tlt);
+            this.sendUpdate();
+            this.rebuild();
+            
+            return;
+        }
+        
         if (data.slot != null) {
-            this.currentSlot = AttachmentsRegistry.CosmeticSlot.valueOf(data.slot);
+            this.currentSlot = AttachmentsRegistry.Slot.valueOf(data.slot);
             this.sendUpdate();
             this.rebuild();
             
@@ -154,12 +194,16 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         
         private String slot;
         
+        private String tlt;
+        
         public static final BuilderCodec<Data> CODEC = BuilderCodec.builder(Data.class, Data::new)
             .append(new KeyedCodec<>("CosmeticId", BuilderCodec.STRING), (data, value) -> data.cosmeticId = value, (data) -> data.cosmeticId)
             .add()
             .append(new KeyedCodec<>("Enabled", BuilderCodec.STRING), (data, value) -> data.enabled = value, (data) -> data.enabled)
             .add()
             .append(new KeyedCodec<>("Slot", BuilderCodec.STRING), (data, value) -> data.slot = value, (data) -> data.slot)
+            .add()
+            .append(new KeyedCodec<>("TLT", BuilderCodec.STRING), (data, value) -> data.tlt = value, (data) -> data.tlt)
             .add()
             .build();
     }

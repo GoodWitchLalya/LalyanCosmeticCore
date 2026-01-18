@@ -1,0 +1,202 @@
+$C = "../../../Common.ui";
+$Sounds = "../../../Sounds.ui";
+
+Group {
+    LayoutMode: Top;
+
+    Group #Underwear {
+        Anchor: (Top: 0);
+        Padding: (Bottom: 10);
+
+        Group {
+            AssetImage #Image {
+                Anchor: (Width: 64, Height: 64);
+                AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+            }
+        }
+
+        Button #CategoryButton {
+            Visible: true;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Underwear.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Selected/Underwear.png"
+                )
+            );
+        }
+
+        Button #CategoryButtonEnabled {
+            Visible: false;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Selected/Underwear.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Underwear.png"
+                )
+            );
+        }
+    }
+
+    Group #BodyCharacteristics {
+        Padding: (Bottom: 10);
+
+        Group {
+            AssetImage #Image {
+                Anchor: (Width: 64, Height: 64);
+                AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+            }
+        }
+
+        Button #CategoryButton {
+            Visible: true;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/BodyCharacteristics.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Selected/BodyCharacteristics.png"
+                )
+            );
+        }
+
+        Button #CategoryButtonEnabled {
+            Visible: false;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Selected/BodyCharacteristics.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/BodyCharacteristics.png"
+                )
+            );
+        }
+    }
+
+    Group #Face {
+        Padding: (Bottom: 10);
+
+        Group {
+            AssetImage #Image {
+                Anchor: (Width: 64, Height: 64);
+                AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+            }
+        }
+
+        Button #CategoryButton {
+            Visible: true;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Face.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Selected/Face.png"
+                )
+            );
+        }
+
+        Button #CategoryButtonEnabled {
+            Visible: false;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Selected/Face.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Face.png"
+                )
+            );
+        }
+    }
+
+    Group #Mouth {
+        Padding: (Bottom: 10);
+
+        Group {
+            AssetImage #Image {
+                Anchor: (Width: 64, Height: 64);
+                AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+            }
+        }
+
+        Button #CategoryButton {
+            Visible: true;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Mouth.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Selected/Mouth.png"
+                )
+            );
+        }
+
+        Button #CategoryButtonEnabled {
+            Visible: false;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Selected/Mouth.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Mouth.png"
+                )
+            );
+        }
+    }
+
+    Group #Ears {
+        Padding: (Bottom: 10);
+
+        Group {
+            AssetImage #Image {
+                Anchor: (Width: 64, Height: 64);
+                AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
+            }
+        }
+
+        Button #CategoryButton {
+            Visible: true;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Ears.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Selected/Ears.png"
+                )
+            );
+        }
+
+        Button #CategoryButtonEnabled {
+            Visible: false;
+            Anchor: (Width: 64, Height: 64);
+            Style: (
+                Sounds: $Sounds.@ButtonsLight,
+                Default: (
+                    Background: "../../../Common/Categories/Categories/Selected/Ears.png"
+                ),
+                Hovered: (
+                    Background: "../../../Common/Categories/Categories/Ears.png"
+                )
+            );
+        }
+    }
+}

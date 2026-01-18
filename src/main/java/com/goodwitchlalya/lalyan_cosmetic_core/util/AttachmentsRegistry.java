@@ -24,6 +24,8 @@ public class AttachmentsRegistry {
     
     private final Map<String, Attachment> attachmentsRegistry = new HashMap<>();
     
+    public enum TopLevelTypes {Head, General, Torso, Legs, Capes}
+    
     public enum SlotType {CHARACTER, COSMETIC}
     
     public interface Slot {
