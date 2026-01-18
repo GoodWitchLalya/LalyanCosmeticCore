@@ -142,7 +142,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         }
         
         AttachmentsRegistry.get().clearSlot(ref, currentSlot);
-        AttachmentsRegistry.get().addCosmetic(ref, data.cosmeticId);
+        AttachmentsRegistry.get().addCosmetic(ref, data.cosmeticId, true);
         
         this.sendUpdate();
         this.rebuild();

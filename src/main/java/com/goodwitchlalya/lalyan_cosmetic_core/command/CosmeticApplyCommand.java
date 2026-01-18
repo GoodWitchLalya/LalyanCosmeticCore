@@ -22,7 +22,6 @@ public class CosmeticApplyCommand extends AbstractPlayerCommand {
     private final Universe universe = Universe.get();
     private RequiredArg<String> cosmeticName;
     private OptionalArg<String> override;
-    private boolean overrideBool;
     
     public CosmeticApplyCommand() {
         super("apply", "Manually applies a cosmetic");
@@ -34,10 +33,10 @@ public class CosmeticApplyCommand extends AbstractPlayerCommand {
     
     @Override
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
-        this.overrideBool = (override.get(commandContext) == null) || !override.get(commandContext).equals("no");
+        boolean overrideBool = (override.get(commandContext) == null) || !override.get(commandContext).equals("no");
         
         universe.getWorld(playerRef.getWorldUuid()).execute(() -> {
-            AttachmentsRegistry.get().applyChanges(ref, Map.of(cosmeticName.get(commandContext), overrideBool));
+            AttachmentsRegistry.get().addCosmetic(ref, cosmeticName.get(commandContext), overrideBool);
         });
     }
     

@@ -43,7 +43,7 @@ public class CosmeticCore extends JavaPlugin {
         getCodecRegistry(Interaction.CODEC).register("LCC_OpenCosmetics", OpenCosmeticPageInteraction.class, OpenCosmeticPageInteraction.CODEC);
         
         getEventRegistry().registerGlobal(PlayerReadyEvent.class, event -> {
-            AttachmentsRegistry.get().applyChanges(event.getPlayerRef());
+            AttachmentsRegistry.get().rebuildSkinWithCosmetics(event.getPlayerRef());
         });
         
         FileManager.wakeUp();

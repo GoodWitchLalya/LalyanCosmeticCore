@@ -24,7 +24,7 @@ public class CosmeticResetCommand extends AbstractPlayerCommand {
     @Override
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
         universe.getWorld(playerRef.getWorldUuid()).execute(() -> {
-            AttachmentsRegistry.get().applyChanges(ref);
+            AttachmentsRegistry.get().clearCosmetics(ref);
         });
     }
     
