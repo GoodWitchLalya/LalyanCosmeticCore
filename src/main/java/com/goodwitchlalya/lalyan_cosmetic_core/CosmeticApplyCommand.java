@@ -16,7 +16,6 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * This is an example command that will simply print the name of the plugin in chat when used.
@@ -47,7 +46,7 @@ public class CosmeticApplyCommand extends AbstractPlayerCommand {
         
         universe.getWorld(playerRef.getWorldUuid()).execute(() -> {
             
-            AttachmentsRegistry.applyChanges(ref, Map.of((String) cosmeticName.get(commandContext), overrideBool));
+            AttachmentsRegistry.get().applyChanges(ref, Map.of(cosmeticName.get(commandContext), overrideBool));
             
         });
     }

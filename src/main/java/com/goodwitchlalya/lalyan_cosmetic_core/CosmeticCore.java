@@ -2,6 +2,7 @@ package com.goodwitchlalya.lalyan_cosmetic_core;
 
 import com.goodwitchlalya.lalyan_cosmetic_core.Util.AttachmentsRegistry;
 import com.goodwitchlalya.lalyan_cosmetic_core.Util.FileManager;
+import com.goodwitchlalya.lalyan_cosmetic_core.component.CosmeticData;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.command.system.CommandManager;
 import com.hypixel.hytale.server.core.console.ConsoleSender;
@@ -40,17 +41,34 @@ public class CosmeticCore extends JavaPlugin {
 
     @Override
     protected void setup() {
-        LOGGER.atInfo().log("Setting up plugin " + this.getName());
+        CosmeticData.INSTANCE = getEntityStoreRegistry().registerComponent(CosmeticData.class, "CCL_CosmeticData", CosmeticData.CODEC);
+        
+        this.getCommandRegistry().registerCommand(new OpenCosmeticPage());
         this.getCommandRegistry().registerCommand(new CosmeticCommand(this.getName(), this.getManifest().getVersion().toString()));
         
-        FileManager.wakeUp();
-        
-        getEventRegistry().registerGlobal(PlayerReadyEvent.class, (event) -> {
-        
-            
-            
+        getEventRegistry().registerGlobal(PlayerReadyEvent.class, event -> {
+            AttachmentsRegistry.get().applyChanges(event.getPlayerRef());
         });
         
+        /*AttachmentsRegistry.get().register("Alien_Antenna", AttachmentsRegistry.CosmeticSlot.Head);
+        AttachmentsRegistry.get().register("Beanie_Cactee", AttachmentsRegistry.CosmeticSlot.Head);
+        AttachmentsRegistry.get().register("Bee_Antenna", AttachmentsRegistry.CosmeticSlot.Head);
+        AttachmentsRegistry.get().register("Hat_Chippy", AttachmentsRegistry.CosmeticSlot.Head);
+        AttachmentsRegistry.get().register("Headband_Littlewood", AttachmentsRegistry.CosmeticSlot.Head);
+        AttachmentsRegistry.get().register("Headband_Paige", AttachmentsRegistry.CosmeticSlot.Head);
+        AttachmentsRegistry.get().register("Kweebec_Mask", AttachmentsRegistry.CosmeticSlot.Head);
+        AttachmentsRegistry.get().register("Kweebec_Mask_Straw", AttachmentsRegistry.CosmeticSlot.Head);
+        AttachmentsRegistry.get().register("Scarak_Defender_Mask", AttachmentsRegistry.CosmeticSlot.Head);
+        AttachmentsRegistry.get().register("Slothian_Mask", AttachmentsRegistry.CosmeticSlot.Head);
+        
+        AttachmentsRegistry.get().register("Cloak_Chippy", AttachmentsRegistry.CosmeticSlot.Capes);
+        
+        AttachmentsRegistry.get().register("Jacket_Racing", AttachmentsRegistry.CosmeticSlot.Overtops);
+        AttachmentsRegistry.get().register("Jacket_Violet", AttachmentsRegistry.CosmeticSlot.Overtops);
+        AttachmentsRegistry.get().register("Overalls", AttachmentsRegistry.CosmeticSlot.Overtops);
+        AttachmentsRegistry.get().register("Sweater", AttachmentsRegistry.CosmeticSlot.Overtops);*/
+        
+        FileManager.wakeUp();
     }
 
     @Override
