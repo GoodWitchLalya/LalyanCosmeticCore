@@ -39,18 +39,18 @@ public class FileManager {
             CosmeticCore.log(s);
             r.add(s + "\n");
             
-            try {// FALLO ANCHE PER IL CHARACTERS
-                if (!Files.exists(assetPack.getFileSystem().getPath("Common/Resources/Cosmetics"))) return;
-                Files.list(assetPack.getFileSystem().getPath("Common/Resources/Cosmetics")).filter(Files::isDirectory).forEach(folder -> {
+            try {// Characters
+                if (!Files.exists(assetPack.getFileSystem().getPath("Common/Resources/Characters"))) return;
+                Files.list(assetPack.getFileSystem().getPath("Common/Resources/Characters")).filter(Files::isDirectory).forEach(folder -> {
                     String folderName = folder.getFileName().toString();
                     
                     try {
-                        AttachmentsRegistry.CosmeticSlot slot = AttachmentsRegistry.CosmeticSlot.valueOf(folderName);
-                        r.add(String.format("The folder %s is valid for CosmeticSlot.%s", folderName, slot.name()));
+                        AttachmentsRegistry.CharacterSlot slot = AttachmentsRegistry.CharacterSlot.valueOf(folderName);
+                        r.add(String.format("The folder %s is valid for CharacterSlot.%s", folderName, slot.name()));
                         
                         /* This is a folder that is valid as a slot folder */
-                        try (Stream<Path> cosmeticItems = Files.list(folder)) {
-                            cosmeticItems
+                        try (Stream<Path> CharacterItems = Files.list(folder)) {
+                            CharacterItems
                                 .filter(Files::isDirectory)
                                 .forEach(itemFolder -> {
                                     boolean isNotEmpty = false;
@@ -62,14 +62,56 @@ public class FileManager {
                                     
                                     if (isNotEmpty) {
                                         /* The folder has cosmetics inside */
-                                        String cosmeticName = itemFolder.getFileName().toString();
+                                        String characterName = itemFolder.getFileName().toString();
                                         /*
                                          * Devi controllare che ci siano effettivamente i files corretti dentro la directory
                                          */
                                         
-                                        AttachmentsRegistry.get().register(cosmeticName, slot);
+                                        AttachmentsRegistry.get().register(characterName, slot);
                                     }
                                 });
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    } catch (IllegalArgumentException e) {
+                        r.add(String.format("The folder %s isn't valid", folderName));
+                    }
+                });
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            
+            try {// Cosmetics
+                if (!Files.exists(assetPack.getFileSystem().getPath("Common/Resources/Cosmetics"))) return;
+                Files.list(assetPack.getFileSystem().getPath("Common/Resources/Cosmetics")).filter(Files::isDirectory).forEach(folder -> {
+                    String folderName = folder.getFileName().toString();
+                    
+                    try {
+                        AttachmentsRegistry.CosmeticSlot slot = AttachmentsRegistry.CosmeticSlot.valueOf(folderName);
+                        r.add(String.format("The folder %s is valid for CosmeticSlot.%s", folderName, slot.name()));
+                        
+                        /* This is a folder that is valid as a slot folder */
+                        try (Stream<Path> cosmeticItems = Files.list(folder)) {
+                            cosmeticItems
+                                    .filter(Files::isDirectory)
+                                    .forEach(itemFolder -> {
+                                        boolean isNotEmpty = false;
+                                        try (Stream<Path> content = Files.list(itemFolder)) {
+                                            isNotEmpty = content.findAny().isPresent();
+                                        } catch (IOException e) {
+                                        
+                                        }
+                                        
+                                        if (isNotEmpty) {
+                                            /* The folder has cosmetics inside */
+                                            String cosmeticName = itemFolder.getFileName().toString();
+                                            /*
+                                             * Devi controllare che ci siano effettivamente i files corretti dentro la directory
+                                             */
+                                            
+                                            AttachmentsRegistry.get().register(cosmeticName, slot);
+                                        }
+                                    });
                         } catch (Exception e) {
                             throw new RuntimeException(e);
                         }
