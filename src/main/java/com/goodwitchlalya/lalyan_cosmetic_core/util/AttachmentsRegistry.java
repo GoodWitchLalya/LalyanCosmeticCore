@@ -305,6 +305,10 @@ public class AttachmentsRegistry {
         }
     }
     
+    private void restoreSkin(List<ModelAttachment> list, PlayerSkin playerSkin) {
+        restoreSkin(list, Map.of(), playerSkin);
+    }
+    
     public boolean containsChange(Ref<EntityStore> ref, String change) {
         Attachment attachment = attachmentsRegistry.getOrDefault(change, null);
         
@@ -538,6 +542,11 @@ public class AttachmentsRegistry {
         );
     }
     
+    public void applyChanges(Ref<EntityStore> ref) {
+        applyChanges(ref, Map.of());
+    }
+    
+    
     public void clearSlot(Ref<EntityStore> ref, CosmeticSlot currentSlot) {
         List<Map.Entry<String, Attachment>> attachments = attachmentsRegistry.entrySet()
             .stream()
@@ -550,11 +559,6 @@ public class AttachmentsRegistry {
             removeCosmetic(ref, attachment.getKey());
         }
     }
-    
-    public void applyChanges(Ref<EntityStore> ref) {
-        applyChanges(ref, Map.of());
-    }
-    
     public void register(String name, Slot slot) {
         String attachmentPath = "Resources/";
         
