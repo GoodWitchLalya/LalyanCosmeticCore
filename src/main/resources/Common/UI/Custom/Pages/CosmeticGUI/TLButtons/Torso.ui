@@ -11,7 +11,7 @@ Group {
 
     Button #CategoryButton {
         Visible: true;
-        Anchor: (Width: 64, Height: 64, Top: 0);
+        Anchor: (Width: 83, Height: 64, Top: 0);
         Style: (
             Sounds: $Sounds.@ButtonsLight,
             Default: (
@@ -26,7 +26,7 @@ Group {
 
     Button #CategoryButtonEnabled {
         Visible: false;
-        Anchor: (Width: 64, Height: 64, Top: 0);
+        Anchor: (Width: 83, Height: 64, Top: 0);
         Style: (
             Sounds: $Sounds.@ButtonsLight,
             Default: (

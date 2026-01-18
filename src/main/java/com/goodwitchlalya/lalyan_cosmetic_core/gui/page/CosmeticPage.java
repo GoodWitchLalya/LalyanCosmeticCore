@@ -15,9 +15,7 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
     public CosmeticPage(@NonNullDecl PlayerRef playerRef) {
@@ -26,6 +24,9 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
     
     private AttachmentsRegistry.Slot currentSlot = AttachmentsRegistry.CharacterSlot.Haircuts;
     private AttachmentsRegistry.TopLevelTypes tlt = AttachmentsRegistry.TopLevelTypes.Head;
+    
+    private String variantOriginalId;
+    private Map<String, AttachmentsRegistry.Variant> variants = new HashMap<>();
     
     @Override
     public void build(@NonNullDecl Ref<EntityStore> ref, @NonNullDecl UICommandBuilder cmd, @NonNullDecl UIEventBuilder evt, @NonNullDecl Store<EntityStore> store) {
@@ -42,7 +43,14 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             cmd.append("#LLSidePanel #Content " + selector, "Pages/CosmeticGUI/TLButtons/" + tlt.name() + ".ui");
             evt.addEventBinding(CustomUIEventBindingType.Activating, "#LLSidePanel #Content " + selector + " #CategoryButton", EventData.of("TLT", tlt.name()));
             
-            if(this.tlt != tlt) continue;
+            if (this.tlt != tlt) {
+                cmd.set("#LLSidePanel #Content " + selector + " #CategoryButton.Visible", true);
+                cmd.set("#LLSidePanel #Content " + selector + " #CategoryButtonEnabled.Visible", false);
+                continue;
+            }
+            
+            cmd.set("#LLSidePanel #Content " + selector + " #CategoryButton.Visible", false);
+            cmd.set("#LLSidePanel #Content " + selector + " #CategoryButtonEnabled.Visible", true);
             
             cmd.append("#LSidePanel #Content #CategoryButton", "Pages/CosmeticGUI/Categories/" + tlt.name() + ".ui");
             
@@ -135,6 +143,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
                 
                 evt.addEventBinding(CustomUIEventBindingType.Activating, slotSelector + " #Button", EventData.of("CosmeticId", "No" + currentSlot.name()).append("Enabled", "false"));
                 evt.addEventBinding(CustomUIEventBindingType.Activating, slotSelector + " #ButtonEnabled", EventData.of("CosmeticId", "No" + currentSlot.name()).append("Enabled", "true"));
+                cmd.set(slotSelector + " #VariantIcon.Visible", false);
             } else {
                 int entryIndex = showVanish ? i - 1 : i;
                 AttachmentsRegistry.Attachment entry = entries[entryIndex];
@@ -149,7 +158,66 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
                 
                 evt.addEventBinding(CustomUIEventBindingType.Activating, slotSelector + " #Button", EventData.of("CosmeticId", cosmeticId).append("Enabled", "false"));
                 evt.addEventBinding(CustomUIEventBindingType.Activating, slotSelector + " #ButtonEnabled", EventData.of("CosmeticId", cosmeticId).append("Enabled", "true"));
+                
+                Map<String, AttachmentsRegistry.Variant> variants = entry.data().variants();
+                
+                boolean variantLogic = variants != null && !variants.isEmpty();
+                
+                cmd.set(slotSelector + " #VariantIcon.Visible", variantLogic);
+                
+                if (!variantLogic) continue;
+                
+                evt.addEventBinding(CustomUIEventBindingType.RightClicking, slotSelector + " #Button", EventData.of("VariantId", cosmeticId));
+                evt.addEventBinding(CustomUIEventBindingType.RightClicking, slotSelector + " #ButtonEnabled", EventData.of("VariantId", cosmeticId));
             }
+        }
+        
+        if (variants == null || variants.isEmpty()) {
+            cmd.set("#RSidePanel.Visible", false);
+            return;
+        }
+        
+        cmd.set("#RSidePanel.Visible", true);
+        
+        cmd.append("#RSidePanel #Content #VariantList #VariantSlot", "Pages/CosmeticGUI/VariantSlot.ui");
+        
+        AttachmentsRegistry.Attachment original = AttachmentsRegistry.get().getAttachmentsRegistry().get(variantOriginalId);
+        
+        cmd.set("#RSidePanel #Content #VariantList #VariantSlot[0] #Icon.AssetPath", original.data().icon());
+        
+        if (AttachmentsRegistry.get().isEquipped(ref, this.variantOriginalId)) {
+            cmd.set("#RSidePanel #Content #VariantList #VariantSlot[0] #Button.Visible", false);
+            cmd.set("#RSidePanel #Content #VariantList #VariantSlot[0] #ButtonEnabled.Visible", true);
+        } else {
+            cmd.set("#RSidePanel #Content #VariantList #VariantSlot[0] #Button.Visible", true);
+            cmd.set("#RSidePanel #Content #VariantList #VariantSlot[0] #ButtonEnabled.Visible", false);
+        }
+        
+        evt.addEventBinding(CustomUIEventBindingType.Activating, "#RSidePanel #Content #VariantList #VariantSlot[0] #Button", EventData.of("CosmeticId", this.variantOriginalId).append("Enabled", "false"));
+        evt.addEventBinding(CustomUIEventBindingType.Activating, "#RSidePanel #Content #VariantList #VariantSlot[0] #ButtonEnabled", EventData.of("CosmeticId", this.variantOriginalId).append("Enabled", "true"));
+        
+        List<Map.Entry<String, AttachmentsRegistry.Variant>> usableVariants = variants.entrySet().stream().toList();
+        for (int i = 0; i < usableVariants.size(); i++) {
+            Map.Entry<String, AttachmentsRegistry.Variant> entry = usableVariants.get(i);
+            
+            String selector = "#VariantSlot[" + (i + 1) + "]";
+            
+            cmd.append("#RSidePanel #Content #VariantList #VariantSlot", "Pages/CosmeticGUI/VariantSlot.ui");
+            
+            cmd.set("#RSidePanel #Content #VariantList " + selector + " #Icon.AssetPath", entry.getValue().icon());
+            
+            String variantId = this.variantOriginalId + "$" + entry.getKey();
+            
+            if (AttachmentsRegistry.get().isEquipped(ref, variantId)) {
+                cmd.set("#RSidePanel #Content #VariantList " + selector + " #Button.Visible", false);
+                cmd.set("#RSidePanel #Content #VariantList " + selector + " #ButtonEnabled.Visible", true);
+            } else {
+                cmd.set("#RSidePanel #Content #VariantList " + selector + " #Button.Visible", true);
+                cmd.set("#RSidePanel #Content #VariantList " + selector + " #ButtonEnabled.Visible", false);
+            }
+            
+            evt.addEventBinding(CustomUIEventBindingType.Activating, "#RSidePanel #Content #VariantList " + selector + " #Button", EventData.of("CosmeticId", variantId).append("Enabled", "false"));
+            evt.addEventBinding(CustomUIEventBindingType.Activating, "#RSidePanel #Content #VariantList " + selector + " #ButtonEnabled", EventData.of("CosmeticId", variantId).append("Enabled", "true"));
         }
     }
     
@@ -157,8 +225,23 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
     public void handleDataEvent(@NonNullDecl Ref<EntityStore> ref, @NonNullDecl Store<EntityStore> store, @NonNullDecl Data data) {
         super.handleDataEvent(ref, store, data);
         
-        if(data.tlt != null) {
+        if (data.variantId != null) {
+            this.variants = new HashMap<>();
+            AttachmentsRegistry.Attachment attachment = AttachmentsRegistry.get().getAttachmentsRegistry().get(data.variantId);
+            this.variants = attachment.data().variants();
+            this.variantOriginalId = data.variantId;
+            
+            this.sendUpdate();
+            this.rebuild();
+            
+            return;
+        }
+        
+        if (data.tlt != null) {
+            this.variants = new HashMap<>();
+            this.variantOriginalId = null;
             this.tlt = AttachmentsRegistry.TopLevelTypes.valueOf(data.tlt);
+            
             this.sendUpdate();
             this.rebuild();
             
@@ -166,11 +249,23 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         }
         
         if (data.slot != null) {
+            this.variants = new HashMap<>();
+            this.variantOriginalId = null;
             this.currentSlot = AttachmentsRegistry.Slot.valueOf(data.slot);
             this.sendUpdate();
             this.rebuild();
             
             return;
+        }
+        
+        String baseId = data.cosmeticId;
+        if (baseId != null && baseId.contains("$")) {
+            baseId = baseId.split("\\$")[0];
+        }
+        
+        if (!Objects.equals(baseId, this.variantOriginalId)) {
+            this.variants = new HashMap<>();
+            this.variantOriginalId = null;
         }
         
         if (data.enabled.equals("true")) {
@@ -181,7 +276,6 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             return;
         }
         
-        AttachmentsRegistry.get().clearSlot(ref, currentSlot);
         AttachmentsRegistry.get().addCosmetic(ref, data.cosmeticId, true);
         
         this.sendUpdate();
@@ -196,6 +290,8 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         
         private String tlt;
         
+        private String variantId;
+        
         public static final BuilderCodec<Data> CODEC = BuilderCodec.builder(Data.class, Data::new)
             .append(new KeyedCodec<>("CosmeticId", BuilderCodec.STRING), (data, value) -> data.cosmeticId = value, (data) -> data.cosmeticId)
             .add()
@@ -204,6 +300,8 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             .append(new KeyedCodec<>("Slot", BuilderCodec.STRING), (data, value) -> data.slot = value, (data) -> data.slot)
             .add()
             .append(new KeyedCodec<>("TLT", BuilderCodec.STRING), (data, value) -> data.tlt = value, (data) -> data.tlt)
+            .add()
+            .append(new KeyedCodec<>("VariantId", BuilderCodec.STRING), (data, value) -> data.variantId = value, (data) -> data.variantId)
             .add()
             .build();
     }

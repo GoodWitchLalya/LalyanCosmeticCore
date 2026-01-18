@@ -3,7 +3,7 @@ $Sounds = "../../Sounds.ui";
 
 Group {
     LayoutMode: Left;
-    Anchor: (Width: 64, Height: 64, Right: 5);
+    Anchor: (Width: 64, Height: 64, Left: 0);
 
     Button #Button {
         Anchor: (Width: 64, Height: 64);
@@ -40,14 +40,6 @@ Group {
         AssetImage #Icon {
             Anchor: (Left: -56, Width: 48, Height: 48);
             AssetPath: "Icons/ItemsGenerated/Bone_Pile.png";
-        }
-    }
-
-    Group {
-        LayoutMode: Middle;
-        AssetImage #VariantIcon {
-            Anchor: (Top: 30, Left: -26, Width: 21, Height: 24);
-            AssetPath: "UI/Custom/Common/VariantIcon.png";
         }
     }
 }

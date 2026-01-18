@@ -17,7 +17,7 @@ Group {
 
         Button #CategoryButton {
             Visible: true;
-            Anchor: (Width: 64, Height: 64);
+            Anchor: (Width: 83, Height: 64);
             Style: (
                 Sounds: $Sounds.@ButtonsLight,
                 Default: (
@@ -31,7 +31,7 @@ Group {
 
         Button #CategoryButtonEnabled {
             Visible: false;
-            Anchor: (Width: 64, Height: 64);
+            Anchor: (Width: 83, Height: 64);
             Style: (
                 Sounds: $Sounds.@ButtonsLight,
                 Default: (
@@ -57,7 +57,7 @@ Group {
 
         Button #CategoryButton {
             Visible: true;
-            Anchor: (Width: 64, Height: 64);
+            Anchor: (Width: 83, Height: 64);
             Style: (
                 Sounds: $Sounds.@ButtonsLight,
                 Default: (
@@ -71,7 +71,7 @@ Group {
 
         Button #CategoryButtonEnabled {
             Visible: false;
-            Anchor: (Width: 64, Height: 64);
+            Anchor: (Width: 83, Height: 64);
             Style: (
                 Sounds: $Sounds.@ButtonsLight,
                 Default: (
@@ -97,7 +97,7 @@ Group {
 
         Button #CategoryButton {
             Visible: true;
-            Anchor: (Width: 64, Height: 64);
+            Anchor: (Width: 83, Height: 64);
             Style: (
                 Sounds: $Sounds.@ButtonsLight,
                 Default: (
@@ -111,7 +111,7 @@ Group {
 
         Button #CategoryButtonEnabled {
             Visible: false;
-            Anchor: (Width: 64, Height: 64);
+            Anchor: (Width: 83, Height: 64);
             Style: (
                 Sounds: $Sounds.@ButtonsLight,
                 Default: (

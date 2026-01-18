@@ -58,5 +58,29 @@ $C.@PageOverlay {
             }
         }
     }
+
+    $C.@Container #RSidePanel {
+        Anchor: (Width: 100, Height: 800, Right: 570);
+        Visible: false;
+
+        #Content {
+            Group {
+                Anchor: (Left: 0, Top: 0);
+                LayoutMode: Top;
+                FlexWeight: 1;
+
+                Group #VariantList {
+                    FlexWeight: 1;
+                    LayoutMode: Top;
+
+                    Group #VariantSlot {
+                        LayoutMode: TopScrolling;
+                        ScrollbarStyle: $C.@DefaultScrollbarStyle;
+
+                    }
+                }
+            }
+        }
+    }
 }
 $C.@BackButton {}

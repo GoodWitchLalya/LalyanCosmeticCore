@@ -17,7 +17,7 @@ Group {
 
         Button #CategoryButton {
             Visible: true;
-            Anchor: (Width: 64, Height: 64);
+            Anchor: (Width: 83, Height: 64);
             Style: (
                 Sounds: $Sounds.@ButtonsLight,
                 Default: (
@@ -31,7 +31,7 @@ Group {
 
         Button #CategoryButtonEnabled {
             Visible: false;
-            Anchor: (Width: 64, Height: 64);
+            Anchor: (Width: 83, Height: 64);
             Style: (
                 Sounds: $Sounds.@ButtonsLight,
                 Default: (
@@ -39,45 +39,6 @@ Group {
                 ),
                 Hovered: (
                     Background: "../../../Common/Categories/Categories/Underwear.png"
-                )
-            );
-        }
-    }
-
-    Group #BodyCharacteristics {
-        Padding: (Bottom: 10);
-
-        Group {
-            AssetImage #Image {
-                Anchor: (Width: 64, Height: 64);
-                AssetPath: "UI/Custom/Common/Categories/CategoryIconBackground.png";
-            }
-        }
-
-        Button #CategoryButton {
-            Visible: true;
-            Anchor: (Width: 64, Height: 64);
-            Style: (
-                Sounds: $Sounds.@ButtonsLight,
-                Default: (
-                    Background: "../../../Common/Categories/Categories/BodyCharacteristics.png"
-                ),
-                Hovered: (
-                    Background: "../../../Common/Categories/Categories/Selected/BodyCharacteristics.png"
-                )
-            );
-        }
-
-        Button #CategoryButtonEnabled {
-            Visible: false;
-            Anchor: (Width: 64, Height: 64);
-            Style: (
-                Sounds: $Sounds.@ButtonsLight,
-                Default: (
-                    Background: "../../../Common/Categories/Categories/Selected/BodyCharacteristics.png"
-                ),
-                Hovered: (
-                    Background: "../../../Common/Categories/Categories/BodyCharacteristics.png"
                 )
             );
         }
@@ -95,7 +56,7 @@ Group {
 
         Button #CategoryButton {
             Visible: true;
-            Anchor: (Width: 64, Height: 64);
+            Anchor: (Width: 83, Height: 64);
             Style: (
                 Sounds: $Sounds.@ButtonsLight,
                 Default: (
@@ -109,7 +70,7 @@ Group {
 
         Button #CategoryButtonEnabled {
             Visible: false;
-            Anchor: (Width: 64, Height: 64);
+            Anchor: (Width: 83, Height: 64);
             Style: (
                 Sounds: $Sounds.@ButtonsLight,
                 Default: (
@@ -134,7 +95,7 @@ Group {
 
         Button #CategoryButton {
             Visible: true;
-            Anchor: (Width: 64, Height: 64);
+            Anchor: (Width: 83, Height: 64);
             Style: (
                 Sounds: $Sounds.@ButtonsLight,
                 Default: (
@@ -148,7 +109,7 @@ Group {
 
         Button #CategoryButtonEnabled {
             Visible: false;
-            Anchor: (Width: 64, Height: 64);
+            Anchor: (Width: 83, Height: 64);
             Style: (
                 Sounds: $Sounds.@ButtonsLight,
                 Default: (
@@ -173,7 +134,7 @@ Group {
 
         Button #CategoryButton {
             Visible: true;
-            Anchor: (Width: 64, Height: 64);
+            Anchor: (Width: 83, Height: 64);
             Style: (
                 Sounds: $Sounds.@ButtonsLight,
                 Default: (
@@ -187,7 +148,7 @@ Group {
 
         Button #CategoryButtonEnabled {
             Visible: false;
-            Anchor: (Width: 64, Height: 64);
+            Anchor: (Width: 83, Height: 64);
             Style: (
                 Sounds: $Sounds.@ButtonsLight,
                 Default: (
