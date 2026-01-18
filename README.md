@@ -1,6 +1,6 @@
-# Hytale Example Plugin
+# Lalyan Cosmetic Core
 
-An example project that can build and run plugins for the game Hytale!
+An API to register and customize cosmetics without using armor slots
 
 > **⚠️ Warning: Early Access**    
 > The game Hytale is in early access, and so is this project! Features may be
@@ -8,90 +8,56 @@ An example project that can build and run plugins for the game Hytale!
 > continues.
 
 ## Introduction
-This project contains a Gradle project that can be imported into IDEA and used
-as the foundation for custom Hytale plugins. The template will add the Hytale
-server to your classpath and create a run configuration that can be used to
-run your plugin on the server. It can also be used to build a sharable JAR file
-that contains your plugin.
+This plugin allows players to customize which cosmetic they have equipped, without having to use up their armor slots
+It also allows plugin makers to create their custom cosmetics, without needing any java code!
 
-## Requirements
-Please ensure all the requirements are met before getting started.
+The plugin features a custom GUI to customize cosmetics, which can be opened by command or, in a more immersive way, by interacting with any vanilla wardrobe
 
-1. Download Hytale using the official launcher.
-2. Have Intellij IDEA installed. Community edition is fine.
-3. Download Java 25 and set it as the SDK in IDEA.
+## Registering cosmetics
 
-Currently this template only supports Windows!
+Registering a cosmetic is quite simple. You'll need to make an asset pack (obviously), and will need 3 files:
 
-## Configuring Template
-It is important to configure the project before using it as a template. Doing
-this before importing the project will help avoid running into caching issues
-later on.
+- The cosmetic's .blockymodel
+- The cosmetic's .png texture
+- The cosmetic's .png icon, which is the same icon you would use for the item!
 
-### 1: Project Name
-Set the name of the project in `settings.gradle`. This should be the name of
-your plugin. We recommend capitalizing your project name and avoiding 
-whitespace and most special characters. This will be used as the base name for
-any files produced by Gradle, like the sharable JAR file.
+These files must be name in the same way, that being Cosmetic_Id.extension
 
-### 2: Gradle Properties
-Review the properties defined in `gradle.properties`. You should change the 
-`maven_group` to match your project. You should also change the `version`
-property before making a new release, or set up CI/CD to automate it.
+Each cosmetic will be its own folder, with this structure
 
-### 3: Manifest
-The manifest file provides important information about your plugin to Hytale.
-You should update every property in this file to reflect your project. The 
-most important property to set is `Main` which tells the game which class
-file to load as the entry point for your plugin. The file can be found at 
-`src/main/resources/manifest.json`.
-
-**This template has configured Gradle to automatically update the `Version` and
-`IncludesAssetPack` property to reflect your Gradle properties every time you 
-run the game in development, or build the plugin. This is a workaround to allow
-the in-game asset editor to be used when working on your project.**
-
-## Importing into IDEA
-When opening the project in IDEA it should automatically create the
-`HytaleServer` run configuration and a `./run` folder. When you run the game it
-will generate all the relevant files in there. It will also load the default 
-assets from the games.
-
-**If you do not see the `HytaleServer` run configuration, you may need to open
-the dropdown or click `Edit Configurations...` once to unhide it.**
-
-## Connecting to Server
-Once the server is running in IDEA you should be able to connect to 
-`Local Server` using your standard Hytale client. If the server does not show
-up automatically, add the IP as `127.0.0.1` manually.
-
-### You MUST authenticate your test server!
-In order to connect to the test server, you must authenticate it with Hytale.
-This is done by running the `auth login device` command in the server terminal.
-This command will print a URL that you can use to authenticate the server using
-your Hytale account. Once authenticated, you can run the 
-`auth persistence Encrypted` command to keep your server authenticated after 
-restarting it. 
-
-**Never share your encrypted auth file!**
-
-If you are unable to run commands from the IDEA terminal, you can also run the 
-command from code like this. Make sure to remove the code after your server is
-authenticated.
-
-```java
-    @Override
-    protected void start() {
-        CommandManager.get().handleCommand(ConsoleSender.INSTANCE, "auth login device");
-    }
+```
+Custom_Id/
+├── Custom_Id.blockymodel
+├── Custom_Id.png
+└── Icon/
+    └── Custom_Id.png
 ```
 
+Then the cosmetic will go in a certain folder, depending on the type:
 
-## Verifying The Example Plugin
-You can verify the Example plugin has loaded by running the `/test` command 
-in game. It will print the name and version of your plugin. This is for 
-demonstration purposes, and should **NOT** be included in your final build.
+The base path is `Common/Resources/Cosmetics`, then the folder based on the slot, which can be:
+- `Capes`
+- `Ears_Accessories`
+- `Face_Accessories`
+- `Gloves`
+- `Head`
+- `Overpants`
+- `Overtops`
+- `Pants`
+- `Shoes`
+- `Undertops`
+- `Underwears`
 
-The example plugin also includes a recipe defined by an asset pack. This recipe
-allows you to craft 10 dirt into 1 dirt using the crafting window. This is also
-an example and should not be removed before you release the plugin.
+Then the folder you made before.
+
+So, for a cosmetic called Custom_Cape, which is in the cape slot it would be like this:
+
+`Common/Resources/Cosmetics/Capes/Custom_Cape` and inside the Custom_Cape folder:
+
+```
+Custom_Cape/
+├── Custom_Cape.blockymodel
+├── Custom_Cape.png
+└── Icon/
+    └── Custom_Cape.png
+```
