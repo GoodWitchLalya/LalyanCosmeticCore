@@ -1,7 +1,7 @@
 {
     "Group": "GoodWitchLalya",
     "Name": "Lalyan Cosmetic Core",
-    "Version": "1.0.0",
+    "Version": "1.1.1",
     "Description": "An API to add custom cosmetics without using armor slots",
     "Authors": [
         {

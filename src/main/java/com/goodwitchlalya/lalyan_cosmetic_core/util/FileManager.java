@@ -32,8 +32,8 @@ public class FileManager {
         String result;
         
         AssetModule.get().getAssetPacks().forEach(assetPack -> {
-            if (assetPack.getName().contains("Hytale:Hytale")) return;
-            if(assetPack.getFileSystem() == null) return;
+            if (assetPack.getName().contains("Hytale:") || assetPack.getName().contains("GoodWitchLalya:LalyanCosmeticCore")) return;
+            if (assetPack.getFileSystem() == null) return;
             
             String s = String.format("Loading asset pack: %s path: (%s)", assetPack.getName(), assetPack.getPackLocation());
             CosmeticCore.log(s);
@@ -65,6 +65,7 @@ public class FileManager {
                                         /*
                                          * Devi controllare che ci siano effettivamente i files corretti dentro la directory
                                          */
+                                        
                                         AttachmentsRegistry.get().register(cosmeticName, slot);
                                     }
                                 });
