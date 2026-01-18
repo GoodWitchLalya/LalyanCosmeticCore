@@ -15,7 +15,7 @@ public class CosmeticCommand extends AbstractPlayerCommand {
     public CosmeticCommand() {
         super("cosmetic", "Does nothing. Use the subcommands!");
         this.addSubCommand(new CosmeticApplyCommand());
-        this.addSubCommand(new CosmeticResetCommand());
+        this.addSubCommand(new CosmeticClearCommand());
         this.addSubCommand(new CosmeticReloadCommand());
         this.addSubCommand(new CosmeticListCommand());
         this.addSubCommand(new CosmeticChangeCommand());
