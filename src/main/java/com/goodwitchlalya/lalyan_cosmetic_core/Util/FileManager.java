@@ -37,7 +37,7 @@ public class FileManager {
                 
                 Path path = assetPack.getPackLocation();
                 
-                try {
+                try {// FALLO ANCHE PER IL CHARACTERS
                     Files.list(assetPack.getFileSystem().getPath("Common/Resources/Cosmetics")).filter(Files::isDirectory).forEach(folder -> {
                         
                         String folderName = folder.getFileName().toString();
