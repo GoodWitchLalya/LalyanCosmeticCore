@@ -14,6 +14,8 @@ It also allows plugin makers to create their custom cosmetics, without needing a
 
 The plugin features a custom GUI to customize cosmetics, which can be opened by command or, in a more immersive way, by interacting with any vanilla wardrobe
 
+The GUI provides an easy way to select cosmetics and cosmetic variants. Left-click on a cosmetic to equip it, if the cosmetic has the variant icon, right-click it to open the variant menu!
+
 ## Commands
 
 The plugin has some commands that are mainly for testing purposes:
@@ -75,4 +77,24 @@ Custom_Cape/
 ├── Custom_Cape.png
 └── Icon/
     └── Custom_Cape.png
+```
+
+## Advanced Cosmetic
+
+Inside your cosmetic folder, you can add a `Cosmetic_Id.json` file. This file allows you customize even more your cosmetics.
+
+Within the json file, you are able to change the name and path of the model, texture and icon of your cosmetic. And that's not all, you'll also be able to define VARIANTS of your cosmetic
+
+```json
+{
+    "model": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat.blockymodel",
+    "texture": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat.png",
+    "icon": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat_Icon.png",
+    "variants": {
+        "Variant": {
+            "texture": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant.png",
+            "icon": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant_Icon.png"
+        }
+    }
+}
 ```
