@@ -1,0 +1,17 @@
+{
+    "Group": "Test",
+    "Name": "PropellerHat",
+    "Version": "0.0.1",
+    "Description": "Example Cosmetic",
+    "Authors": [
+        {
+            "Name": "GoodWitchLalya"
+        }
+    ],
+    "Website": "",
+    "ServerVersion": "*",
+    "Dependencies": {},
+    "OptionalDependencies": {},
+    "DisabledByDefault": false,
+    "IncludesAssetPack": true
+}
