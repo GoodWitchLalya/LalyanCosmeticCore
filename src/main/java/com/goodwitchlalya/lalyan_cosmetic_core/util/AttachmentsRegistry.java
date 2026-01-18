@@ -74,6 +74,9 @@ public class AttachmentsRegistry {
         return attachmentsRegistry;
     }
     
+    public record Variant(@Expose String texture, @Expose String icon) {
+    }
+    
     public static class AttachmentData {
         @Expose
         private final String model;
@@ -81,13 +84,16 @@ public class AttachmentsRegistry {
         private final String texture;
         @Expose
         private final String icon;
+        @Expose
+        private final Map<String, Variant> variants;
         
         public Slot slot;
         
-        public AttachmentData(String model, String texture, String icon) {
+        public AttachmentData(String model, String texture, String icon, Map<String, Variant> variants) {
             this.model = model;
             this.texture = texture;
             this.icon = icon;
+            this.variants = variants;
         }
         
         public String model() {
@@ -105,13 +111,29 @@ public class AttachmentsRegistry {
         public Slot slot() {
             return slot;
         }
+        
+        public Map<String, Variant> variants() {
+            return variants;
+        }
     }
     
     public record Attachment(String name, AttachmentData data) {
-        public ModelAttachment makeModel() {
+        public ModelAttachment makeModel(String variant) {
+            if(variant.isEmpty()) {
+                return new ModelAttachment(
+                    data.model(),
+                    data.texture(),
+                    "",
+                    "",
+                    1
+                );
+            }
+            
+            Variant v = data.variants.get(variant);
+            
             return new ModelAttachment(
                 data.model(),
-                data.texture(),
+                v.texture(),
                 "",
                 "",
                 1
@@ -143,14 +165,23 @@ public class AttachmentsRegistry {
                 continue;
             }
             
-            Attachment attachment = attachmentsRegistry.get(cosmetic);
+            String cosmId = cosmetic;
+            String variant = "";
+            
+            if(cosmetic.contains("$")) {
+                String[] split = cosmetic.split("\\$");
+                cosmId = split[0];
+                variant = split[1];
+            }
+            
+            Attachment attachment = attachmentsRegistry.get(cosmId);
             if (attachment == null) {
-                invalid.add(cosmetic);
+                invalid.add(cosmId);
                 continue;
             }
             
             overrides.put(attachment.data().slot(), true);
-            attachments.add(attachment.makeModel());
+            attachments.add(attachment.makeModel(variant));
         }
         
         for (String inv : invalid) {
@@ -380,6 +411,20 @@ public class AttachmentsRegistry {
         
         if (data == null) return false;
         
+        for (String cosmetic : data.getCosmetics()) {
+            if (cosmetic.equals(cosmeticId)) return true;
+            if (cosmetic.startsWith(cosmeticId + "$")) return true;
+        }
+        
+        return false;
+    }
+    
+    public boolean isEquipped(Ref<EntityStore> ref, String cosmeticId) {
+        Store<EntityStore> store = ref.getStore();
+        CosmeticData data = store.getComponent(ref, CosmeticData.INSTANCE);
+        
+        if (data == null) return false;
+        
         return data.getCosmetics().contains(cosmeticId);
     }
     
@@ -389,18 +434,36 @@ public class AttachmentsRegistry {
         
         if (data == null) return;
         
-        data.removeCosmetic(cosmeticId);
+        List<String> toRemove = new ArrayList<>();
+        
+        for (String cosmetic : data.getCosmetics()) {
+            if (cosmetic.equals(cosmeticId) || cosmetic.startsWith(cosmeticId + "$")) {
+                toRemove.add(cosmetic);
+            }
+        }
+        
+        for (String s : toRemove) {
+            data.removeCosmetic(s);
+        }
+        
         rebuildSkinWithCosmetics(ref);
     }
     
     public void addCosmetic(Ref<EntityStore> ref, String cosmeticId, boolean override) {
+        String cosmId = cosmeticId;
+        
+        if(cosmeticId.contains("$")) {
+            String[] split = cosmeticId.split("\\$");
+            cosmId = split[0];
+        }
+        
         Store<EntityStore> store = ref.getStore();
         CosmeticData data = store.getComponent(ref, CosmeticData.INSTANCE);
         
         if (data == null) return;
         
         if (override) {
-            clearSlot(ref, cosmeticId);
+            clearSlot(ref, cosmId);
         }
         
         data.addCosmetic(cosmeticId);
@@ -408,7 +471,13 @@ public class AttachmentsRegistry {
     }
     
     public void clearSlot(Ref<EntityStore> ref, String cosmeticId) {
-        Attachment attachment = attachmentsRegistry.get(cosmeticId);
+        String id = cosmeticId;
+        
+        if (id.contains("$")) {
+            id = id.split("\\$")[0];
+        }
+        
+        Attachment attachment = attachmentsRegistry.get(id);
         
         if (attachment == null) return;
         if (attachment.data().slot().getType() != SlotType.COSMETIC) return;
@@ -425,14 +494,23 @@ public class AttachmentsRegistry {
         List<String> toRemove = new ArrayList<>();
         
         for (String cosmetic : data.getCosmetics()) {
-            if (cosmetic.contains("No" + slot.name())) {
+            if (cosmetic.equals("No" + slot.name())) {
                 toRemove.add(cosmetic);
                 continue;
             }
             
-            Attachment attachment = attachmentsRegistry.get(cosmetic);
+            String id = cosmetic;
+            if (id.contains("$")) {
+                id = id.split("\\$")[0];
+            }
+            
+            Attachment attachment = attachmentsRegistry.get(id);
             
             if (attachment == null) {
+                if (cosmetic.startsWith("No")) {
+                    continue;
+                }
+                
                 toRemove.add(cosmetic);
                 continue;
             }
@@ -477,7 +555,7 @@ public class AttachmentsRegistry {
         
         attachmentPath += String.format("%s/%s", slot, name);
         
-        AttachmentData attData = new AttachmentData(String.format("%s/%s.blockymodel", attachmentPath, name), String.format("%s/%s.png", attachmentPath, name), String.format("%s/Icon/%s.png", attachmentPath, name));
+        AttachmentData attData = new AttachmentData(String.format("%s/%s.blockymodel", attachmentPath, name), String.format("%s/%s.png", attachmentPath, name), String.format("%s/Icon/%s.png", attachmentPath, name), Map.of());
         attData.slot = slot;
         
         register(name, attData);
