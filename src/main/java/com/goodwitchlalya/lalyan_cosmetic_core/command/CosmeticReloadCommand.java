@@ -1,7 +1,6 @@
-package com.goodwitchlalya.lalyan_cosmetic_core;
+package com.goodwitchlalya.lalyan_cosmetic_core.command;
 
-import com.goodwitchlalya.lalyan_cosmetic_core.Util.AttachmentsRegistry;
-import com.goodwitchlalya.lalyan_cosmetic_core.Util.FileManager;
+import com.goodwitchlalya.lalyan_cosmetic_core.util.FileManager;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.GameMode;
@@ -17,22 +16,21 @@ import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 /**
  * This is an example command that will simply print the name of the plugin in chat when used.
  */
-public class CosmeticListCommand extends AbstractPlayerCommand {
+public class CosmeticReloadCommand extends AbstractPlayerCommand {
     
     private final Universe universe = Universe.get();
     
-    public CosmeticListCommand() {
-        super("list", "");
+    public CosmeticReloadCommand() {
+        super("reload", "");
         this.setPermissionGroup(GameMode.Adventure); // Allows the command to be used by anyone, not just OP
     }
     
     @Override
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
         universe.getWorld(playerRef.getWorldUuid()).execute(() -> {
-            commandContext.sendMessage(Message.raw("Cosmetics:"));
-            AttachmentsRegistry.get().getAttachmentsList().forEach(attachment -> {
-                commandContext.sendMessage(Message.raw(String.format("- %s", attachment)));
-            });
+            
+            commandContext.sendMessage(Message.raw(FileManager.wakeUp()));
+            
         });
     }
     

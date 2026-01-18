@@ -1,12 +1,16 @@
 package com.goodwitchlalya.lalyan_cosmetic_core;
 
-import com.goodwitchlalya.lalyan_cosmetic_core.Util.AttachmentsRegistry;
-import com.goodwitchlalya.lalyan_cosmetic_core.Util.FileManager;
+import com.goodwitchlalya.lalyan_cosmetic_core.interaction.OpenCosmeticPageInteraction;
+import com.goodwitchlalya.lalyan_cosmetic_core.util.AttachmentsRegistry;
+import com.goodwitchlalya.lalyan_cosmetic_core.util.FileManager;
+import com.goodwitchlalya.lalyan_cosmetic_core.command.CosmeticCommand;
 import com.goodwitchlalya.lalyan_cosmetic_core.component.CosmeticData;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.command.system.CommandManager;
 import com.hypixel.hytale.server.core.console.ConsoleSender;
+import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
+import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.Universe;
@@ -43,30 +47,13 @@ public class CosmeticCore extends JavaPlugin {
     protected void setup() {
         CosmeticData.INSTANCE = getEntityStoreRegistry().registerComponent(CosmeticData.class, "CCL_CosmeticData", CosmeticData.CODEC);
         
-        this.getCommandRegistry().registerCommand(new OpenCosmeticPage());
         this.getCommandRegistry().registerCommand(new CosmeticCommand(this.getName(), this.getManifest().getVersion().toString()));
+        
+        getCodecRegistry(Interaction.CODEC).register("LCC_OpenCosmetics", OpenCosmeticPageInteraction.class, OpenCosmeticPageInteraction.CODEC);
         
         getEventRegistry().registerGlobal(PlayerReadyEvent.class, event -> {
             AttachmentsRegistry.get().applyChanges(event.getPlayerRef());
         });
-        
-        /*AttachmentsRegistry.get().register("Alien_Antenna", AttachmentsRegistry.CosmeticSlot.Head);
-        AttachmentsRegistry.get().register("Beanie_Cactee", AttachmentsRegistry.CosmeticSlot.Head);
-        AttachmentsRegistry.get().register("Bee_Antenna", AttachmentsRegistry.CosmeticSlot.Head);
-        AttachmentsRegistry.get().register("Hat_Chippy", AttachmentsRegistry.CosmeticSlot.Head);
-        AttachmentsRegistry.get().register("Headband_Littlewood", AttachmentsRegistry.CosmeticSlot.Head);
-        AttachmentsRegistry.get().register("Headband_Paige", AttachmentsRegistry.CosmeticSlot.Head);
-        AttachmentsRegistry.get().register("Kweebec_Mask", AttachmentsRegistry.CosmeticSlot.Head);
-        AttachmentsRegistry.get().register("Kweebec_Mask_Straw", AttachmentsRegistry.CosmeticSlot.Head);
-        AttachmentsRegistry.get().register("Scarak_Defender_Mask", AttachmentsRegistry.CosmeticSlot.Head);
-        AttachmentsRegistry.get().register("Slothian_Mask", AttachmentsRegistry.CosmeticSlot.Head);
-        
-        AttachmentsRegistry.get().register("Cloak_Chippy", AttachmentsRegistry.CosmeticSlot.Capes);
-        
-        AttachmentsRegistry.get().register("Jacket_Racing", AttachmentsRegistry.CosmeticSlot.Overtops);
-        AttachmentsRegistry.get().register("Jacket_Violet", AttachmentsRegistry.CosmeticSlot.Overtops);
-        AttachmentsRegistry.get().register("Overalls", AttachmentsRegistry.CosmeticSlot.Overtops);
-        AttachmentsRegistry.get().register("Sweater", AttachmentsRegistry.CosmeticSlot.Overtops);*/
         
         FileManager.wakeUp();
     }

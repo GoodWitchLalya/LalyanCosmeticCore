@@ -1,6 +1,6 @@
 package com.goodwitchlalya.lalyan_cosmetic_core.gui.page;
 
-import com.goodwitchlalya.lalyan_cosmetic_core.Util.AttachmentsRegistry;
+import com.goodwitchlalya.lalyan_cosmetic_core.util.AttachmentsRegistry;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.Ref;

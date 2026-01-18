@@ -1,4 +1,4 @@
-package com.goodwitchlalya.lalyan_cosmetic_core.Util;
+package com.goodwitchlalya.lalyan_cosmetic_core.util;
 
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAttachment;
 import com.hypixel.hytale.server.core.cosmetics.PlayerSkinPart;

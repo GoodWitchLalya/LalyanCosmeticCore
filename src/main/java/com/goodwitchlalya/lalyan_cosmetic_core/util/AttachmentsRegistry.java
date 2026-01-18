@@ -1,4 +1,4 @@
-package com.goodwitchlalya.lalyan_cosmetic_core.Util;
+package com.goodwitchlalya.lalyan_cosmetic_core.util;
 
 import com.goodwitchlalya.lalyan_cosmetic_core.CosmeticCore;
 import com.goodwitchlalya.lalyan_cosmetic_core.component.CosmeticData;
