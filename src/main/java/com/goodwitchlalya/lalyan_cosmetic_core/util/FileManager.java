@@ -40,6 +40,7 @@ public class FileManager {
             r.add(s + "\n");
             
             try {// FALLO ANCHE PER IL CHARACTERS
+                if (!Files.exists(assetPack.getFileSystem().getPath("Common/Resources/Cosmetics"))) return;
                 Files.list(assetPack.getFileSystem().getPath("Common/Resources/Cosmetics")).filter(Files::isDirectory).forEach(folder -> {
                     String folderName = folder.getFileName().toString();
                     
