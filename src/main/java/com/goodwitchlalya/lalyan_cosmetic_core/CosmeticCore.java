@@ -1,6 +1,7 @@
 package com.goodwitchlalya.lalyan_cosmetic_core;
 
 import com.goodwitchlalya.lalyan_cosmetic_core.Util.AttachmentsRegistry;
+import com.goodwitchlalya.lalyan_cosmetic_core.Util.FileManager;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.command.system.CommandManager;
 import com.hypixel.hytale.server.core.console.ConsoleSender;
@@ -14,9 +15,6 @@ import javax.annotation.Nonnull;
 /**
  * This class serves as the entrypoint for your plugin. Use the setup method to register into game registries or add
  * event listeners.
- *
- * AssetPackRegisterEvent
- *
  */
 public class CosmeticCore extends JavaPlugin {
 
@@ -45,12 +43,14 @@ public class CosmeticCore extends JavaPlugin {
         LOGGER.atInfo().log("Setting up plugin " + this.getName());
         this.getCommandRegistry().registerCommand(new CosmeticCommand(this.getName(), this.getManifest().getVersion().toString()));
         
+        FileManager.wakeUp();
+        
         getEventRegistry().registerGlobal(PlayerReadyEvent.class, (event) -> {
-            /* Adding custom attachments */
-            AttachmentsRegistry.register("Alien_Antenna", AttachmentsRegistry.CosmeticSlot.Head);
+        
             
             
         });
+        
     }
 
     @Override

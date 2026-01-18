@@ -102,6 +102,7 @@ public class AttachmentsRegistry {
             }
         });
         
+        /* Characters Slots */
         if (!overrides.get(CharacterSlot.Beards.name())) {
             if (playerSkin.facialHair != null) {
                 String[] facialHairsParts = playerSkin.facialHair.split("\\.");
@@ -364,6 +365,14 @@ public class AttachmentsRegistry {
                 String.format("%s/Icon/%s.png", attachmentPath, name)
             )
         );
+    }
+    
+    public static void clear() {
+        attachmentsRegistry.clear();
+    }
+    
+    public static List<String> getAttachmentsList() {
+        return attachmentsRegistry.keySet().stream().sorted().collect(Collectors.toList());
     }
     
 }
