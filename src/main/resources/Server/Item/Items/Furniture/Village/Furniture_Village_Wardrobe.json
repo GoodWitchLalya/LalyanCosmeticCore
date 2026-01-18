@@ -1,13 +1,13 @@
 {
   "TranslationProperties": {
-    "Name": "server.items.Furniture_Crude_Wardrobe.name"
+    "Name": "server.items.Furniture_Village_Wardrobe.name"
   },
   "PlayerAnimationsId": "Block",
   "Categories": [
     "Furniture.Furniture"
   ],
-  "Set": "Furniture_Crude",
-  "Icon": "Icons/ItemsGenerated/Furniture_Crude_Wardrobe.png",
+  "Set": "Furniture_Village",
+  "Icon": "Icons/ItemsGenerated/Furniture_Village_Wardrobe.png",
   "IconProperties": {
     "Rotation": [
       22.5,
@@ -16,14 +16,14 @@
     ],
     "Scale": 0.36,
     "Translation": [
-      13.2,
-      -22.2
+      13.8,
+      -22.8
     ]
   },
   "Recipe": {
     "Input": [
       {
-        "ResourceTypeId": "Wood_Lightwood_Softwood",
+        "ResourceTypeId": "Wood_Hardwood",
         "Quantity": 4
       }
     ],
@@ -40,10 +40,10 @@
   "BlockType": {
     "BlockParticleSetId": "Wood",
     "BlockSoundSetId": "Wood",
-    "CustomModel": "Blocks/Decorative_Sets/Crude/Wardrobe.blockymodel",
+    "CustomModel": "Blocks/Decorative_Sets/Village/Wardrobe.blockymodel",
     "CustomModelTexture": [
       {
-        "Texture": "Blocks/Decorative_Sets/Crude/Wardrobe_Texture.png",
+        "Texture": "Blocks/Decorative_Sets/Village/Wardrobe_Texture.png",
         "Weight": 1
       }
     ],
@@ -58,7 +58,7 @@
     },
     "HitboxType": "Wardrobe",
     "Material": "Solid",
-    "ParticleColor": "#63412c",
+    "ParticleColor": "#5b3222",
     "Support": {
       "Down": [
         {
@@ -85,7 +85,7 @@
       "Furniture"
     ],
     "Family": [
-      "Crude"
+      "Village"
     ]
   },
   "Scale": 0.8,

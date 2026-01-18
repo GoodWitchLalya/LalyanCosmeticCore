@@ -1,13 +1,12 @@
 {
   "TranslationProperties": {
-    "Name": "server.items.Furniture_Crude_Wardrobe.name"
+    "Name": "server.items.Furniture_Temple_Emerald_Wardrobe.name"
   },
   "PlayerAnimationsId": "Block",
   "Categories": [
     "Furniture.Furniture"
   ],
-  "Set": "Furniture_Crude",
-  "Icon": "Icons/ItemsGenerated/Furniture_Crude_Wardrobe.png",
+  "Set": "Furniture_Temple_Light",
   "IconProperties": {
     "Rotation": [
       22.5,
@@ -17,13 +16,13 @@
     "Scale": 0.36,
     "Translation": [
       13.2,
-      -22.2
+      -23.4
     ]
   },
   "Recipe": {
     "Input": [
       {
-        "ResourceTypeId": "Wood_Lightwood_Softwood",
+        "ResourceTypeId": "Rock_Quartzite",
         "Quantity": 4
       }
     ],
@@ -38,12 +37,12 @@
     ]
   },
   "BlockType": {
-    "BlockParticleSetId": "Wood",
-    "BlockSoundSetId": "Wood",
-    "CustomModel": "Blocks/Decorative_Sets/Crude/Wardrobe.blockymodel",
+    "BlockParticleSetId": "Stone",
+    "BlockSoundSetId": "Stone",
+    "CustomModel": "Blocks/Decorative_Sets/Temple_Emerald/Wardrobe.blockymodel",
     "CustomModelTexture": [
       {
-        "Texture": "Blocks/Decorative_Sets/Crude/Wardrobe_Texture.png",
+        "Texture": "Blocks/Decorative_Sets/Temple_Emerald/Wardrobe_Texture.png",
         "Weight": 1
       }
     ],
@@ -53,12 +52,11 @@
     },
     "Gathering": {
       "Breaking": {
-        "GatherType": "Woods"
+        "GatherType": "Rocks"
       }
     },
     "HitboxType": "Wardrobe",
     "Material": "Solid",
-    "ParticleColor": "#63412c",
     "Support": {
       "Down": [
         {
@@ -67,27 +65,21 @@
       ]
     },
     "VariantRotation": "NESW",
+    "ParticleColor": "#9c9766",
     "Interactions": {
       "Primary": "Break_Container",
       "Use": "LCC_OpenWardrobe"
     }
   },
-  "ResourceTypes": [
-    {
-      "Id": "Fuel"
-    },
-    {
-      "Id": "Charcoal"
-    }
-  ],
+  "Icon": "Icons/ItemsGenerated/Furniture_Temple_Emerald_Wardrobe.png",
   "Tags": {
     "Type": [
       "Furniture"
     ],
     "Family": [
-      "Crude"
+      "Temple"
     ]
   },
   "Scale": 0.8,
-  "ItemSoundSetId": "ISS_Blocks_Wood"
+  "ItemSoundSetId": "ISS_Blocks_Stone"
 }

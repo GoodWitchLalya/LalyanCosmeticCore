@@ -1,13 +1,13 @@
 {
   "TranslationProperties": {
-    "Name": "server.items.Furniture_Crude_Wardrobe.name"
+    "Name": "server.items.Furniture_Temple_Dark_Wardrobe.name"
   },
   "PlayerAnimationsId": "Block",
   "Categories": [
     "Furniture.Furniture"
   ],
-  "Set": "Furniture_Crude",
-  "Icon": "Icons/ItemsGenerated/Furniture_Crude_Wardrobe.png",
+  "Set": "Furniture_Temple_Dark",
+  "Icon": "Icons/ItemsGenerated/Furniture_Temple_Dark_Wardrobe.png",
   "IconProperties": {
     "Rotation": [
       22.5,
@@ -16,14 +16,14 @@
     ],
     "Scale": 0.36,
     "Translation": [
-      13.2,
-      -22.2
+      13.8,
+      -21.13
     ]
   },
   "Recipe": {
     "Input": [
       {
-        "ResourceTypeId": "Wood_Lightwood_Softwood",
+        "ResourceTypeId": "Rock_Shale",
         "Quantity": 4
       }
     ],
@@ -38,12 +38,12 @@
     ]
   },
   "BlockType": {
-    "BlockParticleSetId": "Wood",
-    "BlockSoundSetId": "Wood",
-    "CustomModel": "Blocks/Decorative_Sets/Crude/Wardrobe.blockymodel",
+    "BlockParticleSetId": "Dust",
+    "BlockSoundSetId": "Stone",
+    "CustomModel": "Blocks/Decorative_Sets/Temple_Dark/Wardrobe.blockymodel",
     "CustomModelTexture": [
       {
-        "Texture": "Blocks/Decorative_Sets/Crude/Wardrobe_Texture.png",
+        "Texture": "Blocks/Decorative_Sets/Temple_Dark/Wardrobe_Texture.png",
         "Weight": 1
       }
     ],
@@ -53,12 +53,11 @@
     },
     "Gathering": {
       "Breaking": {
-        "GatherType": "Woods"
+        "GatherType": "Rocks"
       }
     },
     "HitboxType": "Wardrobe",
     "Material": "Solid",
-    "ParticleColor": "#63412c",
     "Support": {
       "Down": [
         {
@@ -70,22 +69,15 @@
     "Interactions": {
       "Primary": "Break_Container",
       "Use": "LCC_OpenWardrobe"
-    }
-  },
-  "ResourceTypes": [
-    {
-      "Id": "Fuel"
     },
-    {
-      "Id": "Charcoal"
-    }
-  ],
+    "ParticleColor": "#283132"
+  },
   "Tags": {
     "Type": [
       "Furniture"
     ],
     "Family": [
-      "Crude"
+      "Temple"
     ]
   },
   "Scale": 0.8,

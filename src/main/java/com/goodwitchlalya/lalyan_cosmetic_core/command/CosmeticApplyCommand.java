@@ -17,9 +17,6 @@ import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import java.util.Map;
 
-/**
- * This is an example command that will simply print the name of the plugin in chat when used.
- */
 public class CosmeticApplyCommand extends AbstractPlayerCommand {
     
     private final Universe universe = Universe.get();
@@ -28,26 +25,19 @@ public class CosmeticApplyCommand extends AbstractPlayerCommand {
     private boolean overrideBool;
     
     public CosmeticApplyCommand() {
-        super("apply", "");
-        this.cosmeticName = this.withRequiredArg("cosmetic name", "", ArgTypes.STRING);
-        this.override = this.withOptionalArg("override", "", ArgTypes.STRING);
-        this.setPermissionGroup(GameMode.Adventure); // Allows the command to be used by anyone, not just OP
+        super("apply", "Manually applies a cosmetic");
+        this.cosmeticName = this.withRequiredArg("cosmetic name", "The cosmetic Id", ArgTypes.STRING);
+        this.override = this.withOptionalArg("override", "whether to override other cosmetics, or stack the new one on top of them", ArgTypes.STRING);
+        this.setPermissionGroup(GameMode.Adventure);
         
     }
     
     @Override
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
-        
-        if ((override.get(commandContext) != null) && ((override.get(commandContext).equals("no")))) {
-            this.overrideBool = false;
-        } else {
-            this.overrideBool = true;
-        }
+        this.overrideBool = (override.get(commandContext) == null) || !override.get(commandContext).equals("no");
         
         universe.getWorld(playerRef.getWorldUuid()).execute(() -> {
-            
             AttachmentsRegistry.get().applyChanges(ref, Map.of(cosmeticName.get(commandContext), overrideBool));
-            
         });
     }
     

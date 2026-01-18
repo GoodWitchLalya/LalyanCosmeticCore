@@ -1,13 +1,12 @@
 {
   "TranslationProperties": {
-    "Name": "server.items.Furniture_Crude_Wardrobe.name"
+    "Name": "server.items.Furniture_Frozen_Castle_Wardrobe.name"
   },
   "PlayerAnimationsId": "Block",
   "Categories": [
     "Furniture.Furniture"
   ],
-  "Set": "Furniture_Crude",
-  "Icon": "Icons/ItemsGenerated/Furniture_Crude_Wardrobe.png",
+  "Set": "Furniture_Frozen_Castle",
   "IconProperties": {
     "Rotation": [
       22.5,
@@ -16,14 +15,14 @@
     ],
     "Scale": 0.36,
     "Translation": [
-      13.2,
-      -22.2
+      12.6,
+      -24.6
     ]
   },
   "Recipe": {
     "Input": [
       {
-        "ResourceTypeId": "Wood_Lightwood_Softwood",
+        "ItemId": "Wood_Ice_Trunk",
         "Quantity": 4
       }
     ],
@@ -38,12 +37,12 @@
     ]
   },
   "BlockType": {
-    "BlockParticleSetId": "Wood",
-    "BlockSoundSetId": "Wood",
-    "CustomModel": "Blocks/Decorative_Sets/Crude/Wardrobe.blockymodel",
+    "BlockParticleSetId": "Ice",
+    "BlockSoundSetId": "Ice",
+    "CustomModel": "Blocks/Decorative_Sets/Frozen_Castle/Wardrobe.blockymodel",
     "CustomModelTexture": [
       {
-        "Texture": "Blocks/Decorative_Sets/Crude/Wardrobe_Texture.png",
+        "Texture": "Blocks/Decorative_Sets/Frozen_Castle/Wardrobe_Texture.png",
         "Weight": 1
       }
     ],
@@ -53,12 +52,11 @@
     },
     "Gathering": {
       "Breaking": {
-        "GatherType": "Woods"
+        "GatherType": "Rocks"
       }
     },
     "HitboxType": "Wardrobe",
     "Material": "Solid",
-    "ParticleColor": "#63412c",
     "Support": {
       "Down": [
         {
@@ -70,7 +68,8 @@
     "Interactions": {
       "Primary": "Break_Container",
       "Use": "LCC_OpenWardrobe"
-    }
+    },
+    "ParticleColor": "#5bbaca"
   },
   "ResourceTypes": [
     {
@@ -85,9 +84,10 @@
       "Furniture"
     ],
     "Family": [
-      "Crude"
+      "Human"
     ]
   },
+  "Icon": "Icons/ItemsGenerated/Furniture_Frozen_Castle_Wardrobe.png",
   "Scale": 0.8,
   "ItemSoundSetId": "ISS_Blocks_Wood"
 }

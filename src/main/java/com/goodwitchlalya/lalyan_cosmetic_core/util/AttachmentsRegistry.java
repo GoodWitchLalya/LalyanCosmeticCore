@@ -538,6 +538,8 @@ public class AttachmentsRegistry {
             .filter(e -> e.getValue().slot == currentSlot)
             .toList();
         
+        removeCosmetic(ref, "No"+currentSlot.name());
+        
         for (Map.Entry<String, Attachment> attachment : attachments) {
             removeCosmetic(ref, attachment.getKey());
         }

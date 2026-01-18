@@ -1,13 +1,13 @@
 {
   "TranslationProperties": {
-    "Name": "server.items.Furniture_Crude_Wardrobe.name"
+    "Name": "server.items.Furniture_Ancient_Wardrobe.name"
   },
   "PlayerAnimationsId": "Block",
   "Categories": [
     "Furniture.Furniture"
   ],
-  "Set": "Furniture_Crude",
-  "Icon": "Icons/ItemsGenerated/Furniture_Crude_Wardrobe.png",
+  "Set": "Furniture_Ancient",
+  "Icon": "Icons/ItemsGenerated/Furniture_Ancient_Wardrobe.png",
   "IconProperties": {
     "Rotation": [
       22.5,
@@ -16,14 +16,14 @@
     ],
     "Scale": 0.36,
     "Translation": [
-      13.2,
-      -22.2
+      14.5,
+      -22.7
     ]
   },
   "Recipe": {
     "Input": [
       {
-        "ResourceTypeId": "Wood_Lightwood_Softwood",
+        "ResourceTypeId": "Wood_Blackwood_Deadwood",
         "Quantity": 4
       }
     ],
@@ -40,10 +40,10 @@
   "BlockType": {
     "BlockParticleSetId": "Wood",
     "BlockSoundSetId": "Wood",
-    "CustomModel": "Blocks/Decorative_Sets/Crude/Wardrobe.blockymodel",
+    "CustomModel": "Blocks/Decorative_Sets/Ancient/Wardrobe.blockymodel",
     "CustomModelTexture": [
       {
-        "Texture": "Blocks/Decorative_Sets/Crude/Wardrobe_Texture.png",
+        "Texture": "Blocks/Decorative_Sets/Ancient/Wardrobe_Texture.png",
         "Weight": 1
       }
     ],
@@ -58,7 +58,6 @@
     },
     "HitboxType": "Wardrobe",
     "Material": "Solid",
-    "ParticleColor": "#63412c",
     "Support": {
       "Down": [
         {
@@ -67,8 +66,8 @@
       ]
     },
     "VariantRotation": "NESW",
+    "ParticleColor": "#3e352a",
     "Interactions": {
-      "Primary": "Break_Container",
       "Use": "LCC_OpenWardrobe"
     }
   },
@@ -85,7 +84,7 @@
       "Furniture"
     ],
     "Family": [
-      "Crude"
+      "Ancient"
     ]
   },
   "Scale": 0.8,

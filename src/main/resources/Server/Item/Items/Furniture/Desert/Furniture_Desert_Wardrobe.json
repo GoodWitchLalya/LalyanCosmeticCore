@@ -1,13 +1,12 @@
 {
   "TranslationProperties": {
-    "Name": "server.items.Furniture_Crude_Wardrobe.name"
+    "Name": "server.items.Furniture_Desert_Wardrobe.name"
   },
   "PlayerAnimationsId": "Block",
   "Categories": [
     "Furniture.Furniture"
   ],
-  "Set": "Furniture_Crude",
-  "Icon": "Icons/ItemsGenerated/Furniture_Crude_Wardrobe.png",
+  "Set": "Furniture_Desert",
   "IconProperties": {
     "Rotation": [
       22.5,
@@ -16,14 +15,14 @@
     ],
     "Scale": 0.36,
     "Translation": [
-      13.2,
-      -22.2
+      13.815,
+      -25.485
     ]
   },
   "Recipe": {
     "Input": [
       {
-        "ResourceTypeId": "Wood_Lightwood_Softwood",
+        "ResourceTypeId": "Wood_Drywood_Goldenwood",
         "Quantity": 4
       }
     ],
@@ -40,10 +39,10 @@
   "BlockType": {
     "BlockParticleSetId": "Wood",
     "BlockSoundSetId": "Wood",
-    "CustomModel": "Blocks/Decorative_Sets/Crude/Wardrobe.blockymodel",
+    "CustomModel": "Blocks/Decorative_Sets/Desert/Wardrobe.blockymodel",
     "CustomModelTexture": [
       {
-        "Texture": "Blocks/Decorative_Sets/Crude/Wardrobe_Texture.png",
+        "Texture": "Blocks/Decorative_Sets/Desert/Wardrobe_Texture.png",
         "Weight": 1
       }
     ],
@@ -58,7 +57,7 @@
     },
     "HitboxType": "Wardrobe",
     "Material": "Solid",
-    "ParticleColor": "#63412c",
+    "ParticleColor": "#543022",
     "Support": {
       "Down": [
         {
@@ -80,12 +79,13 @@
       "Id": "Charcoal"
     }
   ],
+  "Icon": "Icons/ItemsGenerated/Furniture_Desert_Wardrobe.png",
   "Tags": {
     "Type": [
       "Furniture"
     ],
     "Family": [
-      "Crude"
+      "Desert"
     ]
   },
   "Scale": 0.8,

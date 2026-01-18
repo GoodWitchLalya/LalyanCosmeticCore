@@ -8,7 +8,6 @@ import com.goodwitchlalya.lalyan_cosmetic_core.component.CosmeticData;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.command.system.CommandManager;
 import com.hypixel.hytale.server.core.console.ConsoleSender;
-import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
@@ -17,15 +16,9 @@ import com.hypixel.hytale.server.core.universe.Universe;
 
 import javax.annotation.Nonnull;
 
-/**
- * This class serves as the entrypoint for your plugin. Use the setup method to register into game registries or add
- * event listeners.
- */
+
 public class CosmeticCore extends JavaPlugin {
-
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-
-    private final Universe universe = Universe.get();
     
     public CosmeticCore(@Nonnull JavaPluginInit init) {
         super(init);
@@ -40,14 +33,12 @@ public class CosmeticCore extends JavaPlugin {
     protected void start() {
         CommandManager.get().handleCommand(ConsoleSender.INSTANCE, "auth login device");
         CommandManager.get().handleCommand(ConsoleSender.INSTANCE, "auth persistence Encrypted");
-        
     }
 
     @Override
     protected void setup() {
         CosmeticData.INSTANCE = getEntityStoreRegistry().registerComponent(CosmeticData.class, "CCL_CosmeticData", CosmeticData.CODEC);
-        
-        this.getCommandRegistry().registerCommand(new CosmeticCommand(this.getName(), this.getManifest().getVersion().toString()));
+        this.getCommandRegistry().registerCommand(new CosmeticCommand());
         
         getCodecRegistry(Interaction.CODEC).register("LCC_OpenCosmetics", OpenCosmeticPageInteraction.class, OpenCosmeticPageInteraction.CODEC);
         

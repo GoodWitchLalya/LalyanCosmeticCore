@@ -1,49 +1,31 @@
 {
   "TranslationProperties": {
-    "Name": "server.items.Furniture_Crude_Wardrobe.name"
+    "Name": "server.items.Furniture_Royal_Magic_Wardrobe.name"
   },
   "PlayerAnimationsId": "Block",
   "Categories": [
     "Furniture.Furniture"
   ],
-  "Set": "Furniture_Crude",
-  "Icon": "Icons/ItemsGenerated/Furniture_Crude_Wardrobe.png",
+  "Set": "Furniture_Royal_Magic",
   "IconProperties": {
+    "Scale": 0.2,
     "Rotation": [
       22.5,
       45,
       22.5
     ],
-    "Scale": 0.36,
     "Translation": [
-      13.2,
-      -22.2
-    ]
-  },
-  "Recipe": {
-    "Input": [
-      {
-        "ResourceTypeId": "Wood_Lightwood_Softwood",
-        "Quantity": 4
-      }
-    ],
-    "BenchRequirement": [
-      {
-        "Id": "Builders",
-        "Type": "StructuralCrafting",
-        "Categories": [
-          "Wardrobe"
-        ]
-      }
+      14.5,
+      -43
     ]
   },
   "BlockType": {
     "BlockParticleSetId": "Wood",
     "BlockSoundSetId": "Wood",
-    "CustomModel": "Blocks/Decorative_Sets/Crude/Wardrobe.blockymodel",
+    "CustomModel": "Blocks/Decorative_Sets/Royal_Magic/Wardrobe.blockymodel",
     "CustomModelTexture": [
       {
-        "Texture": "Blocks/Decorative_Sets/Crude/Wardrobe_Texture.png",
+        "Texture": "Blocks/Decorative_Sets/Royal_Magic/Wardrobe_Texture.png",
         "Weight": 1
       }
     ],
@@ -58,7 +40,6 @@
     },
     "HitboxType": "Wardrobe",
     "Material": "Solid",
-    "ParticleColor": "#63412c",
     "Support": {
       "Down": [
         {
@@ -67,6 +48,7 @@
       ]
     },
     "VariantRotation": "NESW",
+    "ParticleColor": "#632c46",
     "Interactions": {
       "Primary": "Break_Container",
       "Use": "LCC_OpenWardrobe"
@@ -85,9 +67,9 @@
       "Furniture"
     ],
     "Family": [
-      "Crude"
+      "Ancient"
     ]
   },
-  "Scale": 0.8,
+  "Icon": "Icons/ItemsGenerated/Furniture_Grand_Wizard_Wardrobe.png",
   "ItemSoundSetId": "ISS_Blocks_Wood"
 }

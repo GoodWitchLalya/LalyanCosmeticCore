@@ -1,29 +1,28 @@
 {
   "TranslationProperties": {
-    "Name": "server.items.Furniture_Crude_Wardrobe.name"
+    "Name": "server.items.Furniture_Jungle_Wardrobe.name"
   },
   "PlayerAnimationsId": "Block",
   "Categories": [
     "Furniture.Furniture"
   ],
-  "Set": "Furniture_Crude",
-  "Icon": "Icons/ItemsGenerated/Furniture_Crude_Wardrobe.png",
+  "Set": "Furniture_Jungle",
   "IconProperties": {
     "Rotation": [
       22.5,
       45,
       22.5
     ],
-    "Scale": 0.36,
+    "Scale": 0.34,
     "Translation": [
-      13.2,
-      -22.2
+      13,
+      -25
     ]
   },
   "Recipe": {
     "Input": [
       {
-        "ResourceTypeId": "Wood_Lightwood_Softwood",
+        "ResourceTypeId": "Wood_Tropicalwood",
         "Quantity": 4
       }
     ],
@@ -40,10 +39,10 @@
   "BlockType": {
     "BlockParticleSetId": "Wood",
     "BlockSoundSetId": "Wood",
-    "CustomModel": "Blocks/Decorative_Sets/Crude/Wardrobe.blockymodel",
+    "CustomModel": "Blocks/Decorative_Sets/Jungle/Wardrobe.blockymodel",
     "CustomModelTexture": [
       {
-        "Texture": "Blocks/Decorative_Sets/Crude/Wardrobe_Texture.png",
+        "Texture": "Blocks/Decorative_Sets/Jungle/Wardrobe_Texture.png",
         "Weight": 1
       }
     ],
@@ -53,12 +52,11 @@
     },
     "Gathering": {
       "Breaking": {
-        "GatherType": "Woods"
+        "GatherType": "Rocks"
       }
     },
     "HitboxType": "Wardrobe",
     "Material": "Solid",
-    "ParticleColor": "#63412c",
     "Support": {
       "Down": [
         {
@@ -70,24 +68,18 @@
     "Interactions": {
       "Primary": "Break_Container",
       "Use": "LCC_OpenWardrobe"
-    }
-  },
-  "ResourceTypes": [
-    {
-      "Id": "Fuel"
     },
-    {
-      "Id": "Charcoal"
-    }
-  ],
+    "ParticleColor": "#9ebd60"
+  },
   "Tags": {
     "Type": [
       "Furniture"
     ],
     "Family": [
-      "Crude"
+      "Temple"
     ]
   },
+  "Icon": "Icons/ItemsGenerated/Furniture_Jungle_Wardrobe.png",
   "Scale": 0.8,
   "ItemSoundSetId": "ISS_Blocks_Wood"
 }

@@ -13,24 +13,19 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
-/**
- * This is an example command that will simply print the name of the plugin in chat when used.
- */
 public class CosmeticReloadCommand extends AbstractPlayerCommand {
     
     private final Universe universe = Universe.get();
     
     public CosmeticReloadCommand() {
-        super("reload", "");
+        super("reload", "Manually reloads cosmetics");
         this.setPermissionGroup(GameMode.Adventure); // Allows the command to be used by anyone, not just OP
     }
     
     @Override
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
         universe.getWorld(playerRef.getWorldUuid()).execute(() -> {
-            
             commandContext.sendMessage(Message.raw(FileManager.wakeUp()));
-            
         });
     }
     

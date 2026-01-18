@@ -13,15 +13,12 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
-/**
- * This is an example command that will simply print the name of the plugin in chat when used.
- */
 public class CosmeticListCommand extends AbstractPlayerCommand {
     
     private final Universe universe = Universe.get();
     
     public CosmeticListCommand() {
-        super("list", "");
+        super("list", "Lists all Cosmetics found and loaded");
         this.setPermissionGroup(GameMode.Adventure); // Allows the command to be used by anyone, not just OP
     }
     

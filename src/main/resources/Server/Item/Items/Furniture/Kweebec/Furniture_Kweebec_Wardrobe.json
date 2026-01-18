@@ -1,49 +1,32 @@
 {
   "TranslationProperties": {
-    "Name": "server.items.Furniture_Crude_Wardrobe.name"
+    "Name": "server.items.Furniture_Kweebec_Wardrobe.name"
   },
   "PlayerAnimationsId": "Block",
   "Categories": [
     "Furniture.Furniture"
   ],
-  "Set": "Furniture_Crude",
-  "Icon": "Icons/ItemsGenerated/Furniture_Crude_Wardrobe.png",
+  "Set": "Furniture_Kweebec",
+  "Icon": "Icons/ItemsGenerated/Furniture_Kweebec_Wardrobe.png",
   "IconProperties": {
     "Rotation": [
       22.5,
       45,
       22.5
     ],
-    "Scale": 0.36,
+    "Scale": 0.375,
     "Translation": [
-      13.2,
-      -22.2
-    ]
-  },
-  "Recipe": {
-    "Input": [
-      {
-        "ResourceTypeId": "Wood_Lightwood_Softwood",
-        "Quantity": 4
-      }
-    ],
-    "BenchRequirement": [
-      {
-        "Id": "Builders",
-        "Type": "StructuralCrafting",
-        "Categories": [
-          "Wardrobe"
-        ]
-      }
+      15,
+      -19
     ]
   },
   "BlockType": {
     "BlockParticleSetId": "Wood",
     "BlockSoundSetId": "Wood",
-    "CustomModel": "Blocks/Decorative_Sets/Crude/Wardrobe.blockymodel",
+    "CustomModel": "Blocks/Decorative_Sets/Kweebec/Wardrobe.blockymodel",
     "CustomModelTexture": [
       {
-        "Texture": "Blocks/Decorative_Sets/Crude/Wardrobe_Texture.png",
+        "Texture": "Blocks/Decorative_Sets/Kweebec/Wardrobe_Texture.png",
         "Weight": 1
       }
     ],
@@ -58,14 +41,7 @@
     },
     "HitboxType": "Wardrobe",
     "Material": "Solid",
-    "ParticleColor": "#63412c",
-    "Support": {
-      "Down": [
-        {
-          "FaceType": "Full"
-        }
-      ]
-    },
+    "ParticleColor": "#633625",
     "VariantRotation": "NESW",
     "Interactions": {
       "Primary": "Break_Container",
@@ -85,7 +61,7 @@
       "Furniture"
     ],
     "Family": [
-      "Crude"
+      "Kweebec"
     ]
   },
   "Scale": 0.8,
