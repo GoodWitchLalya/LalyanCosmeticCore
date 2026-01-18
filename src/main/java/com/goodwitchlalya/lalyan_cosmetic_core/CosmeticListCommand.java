@@ -29,13 +29,10 @@ public class CosmeticListCommand extends AbstractPlayerCommand {
     @Override
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
         universe.getWorld(playerRef.getWorldUuid()).execute(() -> {
-            
             commandContext.sendMessage(Message.raw("Cosmetics:"));
-            AttachmentsRegistry.getAttachmentsList().forEach(attachment -> {
+            AttachmentsRegistry.get().getAttachmentsList().forEach(attachment -> {
                 commandContext.sendMessage(Message.raw(String.format("- %s", attachment)));
             });
-            
-            
         });
     }
     

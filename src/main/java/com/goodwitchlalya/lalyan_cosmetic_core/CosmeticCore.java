@@ -1,6 +1,7 @@
 package com.goodwitchlalya.lalyan_cosmetic_core;
 
 import com.goodwitchlalya.lalyan_cosmetic_core.Util.AttachmentsRegistry;
+import com.goodwitchlalya.lalyan_cosmetic_core.Util.FileManager;
 import com.goodwitchlalya.lalyan_cosmetic_core.component.CosmeticData;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.command.system.CommandManager;
@@ -49,7 +50,7 @@ public class CosmeticCore extends JavaPlugin {
             AttachmentsRegistry.get().applyChanges(event.getPlayerRef());
         });
         
-        AttachmentsRegistry.get().register("Alien_Antenna", AttachmentsRegistry.CosmeticSlot.Head);
+        /*AttachmentsRegistry.get().register("Alien_Antenna", AttachmentsRegistry.CosmeticSlot.Head);
         AttachmentsRegistry.get().register("Beanie_Cactee", AttachmentsRegistry.CosmeticSlot.Head);
         AttachmentsRegistry.get().register("Bee_Antenna", AttachmentsRegistry.CosmeticSlot.Head);
         AttachmentsRegistry.get().register("Hat_Chippy", AttachmentsRegistry.CosmeticSlot.Head);
@@ -65,15 +66,9 @@ public class CosmeticCore extends JavaPlugin {
         AttachmentsRegistry.get().register("Jacket_Racing", AttachmentsRegistry.CosmeticSlot.Overtops);
         AttachmentsRegistry.get().register("Jacket_Violet", AttachmentsRegistry.CosmeticSlot.Overtops);
         AttachmentsRegistry.get().register("Overalls", AttachmentsRegistry.CosmeticSlot.Overtops);
-        AttachmentsRegistry.get().register("Sweater", AttachmentsRegistry.CosmeticSlot.Overtops);
+        AttachmentsRegistry.get().register("Sweater", AttachmentsRegistry.CosmeticSlot.Overtops);*/
+        
         FileManager.wakeUp();
-        
-        getEventRegistry().registerGlobal(PlayerReadyEvent.class, (event) -> {
-        
-        
-        
-        });
-        
     }
 
     @Override
