@@ -149,7 +149,14 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
                 AttachmentsRegistry.Attachment entry = entries[entryIndex];
                 String cosmeticId = keys[entryIndex];
                 
-                cmd.set(slotSelector + " #Icon.AssetPath", entry.data().icon());
+                String icon = entry.data().icon();
+                
+                String equippedVariant = AttachmentsRegistry.get().getEquippedVariant(ref, cosmeticId);
+                if (equippedVariant != null) {
+                    icon = entry.data().variants().get(equippedVariant).icon();
+                }
+                
+                cmd.set(slotSelector + " #Icon.AssetPath", icon);
                 
                 if (AttachmentsRegistry.get().containsChange(ref, cosmeticId)) {
                     cmd.set(slotSelector + " #Button.Visible", false);
@@ -242,6 +249,14 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             this.variantOriginalId = null;
             this.tlt = AttachmentsRegistry.TopLevelTypes.valueOf(data.tlt);
             
+            switch (this.tlt) {
+                case Head -> this.currentSlot = AttachmentsRegistry.CharacterSlot.Haircuts;
+                case General -> this.currentSlot = AttachmentsRegistry.CosmeticSlot.Underwears;
+                case Torso -> this.currentSlot = AttachmentsRegistry.CosmeticSlot.Undertops;
+                case Legs -> this.currentSlot = AttachmentsRegistry.CosmeticSlot.Pants;
+                case Capes -> this.currentSlot = AttachmentsRegistry.CosmeticSlot.Capes;
+            }
+            
             this.sendUpdate();
             this.rebuild();
             
@@ -269,6 +284,11 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         }
         
         if (data.enabled.equals("true")) {
+            if (!data.cosmeticId.contains("$")) {
+                this.variants = new HashMap<>();
+                this.variantOriginalId = null;
+            }
+
             AttachmentsRegistry.get().removeCosmetic(ref, data.cosmeticId);
             this.sendUpdate();
             this.rebuild();

@@ -419,6 +419,21 @@ public class AttachmentsRegistry {
         return false;
     }
     
+    public String getEquippedVariant(Ref<EntityStore> ref, String cosmeticId) {
+        Store<EntityStore> store = ref.getStore();
+        CosmeticData data = store.getComponent(ref, CosmeticData.INSTANCE);
+        
+        if (data == null) return null;
+        
+        for (String cosmetic : data.getCosmetics()) {
+            if (cosmetic.startsWith(cosmeticId + "$")) {
+                return cosmetic.split("\\$")[1];
+            }
+        }
+        
+        return null;
+    }
+    
     public boolean isEquipped(Ref<EntityStore> ref, String cosmeticId) {
         Store<EntityStore> store = ref.getStore();
         CosmeticData data = store.getComponent(ref, CosmeticData.INSTANCE);
@@ -477,10 +492,14 @@ public class AttachmentsRegistry {
             id = id.split("\\$")[0];
         }
         
+        if (cosmeticId.contains("No")) {
+            clearSlot(ref, Slot.valueOf(cosmeticId.replace("No", "")));
+            return;
+        }
+        
         Attachment attachment = attachmentsRegistry.get(id);
         
         if (attachment == null) return;
-        if (attachment.data().slot().getType() != SlotType.COSMETIC) return;
         
         clearSlot(ref, attachment.data().slot());
     }
