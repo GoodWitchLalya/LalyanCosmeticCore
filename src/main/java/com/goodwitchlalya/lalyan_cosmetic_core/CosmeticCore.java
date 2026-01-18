@@ -5,6 +5,8 @@ import com.goodwitchlalya.lalyan_cosmetic_core.util.AttachmentsRegistry;
 import com.goodwitchlalya.lalyan_cosmetic_core.util.FileManager;
 import com.goodwitchlalya.lalyan_cosmetic_core.command.CosmeticCommand;
 import com.goodwitchlalya.lalyan_cosmetic_core.component.CosmeticData;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.command.system.CommandManager;
 import com.hypixel.hytale.server.core.console.ConsoleSender;
@@ -12,12 +14,17 @@ import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
-import com.hypixel.hytale.server.core.universe.Universe;
 
 import javax.annotation.Nonnull;
 
 
 public class CosmeticCore extends JavaPlugin {
+    
+    public static final Gson GSON = new GsonBuilder()
+        .setPrettyPrinting()
+        .excludeFieldsWithoutExposeAnnotation()
+        .create();
+    
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     
     public CosmeticCore(@Nonnull JavaPluginInit init) {

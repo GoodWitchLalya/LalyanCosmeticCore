@@ -1,6 +1,7 @@
 package com.goodwitchlalya.lalyan_cosmetic_core.util;
 
 import com.goodwitchlalya.lalyan_cosmetic_core.component.CosmeticData;
+import com.google.gson.annotations.Expose;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.PlayerSkin;
@@ -27,6 +28,20 @@ public class AttachmentsRegistry {
     
     public interface Slot {
         SlotType getType();
+        
+        static Slot valueOf(String name) {
+            try {
+                return CosmeticSlot.valueOf(name);
+            } catch (IllegalArgumentException _) {
+                try {
+                    return CharacterSlot.valueOf(name);
+                } catch (IllegalArgumentException e) {
+                    return null;
+                }
+            }
+        }
+        
+        String name();
     }
     
     public enum CharacterSlot implements Slot {
@@ -48,7 +63,7 @@ public class AttachmentsRegistry {
     }
     
     public static AttachmentsRegistry get() {
-        if(INSTANCE == null) INSTANCE = new AttachmentsRegistry();
+        if (INSTANCE == null) INSTANCE = new AttachmentsRegistry();
         
         return INSTANCE;
     }
@@ -57,7 +72,50 @@ public class AttachmentsRegistry {
         return attachmentsRegistry;
     }
     
-    public record Attachment(String name, ModelAttachment modelAttachment, Slot slot, String icon) {}
+    public static class AttachmentData {
+        @Expose
+        private final String model;
+        @Expose
+        private final String texture;
+        @Expose
+        private final String icon;
+        
+        public Slot slot;
+        
+        public AttachmentData(String model, String texture, String icon) {
+            this.model = model;
+            this.texture = texture;
+            this.icon = icon;
+        }
+        
+        public String model() {
+            return model;
+        }
+        
+        public String texture() {
+            return texture;
+        }
+        
+        public String icon() {
+            return icon;
+        }
+        
+        public Slot slot() {
+            return slot;
+        }
+    }
+    
+    public record Attachment(String name, AttachmentData data) {
+        public ModelAttachment makeModel() {
+            return new ModelAttachment(
+                data.model(),
+                data.texture(),
+                "",
+                "",
+                1
+            );
+        }
+    }
     
     public void rebuildSkinWithCosmetics(Ref<EntityStore> ref) {
         Store<EntityStore> store = ref.getStore();
@@ -66,7 +124,7 @@ public class AttachmentsRegistry {
         Player player = store.getComponent(ref, Player.getComponentType());
         Model model = store.getComponent(ref, ModelComponent.getComponentType()).getModel();
         
-        if(data == null) {
+        if (data == null) {
             store.addComponent(ref, CosmeticData.INSTANCE, new CosmeticData());
             return;
         }
@@ -76,11 +134,12 @@ public class AttachmentsRegistry {
         List<String> invalid = new ArrayList<>();
         
         for (String cosmetic : data.getCosmetics()) {
-            try {
-                CosmeticSlot slot = CosmeticSlot.valueOf(cosmetic.replace("No", ""));
+            Slot slot = Slot.valueOf(cosmetic.replace("No", ""));
+            
+            if(slot != null) {
                 overrides.put(slot, true);
                 continue;
-            } catch (IllegalArgumentException _) {}
+            }
             
             Attachment attachment = attachmentsRegistry.get(cosmetic);
             if (attachment == null) {
@@ -88,8 +147,8 @@ public class AttachmentsRegistry {
                 continue;
             }
             
-            overrides.put(attachment.slot(), true);
-            attachments.add(attachment.modelAttachment());
+            overrides.put(attachment.data().slot(), true);
+            attachments.add(attachment.makeModel());
         }
         
         for (String inv : invalid) {
@@ -99,28 +158,7 @@ public class AttachmentsRegistry {
         restoreSkinWithOverrides(ref, attachments, overrides);
         store.replaceComponent(ref, CosmeticData.INSTANCE, data);
         
-        Model newModel = new Model(
-            player.getDisplayName() + "_CustomModel",
-            model.getScale(),
-            model.getRandomAttachmentIds(),
-            attachments.toArray(new ModelAttachment[0]),
-            model.getBoundingBox(),
-            model.getModel(),
-            model.getTexture(),
-            model.getGradientSet(),
-            model.getGradientId(),
-            model.getEyeHeight(),
-            model.getCrouchOffset(),
-            model.getAnimationSetMap(),
-            model.getCamera(),
-            model.getLight(),
-            model.getParticles(),
-            model.getTrails(),
-            model.getPhysicsValues(),
-            model.getDetailBoxes(),
-            model.getPhobia(),
-            model.getPhobiaModelAssetId()
-        );
+        Model newModel = new Model(player.getDisplayName() + "_CustomModel", model.getScale(), model.getRandomAttachmentIds(), attachments.toArray(new ModelAttachment[0]), model.getBoundingBox(), model.getModel(), model.getTexture(), model.getGradientSet(), model.getGradientId(), model.getEyeHeight(), model.getCrouchOffset(), model.getAnimationSetMap(), model.getCamera(), model.getLight(), model.getParticles(), model.getTrails(), model.getPhysicsValues(), model.getDetailBoxes(), model.getPhobia(), model.getPhobiaModelAssetId());
         
         store.replaceComponent(ref, ModelComponent.getComponentType(), new ModelComponent(newModel));
         store.replaceComponent(ref, CosmeticData.INSTANCE, data);
@@ -330,7 +368,7 @@ public class AttachmentsRegistry {
         }
     }
     
-    public boolean isEmptySlot(Ref<EntityStore> ref, CosmeticSlot slot) {
+    public boolean isEmptySlot(Ref<EntityStore> ref, Slot slot) {
         return containsChange(ref, "No" + slot.name());
     }
     
@@ -338,7 +376,7 @@ public class AttachmentsRegistry {
         Store<EntityStore> store = ref.getStore();
         CosmeticData data = store.getComponent(ref, CosmeticData.INSTANCE);
         
-        if(data == null) return false;
+        if (data == null) return false;
         
         return data.getCosmetics().contains(cosmeticId);
     }
@@ -347,7 +385,7 @@ public class AttachmentsRegistry {
         Store<EntityStore> store = ref.getStore();
         CosmeticData data = store.getComponent(ref, CosmeticData.INSTANCE);
         
-        if(data == null) return;
+        if (data == null) return;
         
         data.removeCosmetic(cosmeticId);
         rebuildSkinWithCosmetics(ref);
@@ -356,13 +394,13 @@ public class AttachmentsRegistry {
     public void addCosmetic(Ref<EntityStore> ref, String cosmeticId, boolean override) {
         Store<EntityStore> store = ref.getStore();
         CosmeticData data = store.getComponent(ref, CosmeticData.INSTANCE);
-
-        if(data == null) return;
         
-        if(override) {
+        if (data == null) return;
+        
+        if (override) {
             clearSlot(ref, cosmeticId);
         }
-
+        
         data.addCosmetic(cosmeticId);
         rebuildSkinWithCosmetics(ref);
     }
@@ -370,34 +408,34 @@ public class AttachmentsRegistry {
     public void clearSlot(Ref<EntityStore> ref, String cosmeticId) {
         Attachment attachment = attachmentsRegistry.get(cosmeticId);
         
-        if(attachment == null) return;
-        if(attachment.slot().getType() != SlotType.COSMETIC) return;
+        if (attachment == null) return;
+        if (attachment.data().slot().getType() != SlotType.COSMETIC) return;
         
-        clearSlot(ref, (CosmeticSlot) attachment.slot());
+        clearSlot(ref, attachment.data().slot());
     }
     
-    public void clearSlot(Ref<EntityStore> ref, CosmeticSlot slot) {
+    public void clearSlot(Ref<EntityStore> ref, Slot slot) {
         Store<EntityStore> store = ref.getStore();
         CosmeticData data = store.getComponent(ref, CosmeticData.INSTANCE);
         
-        if(data == null) return;
+        if (data == null) return;
         
         List<String> toRemove = new ArrayList<>();
         
         for (String cosmetic : data.getCosmetics()) {
-            if(cosmetic.contains("No" + slot.name())) {
+            if (cosmetic.contains("No" + slot.name())) {
                 toRemove.add(cosmetic);
                 continue;
             }
             
             Attachment attachment = attachmentsRegistry.get(cosmetic);
             
-            if(attachment == null) {
+            if (attachment == null) {
                 toRemove.add(cosmetic);
                 continue;
             }
             
-            if(attachment.slot() == slot) {
+            if (attachment.data().slot() == slot) {
                 toRemove.add(cosmetic);
             }
         }
@@ -415,6 +453,17 @@ public class AttachmentsRegistry {
         }
     }
     
+    public void clearCharacter(Ref<EntityStore> ref) {
+        for (CharacterSlot slot : CharacterSlot.values()) {
+            clearSlot(ref, slot);
+        }
+    }
+    
+    public void clearAll(Ref<EntityStore> ref) {
+        clearCosmetics(ref);
+        clearCharacter(ref);
+    }
+    
     public void register(String name, Slot slot) {
         String attachmentPath = "Resources/";
         
@@ -426,21 +475,14 @@ public class AttachmentsRegistry {
         
         attachmentPath += String.format("%s/%s", slot, name);
         
-        attachmentsRegistry.put(
-            name,
-            new Attachment(
-                name,
-                new ModelAttachment(
-                    String.format("%s/%s.blockymodel", attachmentPath, name),
-                    String.format("%s/%s.png", attachmentPath, name),
-                    "",
-                    "",
-                    1
-                ),
-                slot,
-                String.format("%s/Icon/%s.png", attachmentPath, name)
-            )
-        );
+        AttachmentData attData = new AttachmentData(String.format("%s/%s.blockymodel", attachmentPath, name), String.format("%s/%s.png", attachmentPath, name), String.format("%s/Icon/%s.png", attachmentPath, name));
+        attData.slot = slot;
+        
+        register(name, attData);
+    }
+    
+    public void register(String name, AttachmentData attachmentData) {
+        attachmentsRegistry.put(name, new Attachment(name, attachmentData));
     }
     
     public String getKey(Attachment e) {

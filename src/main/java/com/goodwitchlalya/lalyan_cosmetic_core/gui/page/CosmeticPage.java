@@ -69,7 +69,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         
         AttachmentsRegistry.Attachment[] entries = registry.values()
             .stream()
-            .filter(a -> a.slot() == currentSlot)
+            .filter(a -> a.data().slot() == currentSlot)
             .toList()
             .toArray(new AttachmentsRegistry.Attachment[0]);
         
@@ -108,7 +108,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
                 AttachmentsRegistry.Attachment entry = entries[entryIndex];
                 String cosmeticId = keys[entryIndex];
                 
-                cmd.set(slotSelector + " #Icon.AssetPath", entry.icon());
+                cmd.set(slotSelector + " #Icon.AssetPath", entry.data().icon());
                 
                 if (AttachmentsRegistry.get().containsChange(ref, cosmeticId)) {
                     cmd.set(slotSelector + " #Button.Visible", false);
