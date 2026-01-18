@@ -56,7 +56,11 @@ public class FileManager {
                 return;
             
             // Skip packs without a valid file system
-            if (assetPack.getFileSystem() == null) return;
+            boolean inDev = false;
+            if (assetPack.getFileSystem() == null) {
+                if (assetPack.getPackLocation() == null) return;
+                else inDev = true;
+            }
             
             String s = String.format("Loading asset pack: %s path: (%s)", assetPack.getName(), assetPack.getPackLocation());
             CosmeticCore.log(s);
@@ -84,7 +88,15 @@ public class FileManager {
      * @param <T> Generic type ensuring the class is an Enum and implements the Slot interface.
      */
     private static <T extends Enum<T> & AttachmentsRegistry.Slot> void loadAssets(AssetPack assetPack, String path, Class<T> enumType, List<String> r) {
-        Path folderPath = assetPack.getFileSystem().getPath(path);
+        boolean inDev = false;
+        if (assetPack.getFileSystem() == null) {
+            if (assetPack.getPackLocation() == null) return;
+            else inDev = true;
+        }
+        
+        Path folderPath;
+        if (inDev) folderPath = assetPack.getPackLocation().resolve(path);
+        else folderPath = assetPack.getFileSystem().getPath(path);
         
         // Exit if the target folder doesn't exist in this asset pack
         if (!Files.exists(folderPath)) return;
@@ -122,7 +134,7 @@ public class FileManager {
                                     // Register using the detailed JSON data
                                     
                                     // If all required files are present, register the attachment
-                                    AttachmentsRegistry.get().register(assetPack.getName() + ":" + itemName, attachmentData);
+                                    AttachmentsRegistry.get().register(assetPack.getName() + "#" + itemName, attachmentData);
                                 } catch (Exception e) {
                                     r.add(String.format("Error reading or parsing JSON for item '%s' in slot %s: %s", itemName, slot.name(), e.getMessage()));
                                 }
@@ -157,7 +169,7 @@ public class FileManager {
                                         if  (!isTextureThere) { r.add("No texture found"); return;}
 
                                         // If all required files are present, register the attachment
-                                        AttachmentsRegistry.get().register(assetPack.getName() + ":" + itemName, slot);
+                                        AttachmentsRegistry.get().register(assetPack.getName() + "#" + itemName, slot);
                                     } else {
                                         // Log if the folder is empty
                                         r.add(String.format("Folder '%s' in slot %s is empty. Ignoring.", itemName, slot.name()));
