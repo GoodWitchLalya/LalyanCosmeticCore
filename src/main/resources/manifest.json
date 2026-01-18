@@ -1,11 +1,14 @@
 {
     "Group": "GoodWitchLalya",
     "Name": "Lalyan Cosmetic Core",
-    "Version": "0.0.1",
-    "Description": "A core that permits to change the caracter's body and cosmetics",
+    "Version": "1.0.0",
+    "Description": "An API to add custom cosmetics without using armor slots",
     "Authors": [
         {
             "Name": "GoodWitchLalya"
+        },
+        {
+            "Name": "MtChloe05"
         }
     ],
     "Website": "",

@@ -37,7 +37,7 @@ public class CosmeticCore extends JavaPlugin {
 
     @Override
     protected void setup() {
-        CosmeticData.INSTANCE = getEntityStoreRegistry().registerComponent(CosmeticData.class, "CCL_CosmeticData", CosmeticData.CODEC);
+        CosmeticData.INSTANCE = getEntityStoreRegistry().registerComponent(CosmeticData.class, "LCC_CosmeticData", CosmeticData.CODEC);
         this.getCommandRegistry().registerCommand(new CosmeticCommand());
         
         getCodecRegistry(Interaction.CODEC).register("LCC_OpenCosmetics", OpenCosmeticPageInteraction.class, OpenCosmeticPageInteraction.CODEC);
