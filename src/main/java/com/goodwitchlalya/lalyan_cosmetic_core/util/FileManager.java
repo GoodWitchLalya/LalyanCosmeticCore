@@ -55,7 +55,7 @@ public class FileManager {
             if (assetPack.getName().contains("Hytale:") || assetPack.getName().contains("GoodWitchLalya:LalyanCosmeticCore"))
                 return;
             
-            // Skip packs without a valid file system
+            // Skip packs without a valid file system or path
             boolean inDev = false;
             if (assetPack.getFileSystem() == null) {
                 if (assetPack.getPackLocation() == null) return;
