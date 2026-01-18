@@ -9,9 +9,24 @@ An API to register and customize cosmetics without using armor slots
 
 ## Introduction
 This plugin allows players to customize which cosmetic they have equipped, without having to use up their armor slots
+
 It also allows plugin makers to create their custom cosmetics, without needing any java code!
 
 The plugin features a custom GUI to customize cosmetics, which can be opened by command or, in a more immersive way, by interacting with any vanilla wardrobe
+
+## Commands
+
+The plugin has some commands that are mainly for testing purposes:
+
+- `/cosmetic apply <CosmeticId> [override]` manually applies a certain cosmetic defined by `CosmeticId`, `override` is optional, default is `yes [other value is no]`, determines whether all other cosmetics of its type should be removed. Requires OP
+
+- `/cosmetic change` manually opens the Cosmetic Customization UI. Does not require permissions
+
+- `/cosmetic list` prints in chat all loaded cosmetic ids. Requires OP
+
+- `/cosmetic reload` manually reloads all cosmetics. Requires OP
+
+- `/cosmetic reset` removes all custom cosmetics and resets the default skin. Requires OP
 
 ## Registering cosmetics
 
@@ -21,7 +36,7 @@ Registering a cosmetic is quite simple. You'll need to make an asset pack (obvio
 - The cosmetic's .png texture
 - The cosmetic's .png icon, which is the same icon you would use for the item!
 
-These files must be name in the same way, that being Cosmetic_Id.extension
+These files must be named in the same way, that being Cosmetic_Id.extension
 
 Each cosmetic will be its own folder, with this structure
 

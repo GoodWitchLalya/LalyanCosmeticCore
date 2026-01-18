@@ -18,7 +18,7 @@ public class CosmeticResetCommand extends AbstractPlayerCommand {
     
     public CosmeticResetCommand() {
         super("reset", "Removes all custom cosmetics applied");
-        this.setPermissionGroup(GameMode.Adventure); // Allows the command to be used by anyone, not just OP
+        this.setPermissionGroups("OP");
     }
     
     @Override

@@ -424,6 +424,12 @@ public class AttachmentsRegistry {
         changes = restoreFromData(ref, changes, true);
         restoreSkin(list, changes, playerSkin);
         
+        for (String cosmetic : data.getCosmetics()) {
+            Attachment attachment = attachmentsRegistry.getOrDefault(cosmetic, null);
+            if (attachment == null) continue;
+            list.add(attachment.modelAttachment);
+        }
+        
         Attachment attachment = attachmentsRegistry.getOrDefault(cosmeticId, null);
         if(attachment != null) {
             list.add(attachment.modelAttachment);

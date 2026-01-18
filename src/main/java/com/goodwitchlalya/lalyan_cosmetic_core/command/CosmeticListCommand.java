@@ -19,7 +19,7 @@ public class CosmeticListCommand extends AbstractPlayerCommand {
     
     public CosmeticListCommand() {
         super("list", "Lists all Cosmetics found and loaded");
-        this.setPermissionGroup(GameMode.Adventure); // Allows the command to be used by anyone, not just OP
+        this.setPermissionGroups("OP");
     }
     
     @Override

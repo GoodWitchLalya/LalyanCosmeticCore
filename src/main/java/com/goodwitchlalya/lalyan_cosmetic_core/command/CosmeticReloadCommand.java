@@ -19,7 +19,7 @@ public class CosmeticReloadCommand extends AbstractPlayerCommand {
     
     public CosmeticReloadCommand() {
         super("reload", "Manually reloads cosmetics");
-        this.setPermissionGroup(GameMode.Adventure); // Allows the command to be used by anyone, not just OP
+        this.setPermissionGroups("OP");
     }
     
     @Override

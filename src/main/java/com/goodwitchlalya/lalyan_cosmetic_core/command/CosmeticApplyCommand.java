@@ -28,7 +28,7 @@ public class CosmeticApplyCommand extends AbstractPlayerCommand {
         super("apply", "Manually applies a cosmetic");
         this.cosmeticName = this.withRequiredArg("cosmetic name", "The cosmetic Id", ArgTypes.STRING);
         this.override = this.withOptionalArg("override", "whether to override other cosmetics, or stack the new one on top of them", ArgTypes.STRING);
-        this.setPermissionGroup(GameMode.Adventure);
+        this.setPermissionGroups("OP");
         
     }
     
