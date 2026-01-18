@@ -553,9 +553,11 @@ public class AttachmentsRegistry {
             attachmentPath += "Cosmetics/";
         }
         
-        attachmentPath += String.format("%s/%s", slot, name);
+        String[] split = name.split("#");
         
-        AttachmentData attData = new AttachmentData(String.format("%s/%s.blockymodel", attachmentPath, name), String.format("%s/%s.png", attachmentPath, name), String.format("%s/Icon/%s.png", attachmentPath, name), Map.of());
+        attachmentPath += String.format("%s/%s", slot, split[1]);
+        
+        AttachmentData attData = new AttachmentData(String.format("%s/%s.blockymodel", attachmentPath, split[1]), String.format("%s/%s.png", attachmentPath, split[1]), String.format("%s/Icon/%s.png", attachmentPath, split[1]), Map.of());
         attData.slot = slot;
         
         register(name, attData);
