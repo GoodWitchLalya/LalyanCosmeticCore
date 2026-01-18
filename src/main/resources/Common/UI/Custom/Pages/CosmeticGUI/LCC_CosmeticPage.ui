@@ -15,7 +15,7 @@ $C.@PageOverlay {
 
         #Content {
             Group {
-                Anchor: (Top: -485);
+                Anchor: (Top: 0);
                 FlexWeight: 1;
                 Group #CosmeticGrid {
                     FlexWeight: 1;
@@ -27,15 +27,16 @@ $C.@PageOverlay {
     }
 
     $C.@Container #LeftSidePanel {
-        Anchor: (Width: 200, Height: 800, Left: 200);
+        Anchor: (Width: 120, Height: 800, Left: 550);
 
         #Content {
-            Group #CCBL {
-                Anchor: (Left: -680, Top: 0);
+            Group {
+                Anchor: (Left: 0, Top: 0);
                 FlexWeight: 1;
 
                 Group #SideButtons {
-                    LayoutMode: Top;
+                    LayoutMode: TopScrolling;
+                    ScrollbarStyle: $C.@DefaultScrollbarStyle;
 
                     Group #Capes {
                         Anchor: (Top: 0);
@@ -49,6 +50,7 @@ $C.@PageOverlay {
                         }
 
                         Button #CategoryButton {
+                            Visible: true;
                             Anchor: (Width: 64, Height: 64);
                             Style: (
                                 Sounds: $Sounds.@ButtonsLight,
@@ -57,6 +59,20 @@ $C.@PageOverlay {
                                 ),
                                 Hovered: (
                                     Background: "../../Common/Categories/Cosmetics/Activated/Cape.png"
+                                )
+                            );
+                        }
+
+                        Button #CategoryButtonEnabled {
+                            Visible: false;
+                            Anchor: (Width: 64, Height: 64);
+                            Style: (
+                                Sounds: $Sounds.@ButtonsLight,
+                                Default: (
+                                    Background: "../../Common/Categories/Cosmetics/Activated/Cape.png"
+                                ),
+                                Hovered: (
+                                    Background: "../../Common/Categories/Cosmetics/Cape.png"
                                 )
                             );
                         }
@@ -71,6 +87,7 @@ $C.@PageOverlay {
                         }
 
                         Button #CategoryButton {
+                            Visible: true;
                             Anchor: (Width: 64, Height: 64, Top: 0);
                             Style: (
                                 Sounds: $Sounds.@ButtonsLight,
@@ -79,6 +96,21 @@ $C.@PageOverlay {
                                 ),
                                 Hovered: (
                                     Background: "../../Common/Categories/Cosmetics/Activated/Face_Accessories.png"
+                                )
+                            );
+                            FlexWeight: 1;
+                        }
+
+                        Button #CategoryButtonEnabled {
+                            Visible: false;
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            Style: (
+                                Sounds: $Sounds.@ButtonsLight,
+                                Default: (
+                                    Background: "../../Common/Categories/Cosmetics/Activated/Face_Accessories.png"
+                                ),
+                                Hovered: (
+                                    Background: "../../Common/Categories/Cosmetics/Face_Accessories.png"
                                 )
                             );
                             FlexWeight: 1;
@@ -94,6 +126,7 @@ $C.@PageOverlay {
                         }
 
                         Button #CategoryButton {
+                            Visible: true;
                             Anchor: (Width: 64, Height: 64, Top: 0);
                             Style: (
                                 Sounds: $Sounds.@ButtonsLight,
@@ -102,6 +135,21 @@ $C.@PageOverlay {
                                 ),
                                 Hovered: (
                                     Background: "../../Common/Categories/Cosmetics/Activated/Gloves.png"
+                                )
+                            );
+                            FlexWeight: 1;
+                        }
+
+                        Button #CategoryButtonEnabled {
+                            Visible: false;
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            Style: (
+                                Sounds: $Sounds.@ButtonsLight,
+                                Default: (
+                                    Background: "../../Common/Categories/Cosmetics/Activated/Gloves.png"
+                                ),
+                                Hovered: (
+                                    Background: "../../Common/Categories/Cosmetics/Gloves.png"
                                 )
                             );
                             FlexWeight: 1;
@@ -117,6 +165,7 @@ $C.@PageOverlay {
                         }
 
                         Button #CategoryButton {
+                            Visible: true;
                             Anchor: (Width: 64, Height: 64, Top: 0);
                             Style: (
                                 Sounds: $Sounds.@ButtonsLight,
@@ -125,6 +174,21 @@ $C.@PageOverlay {
                                 ),
                                 Hovered: (
                                     Background: "../../Common/Categories/Cosmetics/Activated/Head.png"
+                                )
+                            );
+                            FlexWeight: 1;
+                        }
+
+                        Button #CategoryButtonEnabled {
+                            Visible: false;
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            Style: (
+                                Sounds: $Sounds.@ButtonsLight,
+                                Default: (
+                                    Background: "../../Common/Categories/Cosmetics/Activated/Head.png"
+                                ),
+                                Hovered: (
+                                    Background: "../../Common/Categories/Cosmetics/Head.png"
                                 )
                             );
                             FlexWeight: 1;
@@ -140,6 +204,7 @@ $C.@PageOverlay {
                         }
 
                         Button #CategoryButton {
+                            Visible: true;
                             Anchor: (Width: 64, Height: 64, Top: 0);
                             Style: (
                                 Sounds: $Sounds.@ButtonsLight,
@@ -148,6 +213,21 @@ $C.@PageOverlay {
                                 ),
                                 Hovered: (
                                     Background: "../../Common/Categories/Cosmetics/Activated/Ears_Accessories.png"
+                                )
+                            );
+                            FlexWeight: 1;
+                        }
+
+                        Button #CategoryButtonEnabled {
+                            Visible: false;
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            Style: (
+                                Sounds: $Sounds.@ButtonsLight,
+                                Default: (
+                                    Background: "../../Common/Categories/Cosmetics/Activated/Ears_Accessories.png"
+                                ),
+                                Hovered: (
+                                    Background: "../../Common/Categories/Cosmetics/Ears_Accessories.png"
                                 )
                             );
                             FlexWeight: 1;
@@ -163,6 +243,7 @@ $C.@PageOverlay {
                         }
 
                         Button #CategoryButton {
+                            Visible: true;
                             Anchor: (Width: 64, Height: 64, Top: 0);
                             Style: (
                                 Sounds: $Sounds.@ButtonsLight,
@@ -171,6 +252,21 @@ $C.@PageOverlay {
                                 ),
                                 Hovered: (
                                     Background: "../../Common/Categories/Cosmetics/Activated/Overpants.png"
+                                )
+                            );
+                            FlexWeight: 1;
+                        }
+
+                        Button #CategoryButtonEnabled {
+                            Visible: false;
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            Style: (
+                                Sounds: $Sounds.@ButtonsLight,
+                                Default: (
+                                    Background: "../../Common/Categories/Cosmetics/Activated/Overpants.png"
+                                ),
+                                Hovered: (
+                                    Background: "../../Common/Categories/Cosmetics/Overpants.png"
                                 )
                             );
                             FlexWeight: 1;
@@ -186,6 +282,7 @@ $C.@PageOverlay {
                         }
 
                         Button #CategoryButton {
+                            Visible: true;
                             Anchor: (Width: 64, Height: 64, Top: 0);
                             Style: (
                                 Sounds: $Sounds.@ButtonsLight,
@@ -194,6 +291,21 @@ $C.@PageOverlay {
                                 ),
                                 Hovered: (
                                     Background: "../../Common/Categories/Cosmetics/Activated/Overtops.png"
+                                )
+                            );
+                            FlexWeight: 1;
+                        }
+
+                        Button #CategoryButtonEnabled {
+                            Visible: false;
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            Style: (
+                                Sounds: $Sounds.@ButtonsLight,
+                                Default: (
+                                    Background: "../../Common/Categories/Cosmetics/Activated/Overtops.png"
+                                ),
+                                Hovered: (
+                                    Background: "../../Common/Categories/Cosmetics/Overtops.png"
                                 )
                             );
                             FlexWeight: 1;
@@ -209,6 +321,7 @@ $C.@PageOverlay {
                         }
 
                         Button #CategoryButton {
+                            Visible: true;
                             Anchor: (Width: 64, Height: 64, Top: 0);
                             Style: (
                                 Sounds: $Sounds.@ButtonsLight,
@@ -217,6 +330,21 @@ $C.@PageOverlay {
                                 ),
                                 Hovered: (
                                     Background: "../../Common/Categories/Cosmetics/Activated/Pants.png"
+                                )
+                            );
+                            FlexWeight: 1;
+                        }
+
+                        Button #CategoryButtonEnabled {
+                            Visible: false;
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            Style: (
+                                Sounds: $Sounds.@ButtonsLight,
+                                Default: (
+                                    Background: "../../Common/Categories/Cosmetics/Activated/Pants.png"
+                                ),
+                                Hovered: (
+                                    Background: "../../Common/Categories/Cosmetics/Pants.png"
                                 )
                             );
                             FlexWeight: 1;
@@ -232,6 +360,7 @@ $C.@PageOverlay {
                         }
 
                         Button #CategoryButton {
+                            Visible: true;
                             Anchor: (Width: 64, Height: 64, Top: 0);
                             Style: (
                                 Sounds: $Sounds.@ButtonsLight,
@@ -244,16 +373,22 @@ $C.@PageOverlay {
                             );
                             FlexWeight: 1;
                         }
+
+                        Button #CategoryButtonEnabled {
+                            Visible: false;
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            Style: (
+                                Sounds: $Sounds.@ButtonsLight,
+                                Default: (
+                                    Background: "../../Common/Categories/Cosmetics/Activated/Shoes.png"
+                                ),
+                                Hovered: (
+                                    Background: "../../Common/Categories/Cosmetics/Shoes.png"
+                                )
+                            );
+                            FlexWeight: 1;
+                        }
                     }
-                }
-            }
-
-            Group #CCBR {
-                Anchor: (Right: -680, Top: -250);
-                FlexWeight: 1;
-
-                Group #SideButtons {
-                    LayoutMode: Top;
 
                     Group #Undertops {
                         Anchor: (Top: 0);
@@ -264,6 +399,7 @@ $C.@PageOverlay {
                         }
 
                         Button #CategoryButton {
+                            Visible: true;
                             Anchor: (Width: 64, Height: 64, Top: 0);
                             Style: (
                                 Sounds: $Sounds.@ButtonsLight,
@@ -272,6 +408,21 @@ $C.@PageOverlay {
                                 ),
                                 Hovered: (
                                     Background: "../../Common/Categories/Cosmetics/Activated/Undertops.png"
+                                )
+                            );
+                            FlexWeight: 1;
+                        }
+
+                        Button #CategoryButtonEnabled {
+                            Visible: false;
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            Style: (
+                                Sounds: $Sounds.@ButtonsLight,
+                                Default: (
+                                    Background: "../../Common/Categories/Cosmetics/Activated/Undertops.png"
+                                ),
+                                Hovered: (
+                                    Background: "../../Common/Categories/Cosmetics/Undertops.png"
                                 )
                             );
                             FlexWeight: 1;
@@ -287,6 +438,7 @@ $C.@PageOverlay {
                         }
 
                         Button #CategoryButton {
+                            Visible: true;
                             Anchor: (Width: 64, Height: 64, Top: 0);
                             Style: (
                                 Sounds: $Sounds.@ButtonsLight,
@@ -295,6 +447,21 @@ $C.@PageOverlay {
                                 ),
                                 Hovered: (
                                     Background: "../../Common/Categories/Cosmetics/Activated/Underwears.png"
+                                )
+                            );
+                            FlexWeight: 1;
+                        }
+
+                        Button #CategoryButtonEnabled {
+                            Visible: false;
+                            Anchor: (Width: 64, Height: 64, Top: 0);
+                            Style: (
+                                Sounds: $Sounds.@ButtonsLight,
+                                Default: (
+                                    Background: "../../Common/Categories/Cosmetics/Activated/Underwears.png"
+                                ),
+                                Hovered: (
+                                    Background: "../../Common/Categories/Cosmetics/Underwears.png"
                                 )
                             );
                             FlexWeight: 1;

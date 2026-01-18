@@ -15,7 +15,9 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
+import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 
 public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
     public CosmeticPage(@NonNullDecl PlayerRef playerRef) {
@@ -28,11 +30,11 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
     public void build(@NonNullDecl Ref<EntityStore> ref, @NonNullDecl UICommandBuilder cmd, @NonNullDecl UIEventBuilder evt, @NonNullDecl Store<EntityStore> store) {
         cmd.append("Pages/CosmeticGUI/LCC_CosmeticPage.ui");
         
-        buildCosmeticButtons(evt);
+        buildCosmeticButtons(cmd, evt);
         buildCosmetics(ref, cmd, evt);
     }
     
-    private void buildCosmeticButtons(UIEventBuilder evt) {
+    private void buildCosmeticButtons(UICommandBuilder cmd, UIEventBuilder evt) {
         AttachmentsRegistry.CosmeticSlot[] values = AttachmentsRegistry.CosmeticSlot.values();
         
         for (int i = 0, valuesLength = values.length; i < valuesLength; i++) {
@@ -44,47 +46,77 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
                 name = split[0] + split[1];
             }
             
-            String panel = i > 8? "#LeftSidePanel ": "#RightSidePanel ";
+            evt.addEventBinding(CustomUIEventBindingType.Activating, "#LeftSidePanel #Content #SideButtons #" + name + " #CategoryButton", EventData.of("Slot", slot.name()));
+            
+            if (slot != currentSlot) {
+                cmd.set("#LeftSidePanel #Content #SideButtons #" + name + " #CategoryButtonEnabled.Visible", false);
+                cmd.set("#LeftSidePanel #Content #SideButtons #" + name + " #CategoryButton.Visible", true);
                 
-            evt.addEventBinding(CustomUIEventBindingType.Activating, panel + "#SidePanel #Content #SideButtons #" + name + " #CategoryButton", EventData.of("Slot", slot.name()));
+                continue;
+            }
+            
+            cmd.set("#LeftSidePanel #Content #SideButtons #" + name + " #CategoryButtonEnabled.Visible", true);
+            cmd.set("#LeftSidePanel #Content #SideButtons #" + name + " #CategoryButton.Visible", false);
         }
     }
     
     private void buildCosmetics(Ref<EntityStore> ref, UICommandBuilder cmd, UIEventBuilder evt) {
         Map<String, AttachmentsRegistry.Attachment> registry = AttachmentsRegistry.get().getAttachmentsRegistry();
         
-        int amount = registry.size();
         int itemsPerRow = 8;
         
         cmd.appendInline("#Content #CosmeticGrid", "Group #CosmeticRow { LayoutMode: Top; }");
         
-        int rowAmount = (int) Math.ceil((double) amount / itemsPerRow);
-        int placedItems = 0;
+        AttachmentsRegistry.Attachment[] entries = registry.values()
+            .stream()
+            .filter(a -> a.slot() == currentSlot)
+            .toList()
+            .toArray(new AttachmentsRegistry.Attachment[0]);
         
-        AttachmentsRegistry.Attachment[] entries = registry.values().toArray(new AttachmentsRegistry.Attachment[0]);
-        String[] keys = registry.keySet().toArray(new String[0]);
+        String[] keys = Arrays.stream(entries)
+            .map(e -> AttachmentsRegistry.get().getKey(e))
+            .filter(Objects::nonNull)
+            .toArray(String[]::new);
         
-        for (int x = 0; x < rowAmount; x++) {
-            cmd.append("#CosmeticRow", "Pages/CosmeticGUI/CosmeticRow.ui");
+        int totalItems = entries.length + 1;
+        
+        for (int i = 0; i < totalItems; i++) {
+            int rowIndex = i / itemsPerRow;
+            int colIndex = i % itemsPerRow;
             
-            for (int y = 0; y < itemsPerRow; y++) {
-                if(placedItems >= amount) break;
+            if (colIndex == 0) {
+                cmd.append("#CosmeticRow", "Pages/CosmeticGUI/CosmeticRow.ui");
+            }
+            
+            String rowSelector = "#CosmeticRow[" + rowIndex + "]";
+            cmd.append(rowSelector + " #CosmeticSlot", "Pages/CosmeticGUI/CosmeticSlot.ui");
+            
+            String slotSelector = rowSelector + " #CosmeticSlot[" + colIndex + "]";
+            
+            if (i == 0) {
+                cmd.set(slotSelector + " #Icon.AssetPath", "UI/Custom/Common/Categories/VanishPart.png");
                 
-                int index  = (x * itemsPerRow) + y;
-                
-                placedItems++;
-                cmd.append("#CosmeticRow[" + x + "] #CosmeticSlot", "Pages/CosmeticGUI/CosmeticSlot.ui");
-                cmd.set("#CosmeticRow[" + x + "] #CosmeticSlot[" + y +"] #Icon.AssetPath", entries[index].icon());
-                
-                String cosmeticId = keys[index];
-                
-                if(AttachmentsRegistry.get().containsChange(ref, cosmeticId)) {
-                    cmd.set("#CosmeticRow[" + x + "] #CosmeticSlot[" + y +"] #Button.Visible", false);
-                    cmd.set("#CosmeticRow[" + x + "] #CosmeticSlot[" + y +"] #ButtonEnabled.Visible", true);
+                if (AttachmentsRegistry.get().isEmptySlot(ref, currentSlot)) {
+                    cmd.set(slotSelector + " #Button.Visible", false);
+                    cmd.set(slotSelector + " #ButtonEnabled.Visible", true);
                 }
                 
-                evt.addEventBinding(CustomUIEventBindingType.Activating, "#CosmeticRow[" + x + "] #CosmeticSlot[" + y +"] #Button", EventData.of("CosmeticId", cosmeticId).append("Enabled", "false"));
-                evt.addEventBinding(CustomUIEventBindingType.Activating, "#CosmeticRow[" + x + "] #CosmeticSlot[" + y +"] #ButtonEnabled", EventData.of("CosmeticId", cosmeticId).append("Enabled", "true"));
+                evt.addEventBinding(CustomUIEventBindingType.Activating, slotSelector + " #Button", EventData.of("CosmeticId", "No" + currentSlot.name()).append("Enabled", "false"));
+                evt.addEventBinding(CustomUIEventBindingType.Activating, slotSelector + " #ButtonEnabled", EventData.of("CosmeticId", "No" + currentSlot.name()).append("Enabled", "true"));
+            } else {
+                int entryIndex = i - 1;
+                AttachmentsRegistry.Attachment entry = entries[entryIndex];
+                String cosmeticId = keys[entryIndex];
+                
+                cmd.set(slotSelector + " #Icon.AssetPath", entry.icon());
+                
+                if (AttachmentsRegistry.get().containsChange(ref, cosmeticId)) {
+                    cmd.set(slotSelector + " #Button.Visible", false);
+                    cmd.set(slotSelector + " #ButtonEnabled.Visible", true);
+                }
+                
+                evt.addEventBinding(CustomUIEventBindingType.Activating, slotSelector + " #Button", EventData.of("CosmeticId", cosmeticId).append("Enabled", "false"));
+                evt.addEventBinding(CustomUIEventBindingType.Activating, slotSelector + " #ButtonEnabled", EventData.of("CosmeticId", cosmeticId).append("Enabled", "true"));
             }
         }
     }
@@ -93,7 +125,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
     public void handleDataEvent(@NonNullDecl Ref<EntityStore> ref, @NonNullDecl Store<EntityStore> store, @NonNullDecl Data data) {
         super.handleDataEvent(ref, store, data);
         
-        if(data.slot != null) {
+        if (data.slot != null) {
             this.currentSlot = AttachmentsRegistry.CosmeticSlot.valueOf(data.slot);
             this.sendUpdate();
             this.rebuild();
@@ -101,7 +133,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             return;
         }
         
-        if(data.enabled.equals("true")) {
+        if (data.enabled.equals("true")) {
             AttachmentsRegistry.get().removeCosmetic(ref, data.cosmeticId);
             this.sendUpdate();
             this.rebuild();
@@ -109,7 +141,9 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             return;
         }
         
-        AttachmentsRegistry.get().applyChanges(ref, Map.of(data.cosmeticId, true));
+        AttachmentsRegistry.get().clearSlot(ref, currentSlot);
+        AttachmentsRegistry.get().addCosmetic(ref, data.cosmeticId);
+        
         this.sendUpdate();
         this.rebuild();
     }

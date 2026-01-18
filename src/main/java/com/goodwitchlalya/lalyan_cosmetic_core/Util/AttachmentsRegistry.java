@@ -53,7 +53,16 @@ public class AttachmentsRegistry {
         if(INSTANCE == null) INSTANCE = new AttachmentsRegistry();
         
         return INSTANCE;
+    }
     
+    
+    public boolean isEmptySlot(Ref<EntityStore> ref, CosmeticSlot currentSlot) {
+        Store<EntityStore> store = ref.getStore();
+        CosmeticData data = store.getComponent(ref, CosmeticData.INSTANCE);
+        
+        if(data == null) return false;
+        
+        return data.getCosmetics().contains("No" + currentSlot.name());
     }
     
     public Map<String, Attachment> getAttachmentsRegistry() {
@@ -82,14 +91,29 @@ public class AttachmentsRegistry {
         );
         
         changes.forEach((cosmeticName, override) -> {
-            Attachment attachment = attachmentsRegistry.get(cosmeticName);
-            if (attachment != null) {
-                if (override) {
-                    overrides.replace(attachment.slot.toString(), true);
-                }
-            } else {
-                CosmeticCore.log("Attempting to apply changes to " + cosmeticName);
+            String slotName = cosmeticName.replace("No", "");
+            CosmeticSlot slot = null;
+            
+            try {
+                slot = CosmeticSlot.valueOf(slotName);
+            } catch (IllegalArgumentException ignored) {}
+            
+            if(slot != null) {
+                overrides.replace(slot.toString(), override);
+                return;
             }
+            
+            Attachment attachment = attachmentsRegistry.get(cosmeticName);
+            if (attachment == null) {
+                CosmeticCore.log("Attempting to apply changes to " + cosmeticName);
+                return;
+            }
+            
+            if (!override) {
+                return;
+            }
+            
+            overrides.replace(attachment.slot.toString(), true);
         });
         
         if (!overrides.get(CharacterSlot.Beards.name())) {
@@ -273,14 +297,6 @@ public class AttachmentsRegistry {
             }
         }
         
-        if (playerSkin.cape != null) {
-            String[] capesParts = playerSkin.cape.split("\\.");
-            var capes = registry.getCapes().get(capesParts[0]);
-            if (capes != null) {
-                list.add(ModelUtils.resolveAttachment(capes, capesParts, gradientId));
-            }
-        }
-        
         if (playerSkin.skinFeature != null) {
             String[] skinFeaturesParts = playerSkin.skinFeature.split("\\.");
             var skinFeatures = registry.getSkinFeatures().get(skinFeaturesParts[0]);
@@ -309,9 +325,6 @@ public class AttachmentsRegistry {
     }
     
     public void removeCosmetic(Ref<EntityStore> ref, String cosmeticId) {
-        Attachment attachment = attachmentsRegistry.getOrDefault(cosmeticId, null);
-        if(attachment == null) return;
-        
         Store<EntityStore> store = ref.getStore();
         PlayerSkinComponent playerSkincomponent = store.getComponent(ref, PlayerSkinComponent.getComponentType());
         
@@ -328,10 +341,96 @@ public class AttachmentsRegistry {
             store.addComponent(ref, CosmeticData.INSTANCE, data);
         }
         
-        restoreSkin(list, Map.of(), playerSkin);
+        Map<String, Boolean> changes = new HashMap<>();
+        changes = restoreFromData(ref, changes, false);
+        restoreSkin(list, changes, playerSkin);
         
-        list.remove(attachment.modelAttachment);
+        Attachment attachment = attachmentsRegistry.getOrDefault(cosmeticId, null);
+        if(attachment != null) {
+            list.remove(attachment.modelAttachment);
+        }
+        
         data.removeCosmetic(cosmeticId);
+        
+        Model newModel = new Model(
+            player.getDisplayName() + "CustomModel",
+            playerModel.getScale(),
+            playerModel.getRandomAttachmentIds(),
+            list.toArray(new ModelAttachment[0]),
+            playerModel.getBoundingBox(),
+            playerModel.getModel(),
+            playerModel.getTexture(),
+            playerModel.getGradientSet(),
+            playerModel.getGradientId(),
+            playerModel.getEyeHeight(),
+            playerModel.getCrouchOffset(),
+            playerModel.getAnimationSetMap(),
+            playerModel.getCamera(),
+            playerModel.getLight(),
+            playerModel.getParticles(),
+            playerModel.getTrails(),
+            playerModel.getPhysicsValues(),
+            playerModel.getDetailBoxes(),
+            playerModel.getPhobia(),
+            playerModel.getPhobiaModelAssetId()
+        );
+        
+        store.replaceComponent(ref, ModelComponent.getComponentType(), new ModelComponent(newModel));
+        store.replaceComponent(ref, CosmeticData.INSTANCE, data);
+    }
+    
+    private Map<String, Boolean> restoreFromData(Ref<EntityStore> ref, Map<String, Boolean> map, boolean override) {
+        Store<EntityStore> store = ref.getStore();
+        
+        Map<String, Boolean> newM = new HashMap<>(map);
+        
+        CosmeticData data = store.getComponent(ref, CosmeticData.INSTANCE);
+        
+        if(data == null)  {
+            data = new CosmeticData();
+            store.addComponent(ref, CosmeticData.INSTANCE, data);
+            return Map.of();
+        }
+        
+        for (String cosmetic : data.getCosmetics()) {
+            newM.put(cosmetic, override);
+        }
+        
+        store.replaceComponent(ref, CosmeticData.INSTANCE, data);
+        
+        return newM;
+    }
+    
+    public void addCosmetic(Ref<EntityStore> ref, String cosmeticId) {
+        Store<EntityStore> store = ref.getStore();
+        PlayerSkinComponent playerSkincomponent = store.getComponent(ref, PlayerSkinComponent.getComponentType());
+        
+        PlayerSkin playerSkinComponent = playerSkincomponent.getPlayerSkin();
+        PlayerSkin playerSkin = playerSkinComponent.clone();
+        Model playerModel = store.getComponent(ref, ModelComponent.getComponentType()).getModel();
+        Player player = store.getComponent(ref, Player.getComponentType());
+        
+        List<ModelAttachment> list = new ArrayList<>();
+        
+        CosmeticData data = store.getComponent(ref, CosmeticData.INSTANCE);
+        if(data == null) {
+            data = new CosmeticData();
+            store.addComponent(ref, CosmeticData.INSTANCE, data);
+        }
+        
+        Map<String, Boolean> changes = new HashMap<>();
+        
+        changes.put(cosmeticId, true);
+        
+        changes = restoreFromData(ref, changes, true);
+        restoreSkin(list, changes, playerSkin);
+        
+        Attachment attachment = attachmentsRegistry.getOrDefault(cosmeticId, null);
+        if(attachment != null) {
+            list.add(attachment.modelAttachment);
+        }
+        
+        data.addCosmetic(cosmeticId);
         
         Model newModel = new Model(
             player.getDisplayName() + "CustomModel",
@@ -377,6 +476,7 @@ public class AttachmentsRegistry {
             store.addComponent(ref, CosmeticData.INSTANCE, data);
         }
         
+        changes = restoreFromData(ref, changes, true);
         restoreSkin(list, changes, playerSkin);
         
         for (String key : changes.keySet()) {
@@ -433,6 +533,17 @@ public class AttachmentsRegistry {
         );
     }
     
+    public void clearSlot(Ref<EntityStore> ref, CosmeticSlot currentSlot) {
+        List<Map.Entry<String, Attachment>> attachments = attachmentsRegistry.entrySet()
+            .stream()
+            .filter(e -> e.getValue().slot == currentSlot)
+            .toList();
+        
+        for (Map.Entry<String, Attachment> attachment : attachments) {
+            removeCosmetic(ref, attachment.getKey());
+        }
+    }
+    
     public void applyChanges(Ref<EntityStore> ref) {
         applyChanges(ref, Map.of());
     }
@@ -465,4 +576,13 @@ public class AttachmentsRegistry {
         );
     }
     
+    public String getKey(Attachment e) {
+        for (Map.Entry<String, Attachment> entry : attachmentsRegistry.entrySet()) {
+            if (entry.getValue() == e) {
+                return entry.getKey();
+            }
+        }
+        
+        return null;
+    }
 }

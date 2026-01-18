@@ -5,6 +5,7 @@ import com.goodwitchlalya.lalyan_cosmetic_core.component.CosmeticData;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.command.system.CommandManager;
 import com.hypixel.hytale.server.core.console.ConsoleSender;
+import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.Universe;
@@ -37,7 +38,6 @@ public class CosmeticCore extends JavaPlugin {
     protected void start() {
         CommandManager.get().handleCommand(ConsoleSender.INSTANCE, "auth login device");
         CommandManager.get().handleCommand(ConsoleSender.INSTANCE, "auth persistence Encrypted");
-        
     }
 
     @Override
@@ -47,10 +47,13 @@ public class CosmeticCore extends JavaPlugin {
         this.getCommandRegistry().registerCommand(new OpenCosmeticPage());
         this.getCommandRegistry().registerCommand(new CosmeticCommand(this.getName(), this.getManifest().getVersion().toString()));
         
+        getEventRegistry().registerGlobal(PlayerReadyEvent.class, event -> {
+            AttachmentsRegistry.get().applyChanges(event.getPlayerRef());
+        });
+        
         AttachmentsRegistry.get().register("Alien_Antenna", AttachmentsRegistry.CosmeticSlot.Head);
         AttachmentsRegistry.get().register("Beanie_Cactee", AttachmentsRegistry.CosmeticSlot.Head);
         AttachmentsRegistry.get().register("Bee_Antenna", AttachmentsRegistry.CosmeticSlot.Head);
-        AttachmentsRegistry.get().register("Cloak_Chippy", AttachmentsRegistry.CosmeticSlot.Head);
         AttachmentsRegistry.get().register("Hat_Chippy", AttachmentsRegistry.CosmeticSlot.Head);
         AttachmentsRegistry.get().register("Headband_Littlewood", AttachmentsRegistry.CosmeticSlot.Head);
         AttachmentsRegistry.get().register("Headband_Paige", AttachmentsRegistry.CosmeticSlot.Head);
@@ -58,6 +61,8 @@ public class CosmeticCore extends JavaPlugin {
         AttachmentsRegistry.get().register("Kweebec_Mask_Straw", AttachmentsRegistry.CosmeticSlot.Head);
         AttachmentsRegistry.get().register("Scarak_Defender_Mask", AttachmentsRegistry.CosmeticSlot.Head);
         AttachmentsRegistry.get().register("Slothian_Mask", AttachmentsRegistry.CosmeticSlot.Head);
+        
+        AttachmentsRegistry.get().register("Cloak_Chippy", AttachmentsRegistry.CosmeticSlot.Capes);
         
         AttachmentsRegistry.get().register("Jacket_Racing", AttachmentsRegistry.CosmeticSlot.Overtops);
         AttachmentsRegistry.get().register("Jacket_Violet", AttachmentsRegistry.CosmeticSlot.Overtops);
