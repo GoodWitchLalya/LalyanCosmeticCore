@@ -37,21 +37,24 @@ Registering a cosmetic is quite simple. You'll need to make an asset pack (obvio
 *   The cosmetic's .png texture
 *   The cosmetic's .png icon, which is the same icon you would use for the item!
 
-These files must be named in the same way, that being Cosmetic\_Id.extension
+These files must be named in the same way, that being Custom_ID.extension
 
 Each cosmetic will be its own folder, with this structure
 
 ```
-Custom_Id/
-├── Custom_Id.blockymodel
-├── Custom_Id.png
+Custom_ID/
+├── Custom_ID.blockymodel
+├── Custom_ID.png
 └── Icon/
-    └── Custom_Id.png
+    └── Custom_ID.png
 ```
 
 Then the cosmetic will go in a certain folder, depending on the type:
 
-The base path is `Common/Resources/Cosmetics`, then the folder based on the slot, which can be:
+### Cosmetics
+(things like shirts, caps, pants etc..)
+
+The base path for cosmetics is `Common/Resources/Cosmetics`, then the folder based on the slot, which can be:
 
 *   `Capes`
 *   `Ears_Accessories`
@@ -67,9 +70,9 @@ The base path is `Common/Resources/Cosmetics`, then the folder based on the slot
 
 Then the folder you made before.
 
-So, for a cosmetic called Custom\_Cape, which is in the cape slot it would be like this:
+So, for a cosmetic called Custom_Cape, which is in the cape slot it would be like this:
 
-`Common/Resources/Cosmetics/Capes/Custom_Cape` and inside the Custom\_Cape folder:
+`Common/Resources/Cosmetics/Capes/Custom_Cape` and inside the Custom_Cape folder:
 
 ```
 Custom_Cape/
@@ -79,11 +82,43 @@ Custom_Cape/
     └── Custom_Cape.png
 ```
 
-## Advanced Cosmetic
+### Characters
+(things like mouth, ears, eyes etc..)
 
-Inside your cosmetic folder, you can add a `Cosmetic_Id.json` file. This file allows you customize even more your cosmetics.
+The base path for character cosmetics is `Common/Resources/Characters`, then the folder based on the slot, which can be:
 
-Within the json file, you are able to change the name and path of the model, texture and icon of your cosmetic. And that's not all, you'll also be able to define VARIANTS of your cosmetic
+*   `Eyes`
+*   `Mouth`
+*   `Nose`
+*   `Eyebrows`
+*   `Hair`
+*   `Beard`
+*   `Mustache`
+*   `Skin_Color`
+*   `Eye_Color`
+*   `Hair_Color`
+*   `Beard_Color`
+
+Then the folder you made before.
+
+So, for a character cosmetic called Custom_Eyes, which is in the cape slot it would be like this:
+
+`Common/Resources/Cosmetics/Capes/Custom_Eyes` and inside the Custom_Eyes folder:
+
+```
+Custom_Eyes/
+├── Custom_Eyes.blockymodel
+├── Custom_Eyes.png
+└── Icon/
+    └── Custom_Eyes.png
+```
+
+
+## Advanced Cosmetics (optional)
+
+Inside your cosmetic folder, you can add a `Cosmetic_Id.json` file. This file allows you to customize even more your cosmetics.
+
+Within the JSON file, you are able to change the name and path of the model, texture and icon of your cosmetic. And that's not all, you'll also be able to define VARIANTS of your cosmetic and if the cosmetic occupies more than one slot!
 
 ```json
 {
@@ -104,7 +139,6 @@ Within the json file, you are able to change the name and path of the model, tex
 
 # Lalyan Cosmetic Core
 
-
 Un'API per registrare e personalizzare cosmetici senza usare gli slot dell'armatura
 
 ## Introduzione
@@ -115,13 +149,13 @@ Permette anche ai creatori di plugin di creare i loro cosmetici personalizzati, 
 
 Il plugin fornisce una GUI per personalizzare i cosmetici, che può essere aperta tramite comando o, in un modo più immersivo, interagendo con qualsiasi armadio vanilla
 
-Nella GUI, puoi selezionare con Click Sinitro i cosmetici da equipaggiare o, se lo slot ha l'icona delle varianti, puoi fare Click Destro per aprire la tab delle varianti
+La GUI fornisce un modo semplice per selezionare cosmetici e varianti di cosmetici. Fai clic con il pulsante sinistro su un cosmetico per equipaggiarlo, se il cosmetico ha l'icona della variante, fai clic con il pulsante destro per aprire il menu delle varianti!
 
 ## Comandi
 
 Il plugin ha alcuni comandi che sono principalmente a scopo di test:
 
-*   `/cosmetic apply <CosmeticId> [override]` applica manualmente un certo cosmetico definito da `CosmeticId`, `override` è opzionale, il valore predefinito è `yes [qualsiasi altro valore è no]`, determina se tutti gli altri cosmetici del suo tipo devono essere rimossi. Richiede OP
+*   `/cosmetic apply <CosmeticId> [override]` applica manualmente un certo cosmetico definito da `CosmeticId`, `override` è opzionale, il valore predefinito è `yes [l'altro valore è no]`, determina se tutti gli altri cosmetici del suo tipo devono essere rimossi. Richiede OP
 
 *   `/cosmetic change` apre manualmente l'interfaccia utente di personalizzazione dei cosmetici. Non richiede permessi
 
@@ -134,27 +168,30 @@ Il plugin ha alcuni comandi che sono principalmente a scopo di test:
 
 ## Registrazione dei cosmetici
 
-Registrare un cosmetico è abbastanza semplice. Dovrai creare un pacchetto di risorse (ovviamente), e avrai bisogno di 3 file:
+Registrare un cosmetico è abbastanza semplice. Dovrai creare un pacchetto di risorse (ovviamente), e avrai bisogno di 3 file essenziali:
 
-*   Il .blockymodel del cosmetico
+*   Il file .blockymodel del cosmetico
 *   La texture .png del cosmetico
 *   L'icona .png del cosmetico, che è la stessa icona che useresti per l'oggetto!
 
-Questi file devono essere nominati allo stesso modo, ovvero Cosmetic\_Id.extension
+Questi file devono essere nominati allo stesso modo, ovvero Custom_ID.extension
 
 Ogni cosmetico avrà la sua cartella, con questa struttura
 
 ```
-Custom_Id/
-├── Custom_Id.blockymodel
-├── Custom_Id.png
+Custom_ID/
+├── Custom_ID.blockymodel
+├── Custom_ID.png
 └── Icon/
-    └── Custom_Id.png
+    └── Custom_ID.png
 ```
 
-Quindi il cosmetico andrà in una certa cartella, a seconda del tipo:
+La cartella del cosmetico andrà messa all'interno di una certa cartella, a seconda del tipo di cosmetico:
 
-Il percorso base è `Common/Resources/Cosmetics`, quindi la cartella basata sullo slot, che può essere:
+### Cosmetici
+(cose come magliette, cappelli, pantaloni ecc..)
+
+Il percorso base per i cosmetici è `Common/Resources/Cosmetics`, seguito dalla cartella basata sullo slot, che può essere:
 
 *   `Capes`
 *   `Ears_Accessories`
@@ -168,11 +205,11 @@ Il percorso base è `Common/Resources/Cosmetics`, quindi la cartella basata sull
 *   `Undertops`
 *   `Underwears`
 
-Quindi la cartella che hai creato prima.
+Scegli quale di questi slots deve occupare il tuo cosmetico e inserisci la cartella che hai creato prima.
 
-Quindi, per un cosmetico chiamato Custom_Cape, che si trova nello slot del mantello, sarebbe così:
+Quindi, per un cosmetico chiamato `Custom_Cape`, che si trova nello slot `Capes`, il percorso sarà questo:
 
-`Common/Resources/Cosmetics/Capes/Custom_Cape` e all'interno della cartella Custom_Cape:
+`Common/Resources/Cosmetics/Capes/Custom_Cape`, e all'interno della cartella `Custom_Cape`:
 
 ```
 Custom_Cape/
@@ -182,23 +219,64 @@ Custom_Cape/
     └── Custom_Cape.png
 ```
 
+### Parti del Personaggio
+(cose come bocca, orecchie, occhi ecc..)
 
-## Cosmetici Avanzati
+Il percorso base per i cosmetici del personaggio è `Common/Resources/Characters`, seguito dalla cartella basata sullo slot, che può essere:
 
-Nella cartella del cosmetico, puoi creare un file `Cosmetic_Id.json`. Questo file permette di customizzare ancora di più i tuoi cosmetici!
+*   `Eyes`
+*   `Mouth`
+*   `Nose`
+*   `Eyebrows`
+*   `Hair`
+*   `Beard`
+*   `Mustache`
+*   `Skin_Color`
+*   `Eye_Color`
+*   `Hair_Color`
+*   `Beard_Color`
 
-Nel file json potrai cambiare il nome e il percorso del modello, della texture e dell'icona del tuo cosmetico. E non solo, potrai anche definire varianti!
+Scegli quale di questi slots deve occupare la tua parte per il personaggio e inserisci la cartella che hai creato prima.
+
+Quindi, per un cosmetico del personaggio chiamato `Custom_Eyes`, che si trova nello slot `Eyes`, il percorso sarà questo:
+
+`Common/Resources/Characters/Eyes/Custom_Eyes`, e all'interno della cartella `Custom_Eyes`:
+
+```
+Custom_Eyes/
+├── Custom_Eyes.blockymodel
+├── Custom_Eyes.png
+└── Icon/
+    └── Custom_Eyes.png
+```
+
+
+## Cosmetici Avanzati (opzionale)
+
+All'interno della cartella del tuo cosmetico, puoi aggiungere un file `Custom_Id.json` (in cui Custom_Id è l'ID del tuo cosmetico).
+Questo file ti permetterà di personalizzare ancora di più i tuoi cosmetici.
+
+All'interno del file JSON puoi cambiare il nome e il percorso del modello, della texture e dell'icona del tuo cosmetico. E non è tutto, potrai anche definire VARIANTI del tuo cosmetico e decidere se occupa slot multipli!
+
+Qui la formattazione corretta del cosmetico di esempio
 
 ```json
 {
-    "model": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat.blockymodel",
-    "texture": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat.png",
-    "icon": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat_Icon.png",
-    "variants": {
-        "Variant": {
-            "texture": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant.png",
-            "icon": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant_Icon.png"
-        }
+  "model": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat.blockymodel",
+  "texture": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat.png",
+  "icon": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat_Icon.png",
+  "variants": {
+    "Variant1": {
+      "texture": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant1.png",
+      "icon": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant1_Icon.png"
+    },
+    "Variant2": {
+      "texture": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant2.png",
+      "icon": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant2_Icon.png"
     }
+  },
+  "slot_overrides": [
+    "Capes"
+  ]
 }
 ```
