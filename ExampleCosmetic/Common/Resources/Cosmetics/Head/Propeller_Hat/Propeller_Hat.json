@@ -7,5 +7,8 @@
             "texture": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant.png",
             "icon": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant_Icon.png"
         }
-    }
+    },
+    "slot_overrides": [
+        "Capes"
+    ]
 }

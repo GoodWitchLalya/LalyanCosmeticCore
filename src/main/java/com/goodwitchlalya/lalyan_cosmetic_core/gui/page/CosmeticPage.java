@@ -288,8 +288,16 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
                 this.variants = new HashMap<>();
                 this.variantOriginalId = null;
             }
+            
+            if (data.cosmeticId.startsWith("No")) {
+                AttachmentsRegistry.Slot slot = AttachmentsRegistry.Slot.valueOf(data.cosmeticId.replace("No", ""));
+                if (slot != null) {
+                    AttachmentsRegistry.get().clearSlot(ref, slot);
+                }
+            } else {
+                AttachmentsRegistry.get().removeCosmetic(ref, data.cosmeticId);
+            }
 
-            AttachmentsRegistry.get().removeCosmetic(ref, data.cosmeticId);
             this.sendUpdate();
             this.rebuild();
             

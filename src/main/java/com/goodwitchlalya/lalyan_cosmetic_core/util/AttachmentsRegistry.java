@@ -2,6 +2,7 @@ package com.goodwitchlalya.lalyan_cosmetic_core.util;
 
 import com.goodwitchlalya.lalyan_cosmetic_core.component.CosmeticData;
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.PlayerSkin;
@@ -86,14 +87,18 @@ public class AttachmentsRegistry {
         private final String icon;
         @Expose
         private final Map<String, Variant> variants;
+        @Expose
+        @SerializedName("slot_overrides")
+        private final List<String> slotOverrides;
         
         public Slot slot;
         
-        public AttachmentData(String model, String texture, String icon, Map<String, Variant> variants) {
+        public AttachmentData(String model, String texture, String icon, Map<String, Variant> variants, List<String> slotOverrides) {
             this.model = model;
             this.texture = texture;
             this.icon = icon;
-            this.variants = variants;
+            this.variants = variants != null? variants: Map.of();
+            this.slotOverrides = slotOverrides != null? slotOverrides : List.of();
         }
         
         public String model() {
@@ -114,6 +119,10 @@ public class AttachmentsRegistry {
         
         public Map<String, Variant> variants() {
             return variants;
+        }
+        
+        public List<String> slotOverrides() {
+            return slotOverrides;
         }
     }
     
@@ -181,6 +190,14 @@ public class AttachmentsRegistry {
             }
             
             overrides.put(attachment.data().slot(), true);
+            
+            for (String override : attachment.data().slotOverrides()) {
+                Slot overrideSlot = Slot.valueOf(override);
+                if (overrideSlot != null) {
+                    overrides.put(overrideSlot, true);
+                }
+            }
+            
             attachments.add(attachment.makeModel(variant));
         }
         
@@ -461,6 +478,35 @@ public class AttachmentsRegistry {
             data.removeCosmetic(s);
         }
         
+        // Handle slot overrides removal
+        if (cosmeticId.startsWith("No")) {
+            Slot slot = Slot.valueOf(cosmeticId.replace("No", ""));
+            if (slot != null) {
+                List<String> dependentCosmetics = new ArrayList<>();
+                for (String cosmetic : data.getCosmetics()) {
+                    if (cosmetic.startsWith("No")) continue;
+                    
+                    String id = cosmetic.split("\\$")[0];
+                    Attachment attachment = attachmentsRegistry.get(id);
+                    if (attachment != null && attachment.data().slotOverrides().contains(slot.name())) {
+                        dependentCosmetics.add(cosmetic);
+                    }
+                }
+                
+                for (String dep : dependentCosmetics) {
+                    removeCosmetic(ref, dep);
+                }
+            }
+        } else {
+            String id = cosmeticId.split("\\$")[0];
+            Attachment attachment = attachmentsRegistry.get(id);
+            if (attachment != null) {
+                for (String override : attachment.data().slotOverrides()) {
+                    data.removeCosmetic("No" + override);
+                }
+            }
+        }
+        
         rebuildSkinWithCosmetics(ref);
     }
     
@@ -479,6 +525,14 @@ public class AttachmentsRegistry {
         
         if (override) {
             clearSlot(ref, cosmId);
+        }
+        
+        Attachment attachment = attachmentsRegistry.get(cosmId);
+        if (attachment != null) {
+            for (String overrideSlot : attachment.data().slotOverrides()) {
+                clearSlot(ref, Slot.valueOf(overrideSlot));
+                data.addCosmetic("No" + overrideSlot);
+            }
         }
         
         data.addCosmetic(cosmeticId);
@@ -540,7 +594,7 @@ public class AttachmentsRegistry {
         }
         
         for (String rev : toRemove) {
-            data.removeCosmetic(rev);
+            removeCosmetic(ref, rev);
         }
         
         rebuildSkinWithCosmetics(ref);
@@ -576,7 +630,7 @@ public class AttachmentsRegistry {
         
         attachmentPath += String.format("%s/%s", slot, split[1]);
         
-        AttachmentData attData = new AttachmentData(String.format("%s/%s.blockymodel", attachmentPath, split[1]), String.format("%s/%s.png", attachmentPath, split[1]), String.format("%s/Icon/%s.png", attachmentPath, split[1]), Map.of());
+        AttachmentData attData = new AttachmentData(String.format("%s/%s.blockymodel", attachmentPath, split[1]), String.format("%s/%s.png", attachmentPath, split[1]), String.format("%s/Icon/%s.png", attachmentPath, split[1]), Map.of(), List.of());
         attData.slot = slot;
         
         register(name, attData);
