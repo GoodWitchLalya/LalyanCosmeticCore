@@ -10,6 +10,8 @@ $C.@PageOverlay {
                 $C.@Title {
                     @Text = "Customize Cosmetics";
                 }
+
+                $C.@HeaderSearch {}
             }
         }
 
@@ -40,6 +42,7 @@ $C.@PageOverlay {
                 Group #TLTorso {}
                 Group #TLLegs {}
                 Group #TLCapes {}
+                Group #TLAll {}
             }
         }
     }
