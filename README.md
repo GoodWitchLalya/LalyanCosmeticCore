@@ -26,7 +26,7 @@ The plugin has some commands that are mainly for testing purposes:
 
 *   `/cosmetic reload` manually reloads all cosmetics. Requires OP
 
-*   `/cosmetic reset` removes all custom cosmetics and resets the default skin. Requires OP
+*   `/cosmetic clear` removes all custom cosmetics and resets the default skin. Requires OP
 
 
 ## Registering cosmetics
@@ -129,7 +129,7 @@ Il plugin ha alcuni comandi che sono principalmente a scopo di test:
 
 *   `/cosmetic reload` ricarica manualmente tutti i cosmetici. Richiede OP
 
-*   `/cosmetic reset` rimuove tutti i cosmetici personalizzati e ripristina la skin predefinita. Richiede OP
+*   `/cosmetic clear` rimuove tutti i cosmetici personalizzati e ripristina la skin predefinita. Richiede OP
 
 
 ## Registrazione dei cosmetici
