@@ -37,16 +37,16 @@ Registering a cosmetic is quite simple. You'll need to make an asset pack (obvio
 *   The cosmetic's .png texture
 *   The cosmetic's .png icon, which is the same icon you would use for the item!
 
-These files must be named in the same way, that being Custom_ID.extension
+These files must be named in the same way, that being CustomID.extension
 
 Each cosmetic will be its own folder, with this structure
 
 ```
-Custom_ID/
-├── Custom_ID.blockymodel
-├── Custom_ID.png
+CustomID/
+├── CustomID.blockymodel
+├── CustomID.png
 └── Icon/
-    └── Custom_ID.png
+    └── CustomID.png
 ```
 
 Then the cosmetic will go in a certain folder, depending on the type:
@@ -109,12 +109,38 @@ Custom_Eyes/
     └── Custom_Eyes.png
 ```
 
+## Variants (optional)
+This API also allows you to add variants.
+
+To add variants, you will need to add the variant texture and icon inside your cosmetic's folder.
+
+`!Warning! Remember that the name you give to the files is important.`
+
+The variant textures must be placed in the cosmetic folder (CustomID) and named as follows:
+
+    CustomID_Variant_VariantName.png
+
+The variant icons must have the same name given to the variant texture, but unlike the texture, they must be placed inside the `Icon/` folder.
+
+Taking the Propeller_Hat as an example:
+
+```text
+Propeller_Hat/
+├── Propeller_Hat.blockymodel
+├── Propeller_Hat.png
+├── Propeller_Hat_Variant_Circus.png
+├── Propeller_Hat_Variant_Rainbow.png
+└── Icon/
+    ├── Propeller_Hat.png
+    ├── Propeller_Hat_Variant_Circus.png
+    └── Propeller_Hat_Variant_Rainbow.png
+```
 
 ## Advanced Cosmetics (optional)
 
 Inside your cosmetic folder, you can add a `Cosmetic_Id.json` file. This file allows you to customize even more your cosmetics.
 
-Within the JSON file, you are able to change the name and path of the model, texture and icon of your cosmetic. And that's not all, you'll also be able to define VARIANTS of your cosmetic and if the cosmetic occupies more than one slot!
+Within the JSON file, you are able to change the name and path of the model, texture and icon of your cosmetic. And that's not all, you'll also be able to define variants of your cosmetic and if the cosmetic occupies MORE THAN ONE SLOT!
 
 ```json
 {
@@ -129,6 +155,27 @@ Within the JSON file, you are able to change the name and path of the model, tex
     }
 }
 ```
+
+
+**"model"** Is the path of the base cosmetic model and any variants.
+
+**"texture"** Is the path of the base cosmetic texture and any variants.
+
+**"icon"** Is the path of the base cosmetic icon.
+
+**"variants"** Announces the presence of variants that will be listed.
+
+**"variants" > "variant1Name"** Will be replaced with the name of the first variant.
+
+**"variants" > "variant2Name"** Will be replaced with the name of the second variant.
+
+Inside the variant names mentioned above are the definitions of the variant components.
+
+**"variants" > "variantName" > "texture"** Is the path of the texture of the variant in question.
+
+**"variants" > "variantName" > "icon"** Is the path of the icon of the variant in question.
+
+#
 
 ---
 
@@ -171,16 +218,16 @@ Registrare un cosmetico è abbastanza semplice. Dovrai creare un pacchetto di ri
 *   La texture .png del cosmetico
 *   L'icona .png del cosmetico, che è la stessa icona che useresti per l'oggetto!
 
-Questi file devono essere nominati allo stesso modo, ovvero Custom_ID.extension
+Questi file devono essere nominati allo stesso modo, ovvero CustomID.extension
 
 Ogni cosmetico avrà la sua cartella, con questa struttura
 
 ```
-Custom_ID/
-├── Custom_ID.blockymodel
-├── Custom_ID.png
+CustomID/
+├── CustomID.blockymodel
+├── CustomID.png
 └── Icon/
-    └── Custom_ID.png
+    └── CustomID.png
 ```
 
 La cartella del cosmetico andrà messa all'interno di una certa cartella, a seconda del tipo di cosmetico:
@@ -243,13 +290,43 @@ Custom_Eyes/
     └── Custom_Eyes.png
 ```
 
+## Varianti (opzionale)
+Questa API ti consente anche di aggiungere delle varianti.
+
+Per aggiungerle le varianti dovrai aggiungere le textures e le icone delle varianti all'interno della cartella del tuo cosmetico.
+
+``!Attenzione! Ricordati che il nome che dai ad i files è importante.``
+
+Le textures delle varianti devono essere messe nella cartella del cosmetico (CustomID) nominate come segue:
+
+    CustomID_Variant_NomeVariante.png
+
+Le icone delle varianti devono avere lo stesso nome che abbiamo dato alla texture della variante ma a differenza di essa andranno messe dentro la cartella `Icon/`.
+
+Facendo un esempio con il Propeller_Hat:
+
+```text
+Propeller_Hat/
+├── Propeller_Hat.blockymodel
+├── Propeller_Hat.png
+├── Propeller_Hat_Variant_Circo.png
+├── Propeller_Hat_Variant_Arcobaleno.png
+└── Icon/
+    ├── Propeller_Hat.png
+    ├── Propeller_Hat_Variant_Circo.png
+    └── Propeller_Hat_Variant_Arcobaleno.png
+```
+
+Facendo così l'API caricherà: **Propeller_Hat**, **Propeller_Hat_Variant_Circo**, **Propeller_Hat_Variant_Arcobaleno**.
+
+Saranno viste dall'API come varianti dello stesso cosmetico quindi implicitamente useranno `Propeller_Hat.blockymodel` come modello.
 
 ## Cosmetici Avanzati (opzionale)
 
-All'interno della cartella del tuo cosmetico, puoi aggiungere un file `Custom_Id.json` (in cui Custom_Id è l'ID del tuo cosmetico).
+All'interno della cartella del tuo cosmetico, puoi aggiungere un file `CustomID.json` (in cui CustomID è l'ID del tuo cosmetico).
 Questo file ti permetterà di personalizzare ancora di più i tuoi cosmetici.
 
-All'interno del file JSON puoi cambiare il nome e il percorso del modello, della texture e dell'icona del tuo cosmetico. E non è tutto, potrai anche definire VARIANTI del tuo cosmetico e decidere se occupa slot multipli!
+All'interno del file JSON puoi cambiare il nome e il percorso del modello, della texture e dell'icona del tuo cosmetico. E non è tutto, potrai anche definire varianti del tuo cosmetico e decidere se occupa SLOT MULTIPLI!
 
 Qui la formattazione corretta del cosmetico di esempio
 
@@ -259,11 +336,11 @@ Qui la formattazione corretta del cosmetico di esempio
   "texture": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat.png",
   "icon": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat_Icon.png",
   "variants": {
-    "Variant1": {
+    "Variant1Name": {
       "texture": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant1.png",
       "icon": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant1_Icon.png"
     },
-    "Variant2": {
+    "Variant2Name": {
       "texture": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant2.png",
       "icon": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant2_Icon.png"
     }
@@ -273,3 +350,22 @@ Qui la formattazione corretta del cosmetico di esempio
   ]
 }
 ```
+___
+
+**"model"** È il percorso del modello di cosmetico base ed eventuali varianti.
+
+**"texture"** È il percorso della texture di cosmetico base ed eventuali varianti.
+
+**"icon"** È il percorso dell'icona del cosmetico base.
+
+**"variants"** Annuncia la presenza di varianti che saranno elencate.
+
+**"variants" > "variant1Name"** Andrà sostituito con il nome della prima variante.
+
+**"variants" > "variant2Name"** Andrà sostituito con il nome della seconda variante.
+
+Dentro i nomi delle varianti qui sopra citati ci sono le definizioni dei componenti della variante.
+
+**"variants" > "variantName" > "texture"** È il percorso della texture della variante in questione.
+
+**"variants" > "variantName" > "icon"** È il percorso dell'icona della variante in questione.
