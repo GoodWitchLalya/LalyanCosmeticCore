@@ -9,7 +9,11 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /**
@@ -145,7 +149,7 @@ public class FileManager {
                                     // Verify that the folder is not empty (contains at least one file, e.g., the model or texture)
                                     if (content.findAny().isPresent()) {
                                         // Register using default naming conventions
-
+                                        
                                         // Check if the 'Icons' subfolder exists
                                         boolean isIconFolderThere = false;
                                         // Check if the icon image exists within the 'Icons' subfolder
@@ -167,9 +171,44 @@ public class FileManager {
                                         // Check if the main texture file exists
                                         isTextureThere = Files.exists(itemFolder.resolve(itemName + ".png"));
                                         if  (!isTextureThere) { r.add("No texture found"); return;}
-
+                                        
                                         // If all required files are present, register the attachment
-                                        AttachmentsRegistry.get().register(assetPack.getName() + "#" + itemName, slot);
+                                        Map<String, AttachmentsRegistry.Variant> variants = new HashMap<>();
+                                        try (Stream<Path> itemFolderFiles = Files.list(itemFolder)) {
+                                            itemFolderFiles.filter(Files::isRegularFile).filter((item) -> {// Search for suitable variants
+                                                if (item.getFileName().toString().matches(String.format("%s_Variant_.*\\.png", itemName))) return true;
+                                                else return false;
+                                            }).forEach(variant -> {// For each suitable variant
+                                                // Verify if the variant is valid and get the variant name
+                                                String variantFileName = variant.getFileName().toString();
+                                                String variantName = "";
+                                                Pattern pattern = Pattern.compile("_Variant_(.*)\\.png");
+                                                Matcher matcher = pattern.matcher(variantFileName);
+                                                if (matcher.find()) {
+                                                    variantName = matcher.group(1);
+                                                }
+                                                r.add(String.format("Found a variant (%s) for %s in [%s]\nChecking for an icon", variantName, itemName, variantFileName));
+                                                
+                                                //Getting the variable texture path
+                                                String variantTexturePath = itemFolder.resolve(variantFileName).toString().replaceFirst(".*?(?=Resources)", "");
+                                                r.add(String.format("Variant texture found, path: %s", variantTexturePath));
+                                                
+                                                //Getting the variable icon path
+                                                String variantIconPath = itemFolder.resolve("Icon").resolve(variantFileName).toString().replaceFirst(".*?(?=Resources)", "");
+                                                r.add(String.format("Variant icon found, path: %s", variantIconPath));
+                                                
+                                                variants.put(variantName, new AttachmentsRegistry.Variant(variantTexturePath, variantIconPath));
+                                                r.add("Variant saved!");
+                                            });
+                                            if (variants.isEmpty()) {
+                                                AttachmentsRegistry.get().register(assetPack.getName() + "#" + itemName, slot);
+                                            } else {
+                                                AttachmentsRegistry.get().register(assetPack.getName() + "#" + itemName, slot, variants);
+                                                variants.clear();
+                                            }
+                                        } catch (Exception e) {
+                                            r.add(String.format("Cannot access %s for searching variants", itemFolder.getFileName().toString()));
+                                        }
                                     } else {
                                         // Log if the folder is empty
                                         r.add(String.format("Folder '%s' in slot %s is empty. Ignoring.", itemName, slot.name()));
