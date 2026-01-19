@@ -150,19 +150,19 @@ public class FileManager {
                                     if (content.findAny().isPresent()) {
                                         // Register using default naming conventions
                                         
-                                        // Check if the 'Icons' subfolder exists
+                                        // Check if the 'Icon' subfolder exists
                                         boolean isIconFolderThere = false;
-                                        // Check if the icon image exists within the 'Icons' subfolder
+                                        // Check if the icon image exists within the 'Icon' subfolder
                                         boolean isIconThere = false;
                                         // Check if the main texture file exists
                                         boolean isTextureThere = false;
                                         // Check if the blocky model file exists
                                         boolean isModelThere = false;
                                         
-                                        // Check if the 'Icons' subfolder exists
+                                        // Check if the 'Icon' subfolder exists
                                         isIconFolderThere = Files.exists(itemFolder.resolve("Icon"));
-                                        if  (!isIconFolderThere) { r.add("No Icons folder found"); return;}
-                                        // Check if the icon image exists within the 'Icons' subfolder
+                                        if  (!isIconFolderThere) { r.add("No Icon folder found"); return;}
+                                        // Check if the icon image exists within the 'Icon' subfolder
                                         isIconThere = Files.exists(itemFolder.resolve("Icon").resolve(itemName + ".png"));
                                         if  (!isIconThere) { r.add("No icon image found"); return;}
                                         // Check if the blocky model file exists
@@ -174,6 +174,7 @@ public class FileManager {
                                         
                                         // If all required files are present, register the attachment
                                         Map<String, AttachmentsRegistry.Variant> variants = new HashMap<>();
+                                        
                                         try (Stream<Path> itemFolderFiles = Files.list(itemFolder)) {
                                             itemFolderFiles.filter(Files::isRegularFile).filter((item) -> {// Search for suitable variants
                                                 if (item.getFileName().toString().matches(String.format("%s_Variant_.*\\.png", itemName))) return true;
@@ -190,11 +191,11 @@ public class FileManager {
                                                 r.add(String.format("Found a variant (%s) for %s in [%s]\nChecking for an icon", variantName, itemName, variantFileName));
                                                 
                                                 //Getting the variable texture path
-                                                String variantTexturePath = itemFolder.resolve(variantFileName).toString().replaceFirst(".*?(?=Resources)", "");
+                                                String variantTexturePath = itemFolder.resolve(variantFileName).toString().replace("\\", "/").replaceFirst(".*?(?=Resources)", "");
                                                 r.add(String.format("Variant texture found, path: %s", variantTexturePath));
                                                 
                                                 //Getting the variable icon path
-                                                String variantIconPath = itemFolder.resolve("Icon").resolve(variantFileName).toString().replaceFirst(".*?(?=Resources)", "");
+                                                String variantIconPath = itemFolder.resolve("Icon").resolve(variantFileName).toString().replace("\\", "/").replaceFirst(".*?(?=Resources)", "");
                                                 r.add(String.format("Variant icon found, path: %s", variantIconPath));
                                                 
                                                 variants.put(variantName, new AttachmentsRegistry.Variant(variantTexturePath, variantIconPath));
@@ -203,8 +204,7 @@ public class FileManager {
                                             if (variants.isEmpty()) {
                                                 AttachmentsRegistry.get().register(assetPack.getName() + "#" + itemName, slot);
                                             } else {
-                                                AttachmentsRegistry.get().register(assetPack.getName() + "#" + itemName, slot, variants);
-                                                variants.clear();
+                                                AttachmentsRegistry.get().register(assetPack.getName() + "#" + itemName, slot, new HashMap<>(variants));
                                             }
                                         } catch (Exception e) {
                                             r.add(String.format("Cannot access %s for searching variants", itemFolder.getFileName().toString()));

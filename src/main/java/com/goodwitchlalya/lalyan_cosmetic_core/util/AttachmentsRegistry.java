@@ -98,8 +98,8 @@ public class AttachmentsRegistry {
             this.model = model;
             this.texture = texture;
             this.icon = icon;
-            this.variants = variants != null? variants: Map.of();
-            this.slotOverrides = slotOverrides != null? slotOverrides : List.of();
+            this.variants = variants;
+            this.slotOverrides = slotOverrides;
         }
         
         public String model() {
