@@ -76,6 +76,7 @@ public class AttachmentsRegistry {
     }
     
     public record Variant(@Expose String texture, @Expose String icon) {
+    
     }
     
     public static class AttachmentData {
@@ -97,8 +98,8 @@ public class AttachmentsRegistry {
             this.model = model;
             this.texture = texture;
             this.icon = icon;
-            this.variants = variants != null? variants: Map.of();
-            this.slotOverrides = slotOverrides != null? slotOverrides : List.of();
+            this.variants = variants;
+            this.slotOverrides = slotOverrides;
         }
         
         public String model() {
@@ -618,6 +619,10 @@ public class AttachmentsRegistry {
     }
     
     public void register(String name, Slot slot) {
+        register(name, slot, Map.of());
+    }
+    
+    public void register(String name, Slot slot, Map<String, Variant> variants) {
         String attachmentPath = "Resources/";
         
         if (slot.getType() == SlotType.CHARACTER) {
@@ -628,9 +633,16 @@ public class AttachmentsRegistry {
         
         String[] split = name.split("#");
         
+        
         attachmentPath += String.format("%s/%s", slot, split[1]);
         
-        AttachmentData attData = new AttachmentData(String.format("%s/%s.blockymodel", attachmentPath, split[1]), String.format("%s/%s.png", attachmentPath, split[1]), String.format("%s/Icon/%s.png", attachmentPath, split[1]), Map.of(), List.of());
+        AttachmentData attData = new AttachmentData(
+                String.format("%s/%s.blockymodel", attachmentPath, split[1]),
+                String.format("%s/%s.png", attachmentPath, split[1]),
+                String.format("%s/Icon/%s.png", attachmentPath, split[1]),
+                variants,
+                List.of()
+        );
         attData.slot = slot;
         
         register(name, attData);
