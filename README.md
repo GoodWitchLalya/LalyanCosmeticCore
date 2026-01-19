@@ -130,6 +130,7 @@ Within the JSON file, you are able to change the name and path of the model, tex
 }
 ```
 
+---
 
 ### Italiano
 
