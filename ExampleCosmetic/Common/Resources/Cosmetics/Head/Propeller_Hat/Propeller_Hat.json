@@ -3,9 +3,13 @@
     "texture": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat.png",
     "icon": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat_Icon.png",
     "variants": {
-        "Variant": {
-            "texture": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant.png",
-            "icon": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant_Icon.png"
+        "Variant1": {
+            "texture": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant1.png",
+            "icon": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant1_Icon.png"
+        },
+        "Variant2": {
+            "texture": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant2.png",
+            "icon": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant2_Icon.png"
         }
     },
     "slot_overrides": [
