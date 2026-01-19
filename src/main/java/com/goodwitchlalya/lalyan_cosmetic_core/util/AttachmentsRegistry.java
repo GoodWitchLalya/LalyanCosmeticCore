@@ -122,7 +122,7 @@ public class AttachmentsRegistry {
         }
         
         public List<String> slotOverrides() {
-            return slotOverrides;
+            return slotOverrides != null? slotOverrides: List.of();
         }
     }
     
