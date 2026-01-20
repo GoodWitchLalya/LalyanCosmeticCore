@@ -13,19 +13,33 @@ import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
+/**
+ * Subcommand to list all registered and loaded cosmetics.
+ * Requires OP permissions.
+ */
 public class CosmeticListCommand extends AbstractPlayerCommand {
     
     private final Universe universe = Universe.get();
     
+    /**
+     * Constructor for the 'list' subcommand.
+     * Defines the command's description and permissions.
+     */
     public CosmeticListCommand() {
         super("list", "Lists all Cosmetics found and loaded");
         this.setPermissionGroups("OP");
     }
     
+    /**
+     * Executes the command logic.
+     * Sends a list of all registered cosmetic IDs to the player who executed the command.
+     */
     @Override
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
+        // Execute the listing on the world's main thread.
         universe.getWorld(playerRef.getWorldUuid()).execute(() -> {
             commandContext.sendMessage(Message.raw("Cosmetics:"));
+            // Retrieve the list from the registry and send each entry as a message.
             AttachmentsRegistry.get().getAttachmentsList().forEach(attachment -> {
                 commandContext.sendMessage(Message.raw(String.format("- %s", attachment)));
             });
