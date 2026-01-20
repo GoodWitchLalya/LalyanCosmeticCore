@@ -17,12 +17,20 @@ import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import java.util.Map;
 
+/**
+ * Subcommand to manually apply a cosmetic to a player.
+ * Requires OP permissions.
+ */
 public class CosmeticApplyCommand extends AbstractPlayerCommand {
     
     private final Universe universe = Universe.get();
     private RequiredArg<String> cosmeticName;
     private OptionalArg<String> override;
     
+    /**
+     * Constructor for the 'apply' subcommand.
+     * Defines the command's arguments and permissions.
+     */
     public CosmeticApplyCommand() {
         super("apply", "Manually applies a cosmetic");
         this.cosmeticName = this.withRequiredArg("cosmetic name", "The cosmetic Id", ArgTypes.STRING);
@@ -31,10 +39,16 @@ public class CosmeticApplyCommand extends AbstractPlayerCommand {
         
     }
     
+    /**
+     * Executes the command logic.
+     * Applies the specified cosmetic to the player who executed the command.
+     */
     @Override
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
+        // Determine if existing cosmetics in the same slot should be overridden. Defaults to true.
         boolean overrideBool = (override.get(commandContext) == null) || !override.get(commandContext).equals("no");
         
+        // Execute the cosmetic application on the world's main thread.
         universe.getWorld(playerRef.getWorldUuid()).execute(() -> {
             AttachmentsRegistry.get().addCosmetic(ref, cosmeticName.get(commandContext), overrideBool);
         });
