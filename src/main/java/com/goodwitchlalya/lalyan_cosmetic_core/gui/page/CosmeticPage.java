@@ -17,38 +17,66 @@ import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import java.util.*;
 
+/**
+ * Represents the main interactive UI page for cosmetic customization.
+ * This class is responsible for building the UI, handling player interactions,
+ * and updating the player's appearance based on their selections.
+ */
 public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
+    
+    /**
+     * Constructor for the CosmeticPage.
+     * @param playerRef A reference to the player for whom this page is being created.
+     */
     public CosmeticPage(@NonNullDecl PlayerRef playerRef) {
         super(playerRef, CustomPageLifetime.CanDismiss, Data.CODEC);
     }
     
+    // The currently selected cosmetic sub-category (e.g., Haircuts, Capes).
     private AttachmentsRegistry.Slot currentSlot = AttachmentsRegistry.CharacterSlot.Haircuts;
+    // The currently selected top-level category (e.g., Head, Torso).
     private AttachmentsRegistry.TopLevelTypes tlt = AttachmentsRegistry.TopLevelTypes.Head;
     
+    // The current search term entered by the player.
     private String search;
     
+    // The ID of the cosmetic for which variants are currently being displayed.
     private String variantOriginalId;
+    // A map of variants for the currently selected cosmetic.
     private Map<String, AttachmentsRegistry.Variant> variants = new HashMap<>();
     
+    /**
+     * Builds the main UI structure. This method is called to generate the UI commands
+     * that create the visual elements on the player's screen.
+     */
     @Override
     public void build(@NonNullDecl Ref<EntityStore> ref, @NonNullDecl UICommandBuilder cmd, @NonNullDecl UIEventBuilder evt, @NonNullDecl Store<EntityStore> store) {
+        // Load the base UI layout from a file.
         cmd.append("Pages/CosmeticGUI/LCC_CosmeticPage.ui");
         
+        // If there's an active search, set the value of the search input field.
         if (this.search != null) {
             cmd.set("#SearchInput.Value", this.search);
         }
         
+        // Build the dynamic parts of the UI.
         buildCosmeticButtons(cmd, evt);
         buildCosmetics(ref, cmd, evt);
     }
     
+    /**
+     * Builds the side panels with top-level and sub-category buttons.
+     */
     private void buildCosmeticButtons(UICommandBuilder cmd, UIEventBuilder evt) {
+        // Iterate through all top-level types (Head, Torso, etc.) to create their buttons.
         for (AttachmentsRegistry.TopLevelTypes tlt : AttachmentsRegistry.TopLevelTypes.values()) {
             String selector = "#TL" + tlt.name();
             
+            // Append the button UI from a template file.
             cmd.append("#LLSidePanel #Content " + selector, "Pages/CosmeticGUI/TLButtons/" + tlt.name() + ".ui");
             evt.addEventBinding(CustomUIEventBindingType.Activating, "#LLSidePanel #Content " + selector + " #CategoryButton", EventData.of("TLT", tlt.name()));
             
+            // Toggle visibility for enabled/disabled state based on the current selection.
             if (this.tlt != tlt) {
                 cmd.set("#LLSidePanel #Content " + selector + " #CategoryButton.Visible", true);
                 cmd.set("#LLSidePanel #Content " + selector + " #CategoryButtonEnabled.Visible", false);
@@ -58,8 +86,10 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             cmd.set("#LLSidePanel #Content " + selector + " #CategoryButton.Visible", false);
             cmd.set("#LLSidePanel #Content " + selector + " #CategoryButtonEnabled.Visible", true);
             
+            // If this is the selected top-level category, build its sub-category buttons.
             cmd.append("#LSidePanel #Content #CategoryButton", "Pages/CosmeticGUI/Categories/" + tlt.name() + ".ui");
             
+            // Use a switch to build the correct sub-categories for the selected top-level category.
             switch (tlt) {
                 case Head -> {
                     setupCategoryButton(cmd, evt, "Haircut", AttachmentsRegistry.CharacterSlot.Haircuts);
@@ -96,7 +126,13 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         }
     }
     
+    /**
+     * Helper method to configure a single sub-category button.
+     * @param groupName The name of the UI group for this button.
+     * @param slot The cosmetic slot this button corresponds to.
+     */
     private void setupCategoryButton(UICommandBuilder cmd, UIEventBuilder evt, String groupName, AttachmentsRegistry.Slot slot) {
+        // Set the button's visibility based on whether it's the currently selected slot.
         if (this.currentSlot == slot) {
             cmd.set("#LSidePanel #Content #CategoryButton #" + groupName + " #CategoryButton.Visible", false);
             cmd.set("#LSidePanel #Content #CategoryButton #" + groupName + " #CategoryButtonEnabled.Visible", true);
@@ -105,9 +141,13 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             cmd.set("#LSidePanel #Content #CategoryButton #" + groupName + " #CategoryButtonEnabled.Visible", false);
         }
         
+        // Bind a click event to the button.
         evt.addEventBinding(CustomUIEventBindingType.Activating, "#LSidePanel #Content #CategoryButton #" + groupName + " #CategoryButton", EventData.of("Slot", slot != null ? slot.name() : "All"));
     }
     
+    /**
+     * Builds the main grid of cosmetic items based on the current filters.
+     */
     private void buildCosmetics(Ref<EntityStore> ref, UICommandBuilder cmd, UIEventBuilder evt) {
         Map<String, AttachmentsRegistry.Attachment> registry = AttachmentsRegistry.get().getAttachmentsRegistry();
         
@@ -117,16 +157,20 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         
         cmd.appendInline("#Content #CosmeticGrid", "Group #CosmeticRow { LayoutMode: Top; }");
         
+        // Filter and sort the attachments from the registry.
         AttachmentsRegistry.Attachment[] entries = registry.values()
             .stream()
+            // Filter by the currently selected slot.
             .filter(a -> {
                 if (this.tlt == AttachmentsRegistry.TopLevelTypes.All) return true;
                 return a.data().slot() == currentSlot;
             })
+            // Filter by the search term.
             .filter(a -> {
                 if (this.search == null || this.search.isEmpty()) return true;
                 return a.name().toLowerCase().contains(this.search.toLowerCase());
             })
+            // Sort the items for a consistent display order.
             .sorted(Comparator.comparing(a -> {
                 String name = a.name();
                 
@@ -139,14 +183,17 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             .toList()
             .toArray(new AttachmentsRegistry.Attachment[0]);
         
+        // Get the unique keys for the filtered entries.
         String[] keys = Arrays.stream(entries)
             .map(e -> AttachmentsRegistry.get().getKey(e))
             .filter(Objects::nonNull)
             .toArray(String[]::new);
         
+        // Determine if the "unequip" (vanish) button should be shown.
         boolean showVanish = currentSlot != null && currentSlot.getType() != AttachmentsRegistry.SlotType.CHARACTER;
         int totalItems = entries.length + (showVanish ? 1 : 0);
         
+        // Loop to create the grid of items.
         for (int i = 0; i < totalItems; i++) {
             int rowIndex = i / itemsPerRow;
             int colIndex = i % itemsPerRow;
@@ -160,6 +207,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             
             String slotSelector = rowSelector + " #CosmeticSlot[" + colIndex + "]";
             
+            // Special handling for the first item if it's the "vanish" button.
             if (showVanish && i == 0) {
                 cmd.set(slotSelector + " #Icon.AssetPath", "UI/Custom/Common/Categories/VanishPart.png");
                 
@@ -172,12 +220,14 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
                 evt.addEventBinding(CustomUIEventBindingType.Activating, slotSelector + " #ButtonEnabled", EventData.of("CosmeticId", "No" + currentSlot.name()).append("Enabled", "true"));
                 cmd.set(slotSelector + " #VariantIcon.Visible", false);
             } else {
+                // Regular cosmetic item.
                 int entryIndex = showVanish ? i - 1 : i;
                 AttachmentsRegistry.Attachment entry = entries[entryIndex];
                 String cosmeticId = keys[entryIndex];
                 
                 String icon = entry.data().icon();
                 
+                // Check if a variant is equipped and update the icon accordingly.
                 String equippedVariant = AttachmentsRegistry.get().getEquippedVariant(ref, cosmeticId);
                 if (equippedVariant != null) {
                     icon = entry.data().variants().get(equippedVariant).icon();
@@ -185,6 +235,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
                 
                 cmd.set(slotSelector + " #Icon.AssetPath", icon);
                 
+                // Build and set the tooltip text with cosmetic details.
                 String name = entry.name();
                 
                 String[] authorSplit = name.split(":");
@@ -202,29 +253,33 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
                 cmd.set(slotSelector + " #Button.TooltipText", cosmeticName + "\n" + author + "\n" + assetPackName);
                 cmd.set(slotSelector + " #ButtonEnabled.TooltipText", cosmeticName + "\n" + author + "\n" + assetPackName);
                 
+                // Set the button state based on whether the cosmetic is equipped.
                 if (AttachmentsRegistry.get().containsChange(ref, cosmeticId)) {
                     cmd.set(slotSelector + " #Button.Visible", false);
                     cmd.set(slotSelector + " #ButtonEnabled.Visible", true);
                 }
                 
+                // Bind click events for equipping/unequipping.
                 evt.addEventBinding(CustomUIEventBindingType.Activating, slotSelector + " #Button", EventData.of("CosmeticId", cosmeticId).append("Enabled", "false"));
                 evt.addEventBinding(CustomUIEventBindingType.Activating, slotSelector + " #ButtonEnabled", EventData.of("CosmeticId", cosmeticId).append("Enabled", "true"));
                 
+                // Handle variants.
                 Map<String, AttachmentsRegistry.Variant> variants = entry.data().variants();
+                boolean hasVariants = variants != null && !variants.isEmpty();
+                cmd.set(slotSelector + " #VariantIcon.Visible", hasVariants);
                 
-                boolean variantLogic = variants != null && !variants.isEmpty();
+                if (!hasVariants) continue;
                 
-                cmd.set(slotSelector + " #VariantIcon.Visible", variantLogic);
-                
-                if (!variantLogic) continue;
-                
+                // Bind right-click events to open the variant selection panel.
                 evt.addEventBinding(CustomUIEventBindingType.RightClicking, slotSelector + " #Button", EventData.of("VariantId", cosmeticId));
                 evt.addEventBinding(CustomUIEventBindingType.RightClicking, slotSelector + " #ButtonEnabled", EventData.of("VariantId", cosmeticId));
             }
         }
         
+        // Bind an event to the search input field.
         evt.addEventBinding(CustomUIEventBindingType.ValueChanged, "#SearchInput", EventData.of("@Search", "#SearchInput.Value"), false);
         
+        // --- Build Variant Panel ---
         if (variants == null || variants.isEmpty()) {
             cmd.set("#RSidePanel.Visible", false);
             return;
@@ -234,6 +289,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         
         cmd.set("#RSidePanel.Visible", true);
         
+        // Add the "default" variant button.
         cmd.append("#RSidePanel #Content #VariantList #VariantSlot", "Pages/CosmeticGUI/VariantSlot.ui");
         
         AttachmentsRegistry.Attachment original = AttachmentsRegistry.get().getAttachmentsRegistry().get(variantOriginalId);
@@ -254,6 +310,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         evt.addEventBinding(CustomUIEventBindingType.Activating, "#RSidePanel #Content #VariantList #VariantSlot[0] #Button", EventData.of("CosmeticId", this.variantOriginalId).append("Enabled", "false"));
         evt.addEventBinding(CustomUIEventBindingType.Activating, "#RSidePanel #Content #VariantList #VariantSlot[0] #ButtonEnabled", EventData.of("CosmeticId", this.variantOriginalId).append("Enabled", "true"));
         
+        // Add buttons for each available variant.
         List<Map.Entry<String, AttachmentsRegistry.Variant>> usableVariants = variants.entrySet().stream().toList();
         for (int i = 0; i < usableVariants.size(); i++) {
             Map.Entry<String, AttachmentsRegistry.Variant> entry = usableVariants.get(i);
@@ -282,10 +339,14 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         }
     }
     
+    /**
+     * Handles incoming data events from the UI, such as button clicks or input changes.
+     */
     @Override
     public void handleDataEvent(@NonNullDecl Ref<EntityStore> ref, @NonNullDecl Store<EntityStore> store, @NonNullDecl Data data) {
         super.handleDataEvent(ref, store, data);
         
+        // Handle search input changes.
         if (data.search != null) {
             this.search = data.search;
             
@@ -298,6 +359,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             return;
         }
         
+        // Handle right-click to open variant panel.
         if (data.variantId != null) {
             this.variants = new HashMap<>();
             AttachmentsRegistry.Attachment attachment = AttachmentsRegistry.get().getAttachmentsRegistry().get(data.variantId);
@@ -310,12 +372,14 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             return;
         }
         
+        // Handle top-level category selection.
         if (data.tlt != null) {
             this.variants = new HashMap<>();
             this.variantOriginalId = null;
             this.search = null;
             this.tlt = AttachmentsRegistry.TopLevelTypes.valueOf(data.tlt);
             
+            // Set the default sub-category for the new top-level category.
             switch (this.tlt) {
                 case Head -> this.currentSlot = AttachmentsRegistry.CharacterSlot.Haircuts;
                 case General -> this.currentSlot = AttachmentsRegistry.CosmeticSlot.Underwears;
@@ -331,6 +395,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             return;
         }
         
+        // Handle sub-category selection.
         if (data.slot != null) {
             this.variants = new HashMap<>();
             this.variantOriginalId = null;
@@ -346,28 +411,32 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             return;
         }
         
+        // --- Handle Cosmetic/Variant Clicks ---
+        
         String baseId = data.cosmeticId;
         if (baseId != null && baseId.contains("$")) {
             baseId = baseId.split("\\$")[0];
         }
         
+        // If the player clicks a different cosmetic, close the variant panel.
         if (!Objects.equals(baseId, this.variantOriginalId)) {
             this.variants = new HashMap<>();
             this.variantOriginalId = null;
         }
         
+        // Handle un-equipping an item.
         if (data.enabled.equals("true")) {
             if (!data.cosmeticId.contains("$")) {
                 this.variants = new HashMap<>();
                 this.variantOriginalId = null;
             }
             
-            if (data.cosmeticId.startsWith("No")) {
+            if (data.cosmeticId.startsWith("No")) { // "Vanish" button
                 AttachmentsRegistry.Slot slot = AttachmentsRegistry.Slot.valueOf(data.cosmeticId.replace("No", ""));
                 if (slot != null) {
                     AttachmentsRegistry.get().clearSlot(ref, slot);
                 }
-            } else {
+            } else { // Regular unequip
                 AttachmentsRegistry.get().removeCosmetic(ref, data.cosmeticId);
             }
 
@@ -377,12 +446,17 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             return;
         }
         
+        // Handle equipping an item.
         AttachmentsRegistry.get().addCosmetic(ref, data.cosmeticId, true);
         
         this.sendUpdate();
         this.rebuild();
     }
     
+    /**
+     * Defines the data structure for events sent from the client-side UI.
+     * The CODEC is used to serialize/deserialize this data between client and server.
+     */
     public static class Data {
         private String cosmeticId;
         private String enabled;
