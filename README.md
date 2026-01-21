@@ -19,15 +19,15 @@ The GUI provides an easy way to select cosmetics and cosmetic variants. Left-cli
 The plugin has some commands that are mainly for testing purposes:
 
 *   `/cosmetic apply <CosmeticId> [override]` manually applies a certain cosmetic defined by `CosmeticId`, `override` is optional, default is `yes [other value is no]`, determines whether all other cosmetics of its type should be removed. Requires OP
-
+    
 *   `/cosmetic change` manually opens the Cosmetic Customization UI. Does not require permissions
-
+    
 *   `/cosmetic list` prints in chat all loaded cosmetic ids. Requires OP
-
+    
 *   `/cosmetic reload` manually reloads all cosmetics. Requires OP
-
+    
 *   `/cosmetic clear` removes all custom cosmetics and resets the default skin. Requires OP
-
+    
 
 ## Registering cosmetics
 
@@ -52,6 +52,7 @@ CustomID/
 Then the cosmetic will go in a certain folder, depending on the type:
 
 ### Cosmetics
+
 (things like shirts, caps, pants etc..)
 
 The base path for cosmetics is `Common/Resources/Cosmetics`, then the folder based on the slot, which can be:
@@ -70,9 +71,9 @@ The base path for cosmetics is `Common/Resources/Cosmetics`, then the folder bas
 
 Then the folder you made before.
 
-So, for a cosmetic called Custom_Cape, which is in the cape slot it would be like this:
+So, for a cosmetic called Custom\_Cape, which is in the cape slot it would be like this:
 
-`Common/Resources/Cosmetics/Capes/Custom_Cape` and inside the Custom_Cape folder:
+`Common/Resources/Cosmetics/Capes/Custom_Cape` and inside the Custom\_Cape folder:
 
 ```
 Custom_Cape/
@@ -83,6 +84,7 @@ Custom_Cape/
 ```
 
 ### Characters
+
 (things like mouth, ears, eyes etc..)
 
 The base path for character cosmetics is `Common/Resources/Characters`, then the folder based on the slot, which can be:
@@ -91,15 +93,15 @@ The base path for character cosmetics is `Common/Resources/Characters`, then the
 *   `Mouth`
 *   `Nose`
 *   `Eyebrows`
-*   `Hair`
+*   `Haircuts`
 *   `Beard`
 *   `Mustache`
 
 Then the folder you made before.
 
-So, for a character cosmetic called Custom_Eyes, which is in the cape slot it would be like this:
+So, for a character cosmetic called Custom\_Eyes, which is in the cape slot it would be like this:
 
-`Common/Resources/Cosmetics/Capes/Custom_Eyes` and inside the Custom_Eyes folder:
+`Common/Resources/Cosmetics/Capes/Custom_Eyes` and inside the Custom\_Eyes folder:
 
 ```
 Custom_Eyes/
@@ -110,6 +112,7 @@ Custom_Eyes/
 ```
 
 ## Variants (optional)
+
 This API also allows you to add variants.
 
 To add variants, you will need to add the variant texture and icon inside your cosmetic's folder.
@@ -118,13 +121,15 @@ To add variants, you will need to add the variant texture and icon inside your c
 
 The variant textures must be placed in the cosmetic folder (CustomID) and named as follows:
 
-    CustomID_Variant_VariantName.png
+```
+CustomID_Variant_VariantName.png
+```
 
 The variant icons must have the same name given to the variant texture, but unlike the texture, they must be placed inside the `Icon/` folder.
 
-Taking the Propeller_Hat as an example:
+Taking the Propeller\_Hat as an example:
 
-```text
+```
 Propeller_Hat/
 ├── Propeller_Hat.blockymodel
 ├── Propeller_Hat.png
@@ -142,7 +147,7 @@ Inside your cosmetic folder, you can add a `Cosmetic_Id.json` file. This file al
 
 Within the JSON file, you are able to change the name and path of the model, texture and icon of your cosmetic. And that's not all, you'll also be able to define variants of your cosmetic and if the cosmetic occupies MORE THAN ONE SLOT!
 
-```json
+```
 {
     "model": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat.blockymodel",
     "texture": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat.png",
@@ -155,7 +160,6 @@ Within the JSON file, you are able to change the name and path of the model, tex
     }
 }
 ```
-
 
 **"model"** Is the path of the base cosmetic model and any variants.
 
@@ -177,7 +181,7 @@ Inside the variant names mentioned above are the definitions of the variant comp
 
 #
 
----
+***
 
 ### Italiano
 
@@ -200,15 +204,15 @@ La GUI fornisce un modo semplice per selezionare cosmetici e varianti di cosmeti
 Il plugin ha alcuni comandi che sono principalmente a scopo di test:
 
 *   `/cosmetic apply <CosmeticId> [override]` applica manualmente un certo cosmetico definito da `CosmeticId`, `override` è opzionale, il valore predefinito è `yes [l'altro valore è no]`, determina se tutti gli altri cosmetici del suo tipo devono essere rimossi. Richiede OP
-
+    
 *   `/cosmetic change` apre manualmente l'interfaccia utente di personalizzazione dei cosmetici. Non richiede permessi
-
+    
 *   `/cosmetic list` stampa in chat tutti gli ID dei cosmetici caricati. Richiede OP
-
+    
 *   `/cosmetic reload` ricarica manualmente tutti i cosmetici. Richiede OP
-
+    
 *   `/cosmetic clear` rimuove tutti i cosmetici personalizzati e ripristina la skin predefinita. Richiede OP
-
+    
 
 ## Registrazione dei cosmetici
 
@@ -233,6 +237,7 @@ CustomID/
 La cartella del cosmetico andrà messa all'interno di una certa cartella, a seconda del tipo di cosmetico:
 
 ### Cosmetici
+
 (cose come magliette, cappelli, pantaloni ecc..)
 
 Il percorso base per i cosmetici è `Common/Resources/Cosmetics`, seguito dalla cartella basata sullo slot, che può essere:
@@ -264,6 +269,7 @@ Custom_Cape/
 ```
 
 ### Parti del Personaggio
+
 (cose come bocca, orecchie, occhi ecc..)
 
 Il percorso base per i cosmetici del personaggio è `Common/Resources/Characters`, seguito dalla cartella basata sullo slot, che può essere:
@@ -272,7 +278,7 @@ Il percorso base per i cosmetici del personaggio è `Common/Resources/Characters
 *   `Mouth`
 *   `Nose`
 *   `Eyebrows`
-*   `Hair`
+*   `Haircuts`
 *   `Beard`
 *   `Mustache`
 
@@ -291,21 +297,24 @@ Custom_Eyes/
 ```
 
 ## Varianti (opzionale)
+
 Questa API ti consente anche di aggiungere delle varianti.
 
 Per aggiungerle le varianti dovrai aggiungere le textures e le icone delle varianti all'interno della cartella del tuo cosmetico.
 
-``!Attenzione! Ricordati che il nome che dai ad i files è importante.``
+`!Attenzione! Ricordati che il nome che dai ad i files è importante.`
 
 Le textures delle varianti devono essere messe nella cartella del cosmetico (CustomID) nominate come segue:
 
-    CustomID_Variant_NomeVariante.png
+```
+CustomID_Variant_NomeVariante.png
+```
 
 Le icone delle varianti devono avere lo stesso nome che abbiamo dato alla texture della variante ma a differenza di essa andranno messe dentro la cartella `Icon/`.
 
-Facendo un esempio con il Propeller_Hat:
+Facendo un esempio con il Propeller\_Hat:
 
-```text
+```
 Propeller_Hat/
 ├── Propeller_Hat.blockymodel
 ├── Propeller_Hat.png
@@ -317,20 +326,19 @@ Propeller_Hat/
     └── Propeller_Hat_Variant_Arcobaleno.png
 ```
 
-Facendo così l'API caricherà: **Propeller_Hat**, **Propeller_Hat_Variant_Circo**, **Propeller_Hat_Variant_Arcobaleno**.
+Facendo così l'API caricherà: **Propeller\_Hat**, **Propeller\_Hat\_Variant\_Circo**, **Propeller\_Hat\_Variant\_Arcobaleno**.
 
 Saranno viste dall'API come varianti dello stesso cosmetico quindi implicitamente useranno `Propeller_Hat.blockymodel` come modello.
 
 ## Cosmetici Avanzati (opzionale)
 
-All'interno della cartella del tuo cosmetico, puoi aggiungere un file `CustomID.json` (in cui CustomID è l'ID del tuo cosmetico).
-Questo file ti permetterà di personalizzare ancora di più i tuoi cosmetici.
+All'interno della cartella del tuo cosmetico, puoi aggiungere un file `CustomID.json` (in cui CustomID è l'ID del tuo cosmetico). Questo file ti permetterà di personalizzare ancora di più i tuoi cosmetici.
 
 All'interno del file JSON puoi cambiare il nome e il percorso del modello, della texture e dell'icona del tuo cosmetico. E non è tutto, potrai anche definire varianti del tuo cosmetico e decidere se occupa SLOT MULTIPLI!
 
 Qui la formattazione corretta del cosmetico di esempio
 
-```json
+```
 {
   "model": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat.blockymodel",
   "texture": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat.png",
@@ -350,7 +358,8 @@ Qui la formattazione corretta del cosmetico di esempio
   ]
 }
 ```
-___
+
+***
 
 **"model"** È il percorso del modello di cosmetico base ed eventuali varianti.
 
