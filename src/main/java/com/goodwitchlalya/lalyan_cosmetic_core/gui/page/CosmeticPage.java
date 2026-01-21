@@ -93,6 +93,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             switch (tlt) {
                 case Head -> {
                     setupCategoryButton(cmd, evt, "Haircut", AttachmentsRegistry.CharacterSlot.Haircuts);
+                    setupCategoryButton(cmd, evt, "HairExtension", AttachmentsRegistry.CharacterSlot.Hair_Extension);
                     setupCategoryButton(cmd, evt, "Eyebrows", AttachmentsRegistry.CharacterSlot.Eyebrows);
                     setupCategoryButton(cmd, evt, "Eyes", AttachmentsRegistry.CharacterSlot.Eyes);
                     setupCategoryButton(cmd, evt, "FacialHair", AttachmentsRegistry.CharacterSlot.Beards);
