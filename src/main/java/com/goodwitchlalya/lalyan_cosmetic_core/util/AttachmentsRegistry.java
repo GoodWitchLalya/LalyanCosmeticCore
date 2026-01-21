@@ -18,20 +18,29 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
+// A singleton registry that manages all custom cosmetic and character attachments.
+// It handles loading, storing, and applying these attachments to player models.
 public class AttachmentsRegistry {
     
+    // Singleton instance of the registry.
     private static AttachmentsRegistry INSTANCE;
     
+    // The main map storing all registered attachments, keyed by a unique ID (e.g., "assetpack#cosmeticName").
     private final Map<String, Attachment> attachmentsRegistry = new HashMap<>();
     
+    // Enum for top-level UI categories.
     public enum TopLevelTypes {Head, General, Torso, Legs, Capes, All}
     
+    // Enum to differentiate between character parts and wearable cosmetics.
     public enum SlotType {CHARACTER, COSMETIC}
     
+    // Common interface for all cosmetic/character slots.
+    // Provides a way to group and handle different slot types polymorphically.
     public interface Slot {
         SlotType getType();
         
+        // A utility method to find a Slot enum constant by its name,
+        // searching through both CosmeticSlot and CharacterSlot.
         static Slot valueOf(String name) {
             try {
                 return CosmeticSlot.valueOf(name);
@@ -47,6 +56,7 @@ public class AttachmentsRegistry {
         String name();
     }
     
+    // Enum representing slots for built-in character features like eyes and hair.
     public enum CharacterSlot implements Slot {
         Beards, Ears, Eyebrows, Eyes, Faces, Mouths, Haircuts;
         
@@ -56,6 +66,7 @@ public class AttachmentsRegistry {
         }
     }
     
+    // Enum representing slots for wearable cosmetics like hats and capes.
     public enum CosmeticSlot implements Slot {
         Capes, Face_Accessories, Gloves, Head, Ears_Accessories, Overpants, Overtops, Pants, Shoes, Undertops, Underwears;
         
@@ -65,20 +76,25 @@ public class AttachmentsRegistry {
         }
     }
     
+    // Provides access to the singleton instance of the registry.
     public static AttachmentsRegistry get() {
         if (INSTANCE == null) INSTANCE = new AttachmentsRegistry();
         
         return INSTANCE;
     }
     
+    // Returns the raw map of registered attachments.
     public Map<String, Attachment> getAttachmentsRegistry() {
         return attachmentsRegistry;
     }
     
+    // A record to hold data for a single cosmetic variant (texture and icon).
     public record Variant(@Expose String texture, @Expose String icon) {
     
     }
     
+    // A class holding all the data for a single attachment, loaded from asset files or JSON.
+    // This includes paths to model, texture, icon, as well as variants and slot overrides.
     public static class AttachmentData {
         @Expose
         private final String model;
@@ -92,7 +108,7 @@ public class AttachmentsRegistry {
         @SerializedName("slot_overrides")
         private final List<String> slotOverrides;
         
-        public Slot slot;
+        public Slot slot; // The primary slot this attachment belongs to.
         
         public AttachmentData(String model, String texture, String icon, Map<String, Variant> variants, List<String> slotOverrides) {
             this.model = model;
@@ -127,7 +143,11 @@ public class AttachmentsRegistry {
         }
     }
     
+    // A record representing a fully processed attachment, containing its name and its data.
     public record Attachment(String name, AttachmentData data) {
+        // Creates a Hytale ModelAttachment object from this attachment's data.
+        // @param variant The name of the variant to use. If empty, the default texture is used.
+        // @return A ModelAttachment ready to be applied to a player model.
         public ModelAttachment makeModel(String variant) {
             if(variant.isEmpty()) {
                 return new ModelAttachment(
@@ -151,6 +171,9 @@ public class AttachmentsRegistry {
         }
     }
     
+    // The core method for rebuilding a player's skin. It combines the player's default skin
+    // with the custom cosmetics they have equipped.
+    // @param ref A reference to the player entity.
     public void rebuildSkinWithCosmetics(Ref<EntityStore> ref) {
         Store<EntityStore> store = ref.getStore();
         
@@ -167,7 +190,9 @@ public class AttachmentsRegistry {
         Map<Slot, Boolean> overrides = new HashMap<>();
         List<String> invalid = new ArrayList<>();
         
+        // Iterate through the player's equipped cosmetics.
         for (String cosmetic : data.getCosmetics()) {
+            // Handle "empty slot" markers.
             Slot slot = Slot.valueOf(cosmetic.replace("No", ""));
             
             if(slot != null) {
@@ -175,6 +200,7 @@ public class AttachmentsRegistry {
                 continue;
             }
             
+            // Parse cosmetic ID and variant name.
             String cosmId = cosmetic;
             String variant = "";
             
@@ -184,12 +210,14 @@ public class AttachmentsRegistry {
                 variant = split[1];
             }
             
+            // Find the attachment in the registry.
             Attachment attachment = attachmentsRegistry.get(cosmId);
             if (attachment == null) {
                 invalid.add(cosmId);
                 continue;
             }
             
+            // Add the attachment's primary slot and any extra override slots to the override map.
             overrides.put(attachment.data().slot(), true);
             
             for (String override : attachment.data().slotOverrides()) {
@@ -199,22 +227,29 @@ public class AttachmentsRegistry {
                 }
             }
             
+            // Create the model attachment and add it to the list.
             attachments.add(attachment.makeModel(variant));
         }
         
+        // Clean up any invalid cosmetics from the player's data.
         for (String inv : invalid) {
             data.removeCosmetic(inv);
         }
         
+        // Restore the base skin, skipping parts that are overridden by custom cosmetics.
         restoreSkinWithOverrides(ref, attachments, overrides);
         store.replaceComponent(ref, CosmeticData.INSTANCE, data);
         
+        // Create a new player model with the combined attachments.
         Model newModel = new Model(player.getDisplayName() + "_CustomModel", model.getScale(), model.getRandomAttachmentIds(), attachments.toArray(new ModelAttachment[0]), model.getBoundingBox(), model.getModel(), model.getTexture(), model.getGradientSet(), model.getGradientId(), model.getEyeHeight(), model.getCrouchOffset(), model.getAnimationSetMap(), model.getCamera(), model.getLight(), model.getParticles(), model.getTrails(), model.getPhysicsValues(), model.getDetailBoxes(), model.getPhobia(), model.getPhobiaModelAssetId());
         
+        // Apply the new model to the player.
         store.replaceComponent(ref, ModelComponent.getComponentType(), new ModelComponent(newModel));
         store.replaceComponent(ref, CosmeticData.INSTANCE, data);
     }
     
+    // Re-applies the player's default Hytale skin parts (hair, eyes, etc.) unless they
+    // are marked as being overridden by a custom cosmetic.
     private void restoreSkinWithOverrides(Ref<EntityStore> ref, List<ModelAttachment> attachments, Map<Slot, Boolean> overrides) {
         CosmeticRegistry registry = CosmeticsModule.get().getRegistry();
         
@@ -224,6 +259,8 @@ public class AttachmentsRegistry {
         String gradientId = playerSkin.bodyCharacteristic.split("\\.")[1];
         String[] bodyCharacteristicParts = playerSkin.bodyCharacteristic.split("\\.");
         
+        // This large block of code checks each vanilla cosmetic slot. If it's not in the 'overrides' map,
+        // it resolves the corresponding attachment from the vanilla registry and adds it to the list.
         var bodyCharacteristic = registry.getBodyCharacteristics().get(bodyCharacteristicParts[0]);
         if (bodyCharacteristic != null) {
             attachments.add(ModelUtils.resolveAttachment(bodyCharacteristic, bodyCharacteristicParts, gradientId));
@@ -419,10 +456,12 @@ public class AttachmentsRegistry {
         }
     }
     
+    // Checks if a player has marked a specific slot as empty.
     public boolean isEmptySlot(Ref<EntityStore> ref, Slot slot) {
         return containsChange(ref, "No" + slot.name());
     }
     
+    // Checks if a player has a specific cosmetic or one of its variants equipped.
     public boolean containsChange(Ref<EntityStore> ref, String cosmeticId) {
         Store<EntityStore> store = ref.getStore();
         CosmeticData data = store.getComponent(ref, CosmeticData.INSTANCE);
@@ -437,6 +476,8 @@ public class AttachmentsRegistry {
         return false;
     }
     
+    // Gets the name of the equipped variant for a given base cosmetic ID.
+    // @return The variant name, or null if no variant is equipped.
     public String getEquippedVariant(Ref<EntityStore> ref, String cosmeticId) {
         Store<EntityStore> store = ref.getStore();
         CosmeticData data = store.getComponent(ref, CosmeticData.INSTANCE);
@@ -452,6 +493,7 @@ public class AttachmentsRegistry {
         return null;
     }
     
+    // Checks if a player has a specific cosmetic ID (including variant) equipped.
     public boolean isEquipped(Ref<EntityStore> ref, String cosmeticId) {
         Store<EntityStore> store = ref.getStore();
         CosmeticData data = store.getComponent(ref, CosmeticData.INSTANCE);
@@ -461,12 +503,14 @@ public class AttachmentsRegistry {
         return data.getCosmetics().contains(cosmeticId);
     }
     
+    // Removes a cosmetic (and any of its variants) from a player.
     public void removeCosmetic(Ref<EntityStore> ref, String cosmeticId) {
         Store<EntityStore> store = ref.getStore();
         CosmeticData data = store.getComponent(ref, CosmeticData.INSTANCE);
         
         if (data == null) return;
         
+        // Find all cosmetics to remove (base ID and any variants).
         List<String> toRemove = new ArrayList<>();
         
         for (String cosmetic : data.getCosmetics()) {
@@ -480,6 +524,8 @@ public class AttachmentsRegistry {
         }
         
         // Handle slot overrides removal
+        // If we are removing a "No" cosmetic, we need to check if other cosmetics depended on it.
+        // This logic seems complex and might need review.
         if (cosmeticId.startsWith("No")) {
             Slot slot = Slot.valueOf(cosmeticId.replace("No", ""));
             if (slot != null) {
@@ -499,6 +545,7 @@ public class AttachmentsRegistry {
                 }
             }
         } else {
+            // If we remove a regular cosmetic, also remove any "No" markers it might have added.
             String id = cosmeticId.split("\\$")[0];
             Attachment attachment = attachmentsRegistry.get(id);
             if (attachment != null) {
@@ -511,6 +558,8 @@ public class AttachmentsRegistry {
         rebuildSkinWithCosmetics(ref);
     }
     
+    // Adds a cosmetic to a player.
+    // @param override If true, clears the slot before adding the new cosmetic.
     public void addCosmetic(Ref<EntityStore> ref, String cosmeticId, boolean override) {
         String cosmId = cosmeticId;
         
@@ -528,6 +577,7 @@ public class AttachmentsRegistry {
             clearSlot(ref, cosmId);
         }
         
+        // Add any necessary slot overrides for this cosmetic.
         Attachment attachment = attachmentsRegistry.get(cosmId);
         if (attachment != null) {
             for (String overrideSlot : attachment.data().slotOverrides()) {
@@ -540,6 +590,7 @@ public class AttachmentsRegistry {
         rebuildSkinWithCosmetics(ref);
     }
     
+    // Clears all cosmetics from a given slot, determined by a cosmetic ID.
     public void clearSlot(Ref<EntityStore> ref, String cosmeticId) {
         String id = cosmeticId;
         
@@ -559,6 +610,7 @@ public class AttachmentsRegistry {
         clearSlot(ref, attachment.data().slot());
     }
     
+    // Clears all cosmetics from a specific slot.
     public void clearSlot(Ref<EntityStore> ref, Slot slot) {
         Store<EntityStore> store = ref.getStore();
         CosmeticData data = store.getComponent(ref, CosmeticData.INSTANCE);
@@ -567,6 +619,7 @@ public class AttachmentsRegistry {
         
         List<String> toRemove = new ArrayList<>();
         
+        // Find all cosmetics belonging to the specified slot.
         for (String cosmetic : data.getCosmetics()) {
             if (cosmetic.equals("No" + slot.name())) {
                 toRemove.add(cosmetic);
@@ -585,6 +638,7 @@ public class AttachmentsRegistry {
                     continue;
                 }
                 
+                // Remove invalid cosmetics.
                 toRemove.add(cosmetic);
                 continue;
             }
@@ -594,6 +648,7 @@ public class AttachmentsRegistry {
             }
         }
         
+        // Remove them.
         for (String rev : toRemove) {
             removeCosmetic(ref, rev);
         }
@@ -601,27 +656,32 @@ public class AttachmentsRegistry {
         rebuildSkinWithCosmetics(ref);
     }
     
+    // Clears all wearable cosmetics from the player.
     public void clearCosmetics(Ref<EntityStore> ref) {
         for (CosmeticSlot slot : CosmeticSlot.values()) {
             clearSlot(ref, slot);
         }
     }
     
+    // Clears all character parts from the player.
     public void clearCharacter(Ref<EntityStore> ref) {
         for (CharacterSlot slot : CharacterSlot.values()) {
             clearSlot(ref, slot);
         }
     }
     
+    // Clears all custom attachments (both cosmetics and character parts) from the player.
     public void clearAll(Ref<EntityStore> ref) {
         clearCosmetics(ref);
         clearCharacter(ref);
     }
     
+    // Registers a new attachment with default paths and no variants.
     public void register(String name, Slot slot) {
         register(name, slot, Map.of());
     }
     
+    // Registers a new attachment with default paths but with specified variants.
     public void register(String name, Slot slot, Map<String, Variant> variants) {
         String attachmentPath = "Resources/";
         
@@ -636,6 +696,7 @@ public class AttachmentsRegistry {
         
         attachmentPath += String.format("%s/%s", slot, split[1]);
         
+        // Create AttachmentData with conventional paths.
         AttachmentData attData = new AttachmentData(
                 String.format("%s/%s.blockymodel", attachmentPath, split[1]),
                 String.format("%s/%s.png", attachmentPath, split[1]),
@@ -648,10 +709,12 @@ public class AttachmentsRegistry {
         register(name, attData);
     }
     
+    // The core registration method. Adds a fully-formed AttachmentData object to the registry.
     public void register(String name, AttachmentData attachmentData) {
         attachmentsRegistry.put(name, new Attachment(name, attachmentData));
     }
     
+    // Utility method to find the key for a given Attachment object.
     public String getKey(Attachment e) {
         for (Map.Entry<String, Attachment> entry : attachmentsRegistry.entrySet()) {
             if (entry.getValue() == e) {
@@ -662,10 +725,12 @@ public class AttachmentsRegistry {
         return null;
     }
     
+    // Clears all attachments from the registry. Used during reload.
     public void clear() {
         attachmentsRegistry.clear();
     }
     
+    // Returns a sorted list of all registered cosmetic IDs.
     public List<String> getAttachmentsList() {
         return attachmentsRegistry.keySet().stream().sorted().collect(Collectors.toList());
     }
