@@ -1,5 +1,6 @@
 package com.goodwitchlalya.lalyan_cosmetic_core.util;
 
+import com.goodwitchlalya.lalyan_cosmetic_core.CosmeticCore;
 import com.goodwitchlalya.lalyan_cosmetic_core.component.CosmeticData;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -27,6 +28,16 @@ public class AttachmentsRegistry {
     
     // The main map storing all registered attachments, keyed by a unique ID (e.g., "assetpack#cosmeticName").
     private final Map<String, Attachment> attachmentsRegistry = new HashMap<>();
+    
+    // A list of slots that doesn't make the override by default
+    public final List<Slot> nonOverridingSlots = List.of(
+            CharacterSlot.Hair_Extension
+    );
+    
+    // A list of slots that use the same hair gradient by default
+    public final List<Slot> hairColouredSlots = List.of(
+            CharacterSlot.Hair_Extension
+    );
     
     // Enum for top-level UI categories.
     public enum TopLevelTypes {Head, General, Torso, Legs, Capes, All}
@@ -148,13 +159,13 @@ public class AttachmentsRegistry {
         // Creates a Hytale ModelAttachment object from this attachment's data.
         // @param variant The name of the variant to use. If empty, the default texture is used.
         // @return A ModelAttachment ready to be applied to a player model.
-        public ModelAttachment makeModel(String variant) {
+        public ModelAttachment makeModel(String variant, String gradientSet, String gradientID) {
             if(variant.isEmpty()) {
                 return new ModelAttachment(
                     data.model(),
                     data.texture(),
-                    "",
-                    "",
+                    gradientSet,
+                    gradientID,
                     1
                 );
             }
@@ -164,10 +175,14 @@ public class AttachmentsRegistry {
             return new ModelAttachment(
                 data.model(),
                 v.texture(),
-                "",
-                "",
+                gradientSet,
+                gradientID,
                 1
             );
+        }
+        
+        public ModelAttachment makeModel(String variant) {
+            return makeModel(variant, "", "");
         }
     }
     
@@ -180,6 +195,7 @@ public class AttachmentsRegistry {
         CosmeticData data = store.getComponent(ref, CosmeticData.INSTANCE);
         Player player = store.getComponent(ref, Player.getComponentType());
         Model model = store.getComponent(ref, ModelComponent.getComponentType()).getModel();
+        PlayerSkin playerSkin = store.getComponent(ref, PlayerSkinComponent.getComponentType()).getPlayerSkin();
         
         if (data == null) {
             store.addComponent(ref, CosmeticData.INSTANCE, new CosmeticData());
@@ -218,7 +234,11 @@ public class AttachmentsRegistry {
             }
             
             // Add the attachment's primary slot and any extra override slots to the override map.
-            overrides.put(attachment.data().slot(), true);
+            if (nonOverridingSlots.contains(attachment.data().slot())) {
+                overrides.put(attachment.data().slot(), false);
+            } else {
+                overrides.put(attachment.data().slot(), true);
+            }
             
             for (String override : attachment.data().slotOverrides()) {
                 Slot overrideSlot = Slot.valueOf(override);
@@ -228,7 +248,13 @@ public class AttachmentsRegistry {
             }
             
             // Create the model attachment and add it to the list.
-            attachments.add(attachment.makeModel(variant));
+            if (hairColouredSlots.contains(attachment.data().slot())) {
+                String gradientSet = "Hair";
+                String gradientId = playerSkin.haircut.split("\\.")[1];
+                attachments.add(attachment.makeModel(variant, gradientSet, gradientId));
+            } else {
+                attachments.add(attachment.makeModel(variant));
+            }
         }
         
         // Clean up any invalid cosmetics from the player's data.

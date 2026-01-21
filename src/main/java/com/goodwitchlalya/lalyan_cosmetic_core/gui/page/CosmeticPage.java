@@ -1,5 +1,6 @@
 package com.goodwitchlalya.lalyan_cosmetic_core.gui.page;
 
+import com.goodwitchlalya.lalyan_cosmetic_core.CosmeticCore;
 import com.goodwitchlalya.lalyan_cosmetic_core.util.AttachmentsRegistry;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -446,9 +447,19 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             
             return;
         }
+        // Determining the slot of the cosmetic
+        AttachmentsRegistry.Attachment cosmeticAttachment = AttachmentsRegistry.get().getAttachmentsRegistry().get(data.cosmeticId);
+        if (cosmeticAttachment != null) {
+            AttachmentsRegistry.Slot cosmeticSlot = cosmeticAttachment.data().slot();
+            
+            AttachmentsRegistry.get().addCosmetic(ref, data.cosmeticId, !AttachmentsRegistry.get().nonOverridingSlots.contains(cosmeticSlot));
+            
+        } else {
+            // Handle equipping an item.
+            AttachmentsRegistry.get().addCosmetic(ref, data.cosmeticId, true);
+        }
         
-        // Handle equipping an item.
-        AttachmentsRegistry.get().addCosmetic(ref, data.cosmeticId, true);
+        
         
         this.sendUpdate();
         this.rebuild();
