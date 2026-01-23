@@ -574,6 +574,7 @@ public class AttachmentsRegistry {
         @Expose
         private final Map<String, Variant> variants;
         @Expose
+        @SerializedName("gradient_set")
         private final String gradientSet;
         @Expose
         @SerializedName("slot_overrides")
@@ -613,6 +614,10 @@ public class AttachmentsRegistry {
         public List<String> slotOverrides() {
             return slotOverrides != null? slotOverrides: List.of();
         }
+        
+        public String gradientSet() {
+            return gradientSet;
+        }
     }
     
     // A record representing a fully processed attachment, containing its name and its data.
@@ -644,6 +649,10 @@ public class AttachmentsRegistry {
         
         public ModelAttachment makeModel(String variant) {
             return makeModel(variant, new Colour("", ""));
+        }
+        
+        public ModelAttachment makeModel(String set, String id) {
+            return makeModel("", new Colour(set, id));
         }
         
         public List<ModelAttachment> makeModelsWithColorSet(String colourSet) {
@@ -692,10 +701,22 @@ public class AttachmentsRegistry {
             String cosmId = cosmetic;
             String variant = "";
             
+            String gradientSet = "";
+            String gradientId = "";
+            
             if(cosmetic.contains("$")) {
                 String[] split = cosmetic.split("\\$");
                 cosmId = split[0];
                 variant = split[1];
+            }
+            
+            if(cosmetic.contains("%")) {
+                String[] gradStuff = cosmetic.split("%");
+                String[] split = gradStuff[1].split(":");
+                
+                cosmId = gradStuff[0];
+                gradientSet = split[0];
+                gradientId = split[1];
             }
             
             // Find the attachment in the registry.
@@ -712,12 +733,11 @@ public class AttachmentsRegistry {
             
             // Create the model attachment and add it to the list.
             if (hairColouredSlots.contains(attachment.data().slot())) {
-                String gradientSet = "Hair";
-                String gradientId = playerSkin.haircut.split("\\.")[1];
-                attachments.addAll(attachment.makeModelsWithColorSet(gradientSet));
-            } else {
-                attachments.add(attachment.makeModel(variant));
+                gradientSet = "Hair";
+                gradientId = playerSkin.haircut.split("\\.")[1];
             }
+            
+            attachments.add(attachment.makeModel(variant, new Colour(gradientSet, gradientId)));
         }
         
         // Clean up any invalid cosmetics from the player's data.
@@ -1081,6 +1101,11 @@ public class AttachmentsRegistry {
             cosmId = split[0];
         }
         
+        if(cosmeticId.contains("%")) {
+            String[] split = cosmeticId.split("%");
+            cosmId = split[0];
+        }
+        
         Store<EntityStore> store = ref.getStore();
         CosmeticData data = store.getComponent(ref, CosmeticData.INSTANCE);
         
@@ -1092,7 +1117,7 @@ public class AttachmentsRegistry {
         if (slot == null && cosmId.startsWith("No")) {
              try {
                  slot = Slot.valueOf(cosmId.replace("No", ""));
-             } catch (Exception e) {}
+             } catch (Exception _) {}
         }
         
         boolean isNonOverriding = slot != null && nonOverridingSlots.contains(slot);

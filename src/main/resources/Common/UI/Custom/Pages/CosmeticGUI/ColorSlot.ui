@@ -1,0 +1,34 @@
+$C = "../../Common.ui";
+$Sounds = "../../Sounds.ui";
+
+Group {
+    Anchor: (Width: 44, Height: 44, Bottom: 8);
+    Padding: (Top: 20);
+    Button #Button {
+        @Sounds = (
+            Activate: (
+                SoundPath: $Sounds.@TilesActivate,
+                MinPitch: -0.04,
+                MaxPitch: 0.04,
+                Volume: 6
+            )
+        );
+
+        Group #SelectedHighlight {
+            Anchor: (Width: 48, Height: 48);
+            Background: "../../Common/ColorOptionSelected.png";
+            Visible: false;
+        }
+
+        Group #Colors {
+            LayoutMode: Left;
+            Anchor: (Width: 44, Height: 44);
+            MaskTexturePath: "../../Common/ColorOptionMask.png";
+        }
+
+        Group {
+            Anchor: (Width: 44, Height: 44);
+            Background: "../../Common/ColorOptionFrame.png";
+        }
+    }
+}
