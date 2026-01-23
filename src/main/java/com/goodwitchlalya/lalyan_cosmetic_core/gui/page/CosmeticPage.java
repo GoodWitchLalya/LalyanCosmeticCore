@@ -1,11 +1,13 @@
 package com.goodwitchlalya.lalyan_cosmetic_core.gui.page;
 
-import com.goodwitchlalya.lalyan_cosmetic_core.CosmeticCore;
 import com.goodwitchlalya.lalyan_cosmetic_core.util.AttachmentsRegistry;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.math.vector.Vector3f;
+import com.hypixel.hytale.protocol.*;
+import com.hypixel.hytale.protocol.packets.camera.SetServerCamera;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
@@ -46,6 +48,9 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
     // A map of variants for the currently selected cosmetic.
     private Map<String, AttachmentsRegistry.Variant> variants = new HashMap<>();
     
+    //Whether to allow multiple cosmetics of the same type regardless of slot
+    private boolean multiSelect = false;
+    
     /**
      * Builds the main UI structure. This method is called to generate the UI commands
      * that create the visual elements on the player's screen.
@@ -63,6 +68,12 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         // Build the dynamic parts of the UI.
         buildCosmeticButtons(cmd, evt);
         buildCosmetics(ref, cmd, evt);
+        
+        cmd.set("#Title #MultiSelect #CheckBox.Value", this.multiSelect);
+        
+        evt.addEventBinding(CustomUIEventBindingType.ValueChanged, "#Title #MultiSelect #CheckBox", EventData.of("MultiSelect", "true"));
+        
+        updateCamera();
     }
     
     /**
@@ -342,11 +353,83 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
     }
     
     /**
+     * Updates the camera settings based on the currently selected slot.
+     */
+    private void updateCamera() {
+        Vector3f headRot = this.playerRef.getHeadRotation();
+
+        ServerCameraSettings settings = new ServerCameraSettings();
+        
+        settings.distance = 2;
+        settings.positionLerpSpeed = 0.1f;
+        settings.rotationLerpSpeed = 0.1f;
+        settings.displayCursor = true;
+        settings.isFirstPerson = false;
+        settings.mouseInputTargetType = MouseInputTargetType.None;
+        settings.sendMouseMotion = false;
+        settings.mouseInputType = MouseInputType.LookAtPlane;
+        settings.rotationType = RotationType.Custom;
+        settings.eyeOffset = true;
+        settings.rotation = new Direction((float) (headRot.getYaw() + Math.PI), headRot.getPitch(), headRot.getRoll());
+        settings.allowPitchControls = false;
+        settings.planeNormal = new com.hypixel.hytale.protocol.Vector3f(0, 0, 0);
+        settings.positionOffset = new Position(0, -0.3, 0);
+
+        if (currentSlot != null) {
+            if (currentSlot instanceof AttachmentsRegistry.CharacterSlot) {
+                switch ((AttachmentsRegistry.CharacterSlot) currentSlot) {
+                    case Haircuts, Hair_Extension -> {
+                        settings.positionOffset = new Position(0, 0.2, 0);
+                        settings.rotation = new Direction(headRot.getYaw(), headRot.getPitch(), headRot.getRoll());
+                    }
+                    case Eyebrows, Eyes, Beards, Faces, Mouths -> {
+                        settings.positionOffset = new Position(0, 0, 0);
+                        settings.distance = 1;
+                    }
+                    case Ears -> {}
+                }
+            } else if (currentSlot instanceof AttachmentsRegistry.CosmeticSlot) {
+                switch ((AttachmentsRegistry.CosmeticSlot) currentSlot) {
+                    case Head -> {
+                        settings.positionOffset = new Position(0, 0.1, 0);
+                    }
+                    case Face_Accessories -> {
+                        settings.distance = 1;
+                    }
+                    case Ears_Accessories -> {}
+                    case Underwears, Overpants, Shoes, Pants -> {
+                        settings.positionOffset = new Position(0, -1.2, 0);
+                        settings.distance = 1;
+                    }
+                    case Undertops, Overtops -> {
+                        settings.positionOffset = new Position(0, -0.5, 0);
+                        settings.distance = 1;
+                    }
+                    case Gloves -> {}
+                    case Capes -> {
+                        settings.rotation = new Direction(headRot.getYaw(), headRot.getPitch(), headRot.getRoll());
+                    }
+                }
+            }
+        }
+
+        this.playerRef.getPacketHandler().writeNoCache(new SetServerCamera(ClientCameraView.Custom, true, settings));
+    }
+
+    /**
      * Handles incoming data events from the UI, such as button clicks or input changes.
      */
     @Override
     public void handleDataEvent(@NonNullDecl Ref<EntityStore> ref, @NonNullDecl Store<EntityStore> store, @NonNullDecl Data data) {
         super.handleDataEvent(ref, store, data);
+        
+        if(data.multiSelect != null) {
+            this.multiSelect = !this.multiSelect;
+            
+            this.sendUpdate();
+            this.rebuild();
+            return;
+        }
         
         // Handle search input changes.
         if (data.search != null) {
@@ -391,6 +474,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
                 case All -> this.currentSlot = null;
             }
             
+            updateCamera();
             this.sendUpdate();
             this.rebuild();
             
@@ -407,6 +491,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             } else {
                 this.currentSlot = AttachmentsRegistry.Slot.valueOf(data.slot);
             }
+            updateCamera();
             this.sendUpdate();
             this.rebuild();
             
@@ -452,17 +537,23 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         if (cosmeticAttachment != null) {
             AttachmentsRegistry.Slot cosmeticSlot = cosmeticAttachment.data().slot();
             
-            AttachmentsRegistry.get().addCosmetic(ref, data.cosmeticId, !AttachmentsRegistry.get().nonOverridingSlots.contains(cosmeticSlot));
+            AttachmentsRegistry.get().addCosmetic(ref, data.cosmeticId, !AttachmentsRegistry.get().nonOverridingSlots.contains(cosmeticSlot) && !multiSelect);
             
         } else {
             // Handle equipping an item.
-            AttachmentsRegistry.get().addCosmetic(ref, data.cosmeticId, true);
+            AttachmentsRegistry.get().addCosmetic(ref, data.cosmeticId, !multiSelect);
         }
         
         
         
         this.sendUpdate();
         this.rebuild();
+    }
+    
+    @Override
+    public void onDismiss(@NonNullDecl Ref<EntityStore> ref, @NonNullDecl Store<EntityStore> store) {
+        super.onDismiss(ref, store);
+        this.playerRef.getPacketHandler().writeNoCache(new SetServerCamera(ClientCameraView.Custom, false, null));
     }
     
     /**
@@ -480,6 +571,8 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         private String search;
         private String variantId;
         
+        private String multiSelect;
+        
         public static final BuilderCodec<Data> CODEC = BuilderCodec.builder(Data.class, Data::new)
             .append(new KeyedCodec<>("CosmeticId", BuilderCodec.STRING), (data, value) -> data.cosmeticId = value, (data) -> data.cosmeticId)
             .add()
@@ -492,6 +585,8 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             .append(new KeyedCodec<>("VariantId", BuilderCodec.STRING), (data, value) -> data.variantId = value, (data) -> data.variantId)
             .add()
             .append(new KeyedCodec<>("@Search", BuilderCodec.STRING), (data, value) -> data.search = value, (data) -> data.search)
+            .add()
+            .append(new KeyedCodec<>("MultiSelect", BuilderCodec.STRING), (data, value) -> data.multiSelect = value, (data) -> data.multiSelect)
             .add()
             .build();
     }

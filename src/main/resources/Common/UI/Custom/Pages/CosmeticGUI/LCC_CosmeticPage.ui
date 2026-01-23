@@ -1,12 +1,36 @@
 $C = "../../Common.ui";
 $Sounds = "../../Sounds.ui";
 
+@StyledCheckBox = Group {
+    Anchor: (Left: 20, Top: 0);
+    Background: #ffffff(0);
+    LayoutMode: Left;
+
+    $C.@CheckBox #CheckBox {
+        Anchor: (Width: 18, Height: 18);
+    }
+
+    Label #Name {
+        Style: (VerticalAlignment: Center, TextColor: #96a9be, RenderUppercase: true, FontSize: 16);
+        Text: @Name;
+        Padding: (Left: 8);
+    }
+};
+
 $C.@PageOverlay {
+    Background: #ffffff(0);
+
     $C.@Container {
-        Anchor: (Width: 600, Height: 800);
+        Anchor: (Width: 600, Height: 800, Right: 150);
 
         #Title {
             Group {
+                @StyledCheckBox #MultiSelect {
+                    #Name {
+                        Text: "Multi-Select";
+                    }
+                }
+
                 $C.@Title {
                     @Text = "Customize Cosmetics";
                 }
@@ -29,7 +53,7 @@ $C.@PageOverlay {
     }
 
     $C.@Container #LLSidePanel {
-        Anchor: (Width: 100, Height: 800, Left: 465);
+        Anchor: (Width: 100, Height: 800, Left: 505);
 
         #Content {
             Group {
@@ -48,7 +72,7 @@ $C.@PageOverlay {
     }
 
     $C.@Container #LSidePanel {
-        Anchor: (Width: 100, Height: 800, Left: 570);
+        Anchor: (Width: 100, Height: 800, Left: 610);
 
         #Content {
             Group {
@@ -63,7 +87,7 @@ $C.@PageOverlay {
     }
 
     $C.@Container #RSidePanel {
-        Anchor: (Width: 100, Height: 800, Right: 570);
+        Anchor: (Width: 100, Height: 800, Right: 40);
         Visible: false;
 
         #Content {
