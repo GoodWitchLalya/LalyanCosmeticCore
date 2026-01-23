@@ -94,6 +94,7 @@ The base path for character cosmetics is `Common/Resources/Characters`, then the
 *   `Nose`
 *   `Eyebrows`
 *   `Haircuts`
+*   `Hair_Extension`
 *   `Beard`
 *   `Mustache`
 
@@ -110,6 +111,8 @@ Custom_Eyes/
 └── Icon/
     └── Custom_Eyes.png
 ```
+
+The Hair_Extension slot automatically takes the same gradient as the Hairstyle.
 
 ## Variants (optional)
 
@@ -279,6 +282,7 @@ Il percorso base per i cosmetici del personaggio è `Common/Resources/Characters
 *   `Nose`
 *   `Eyebrows`
 *   `Haircuts`
+*   `Hair_Extension`
 *   `Beard`
 *   `Mustache`
 
@@ -295,6 +299,8 @@ Custom_Eyes/
 └── Icon/
     └── Custom_Eyes.png
 ```
+
+Lo slot Hair_Extension prende automaticamente il gradiente del'acconciatura.
 
 ## Varianti (opzionale)
 
