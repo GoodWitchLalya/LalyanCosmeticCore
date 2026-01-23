@@ -1,11 +1,16 @@
 package com.goodwitchlalya.lalyan_cosmetic_core.util;
 
 import com.goodwitchlalya.lalyan_cosmetic_core.CosmeticCore;
+import com.goodwitchlalya.lalyan_cosmetic_core.util.AttachmentsRegistry.ModelVariant;
+import com.goodwitchlalya.lalyan_cosmetic_core.util.AttachmentsRegistry.ColorVariant;
+import com.goodwitchlalya.lalyan_cosmetic_core.util.AttachmentsRegistry.Variant;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.hypixel.hytale.assetstore.AssetPack;
 import com.hypixel.hytale.server.core.asset.AssetModule;
 
 import java.io.IOException;
-import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -130,7 +135,39 @@ public class FileManager {
                                 try {
                                     // Read and deserialize the JSON into AttachmentData
                                     String jsonContent = new String(Files.readAllBytes(jsonFile));
-                                    AttachmentsRegistry.AttachmentData attachmentData = CosmeticCore.GSON.fromJson(jsonContent, AttachmentsRegistry.AttachmentData.class);
+                                    
+                                    // Custom deserialization logic to handle polymorphic variants
+                                    JsonObject jsonObject = JsonParser.parseString(jsonContent).getAsJsonObject();
+                                    
+                                    String model = jsonObject.has("model") ? jsonObject.get("model").getAsString() : null;
+                                    String texture = jsonObject.has("texture") ? jsonObject.get("texture").getAsString() : null;
+                                    String icon = jsonObject.has("icon") ? jsonObject.get("icon").getAsString() : null;
+                                    String gradientSet = jsonObject.has("gradientSet") ? jsonObject.get("gradientSet").getAsString() : null;
+                                    String gradientId = jsonObject.has("gradientId") ? jsonObject.get("gradientId").getAsString() : null;
+                                    
+                                    Map<String, Variant> variants = new HashMap<>();
+                                    if (jsonObject.has("variants")) {
+                                        JsonObject variantsObj = jsonObject.getAsJsonObject("variants");
+                                        for (Map.Entry<String, JsonElement> entry : variantsObj.entrySet()) {
+                                            JsonObject variantObj = entry.getValue().getAsJsonObject();
+                                            String type = variantObj.has("type") ? variantObj.get("type").getAsString() : "model";
+                                            
+                                            if ("color".equals(type)) {
+                                                variants.put(entry.getKey(), CosmeticCore.GSON.fromJson(variantObj, ColorVariant.class));
+                                            } else {
+                                                variants.put(entry.getKey(), CosmeticCore.GSON.fromJson(variantObj, ModelVariant.class));
+                                            }
+                                        }
+                                    }
+                                    
+                                    List<String> slotOverrides = new ArrayList<>();
+                                    if (jsonObject.has("slot_overrides")) {
+                                        for (JsonElement e : jsonObject.getAsJsonArray("slot_overrides")) {
+                                            slotOverrides.add(e.getAsString());
+                                        }
+                                    }
+                                    
+                                    AttachmentsRegistry.AttachmentData attachmentData = new AttachmentsRegistry.AttachmentData(model, texture, icon, gradientSet, gradientId, variants, slotOverrides);
                                     
                                     // Inject the slot type (inferred from the folder structure)
                                     attachmentData.slot = slot;
@@ -173,7 +210,7 @@ public class FileManager {
                                         if  (!isTextureThere) { r.add("No texture found"); return;}
                                         
                                         // If all required files are present, register the attachment
-                                        Map<String, AttachmentsRegistry.Variant> variants = new HashMap<>();
+                                        Map<String, Variant> variants = new HashMap<>();
                                         
                                         try (Stream<Path> itemFolderFiles = Files.list(itemFolder)) {
                                             itemFolderFiles.filter(Files::isRegularFile).filter((item) -> {// Search for suitable variants
@@ -198,7 +235,7 @@ public class FileManager {
                                                 String variantIconPath = itemFolder.resolve("Icon").resolve(variantFileName).toString().replace("\\", "/").replaceFirst(".*?(?=Resources)", "");
                                                 r.add(String.format("Variant icon found, path: %s", variantIconPath));
                                                 
-                                                variants.put(variantName, new AttachmentsRegistry.Variant(variantTexturePath, variantIconPath));
+                                                variants.put(variantName, new ModelVariant(variantTexturePath, variantIconPath, null));
                                                 r.add("Variant saved!");
                                             });
                                             if (variants.isEmpty()) {

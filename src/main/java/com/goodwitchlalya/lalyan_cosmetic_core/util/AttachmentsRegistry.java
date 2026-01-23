@@ -1,6 +1,5 @@
 package com.goodwitchlalya.lalyan_cosmetic_core.util;
 
-import com.goodwitchlalya.lalyan_cosmetic_core.CosmeticCore;
 import com.goodwitchlalya.lalyan_cosmetic_core.component.CosmeticData;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -99,9 +98,41 @@ public class AttachmentsRegistry {
         return attachmentsRegistry;
     }
     
-    // A record to hold data for a single cosmetic variant (texture and icon).
-    public record Variant(@Expose String texture, @Expose String icon) {
-    
+    public static abstract class Variant {
+        @Expose public String type;
+        @Expose public String texture;
+        @Expose public String icon;
+    }
+
+    public static class ModelVariant extends Variant {
+        @Expose public String model;
+
+        public ModelVariant() {
+            this.type = "model";
+        }
+
+        public ModelVariant(String texture, String icon, String model) {
+            this.type = "model";
+            this.texture = texture;
+            this.icon = icon;
+            this.model = model;
+        }
+    }
+
+    public static class ColorVariant extends Variant {
+        @Expose @SerializedName("gradient_set") public String gradientSet;
+        @Expose @SerializedName("gradient_id") public String gradientId;
+
+        public ColorVariant() {
+            this.type = "color";
+        }
+
+        public ColorVariant(String texture, String gradientSet, String gradientId) {
+            this.type = "color";
+            this.texture = texture;
+            this.gradientSet = gradientSet;
+            this.gradientId = gradientId;
+        }
     }
     
     // A class holding all the data for a single attachment, loaded from asset files or JSON.
@@ -113,6 +144,10 @@ public class AttachmentsRegistry {
         private final String texture;
         @Expose
         private final String icon;
+        @Expose @SerializedName("gradient_set")
+        private final String gradientSet;
+        @Expose @SerializedName("gradient_id")
+        private final String gradientId;
         @Expose
         private final Map<String, Variant> variants;
         @Expose
@@ -121,10 +156,12 @@ public class AttachmentsRegistry {
         
         public Slot slot; // The primary slot this attachment belongs to.
         
-        public AttachmentData(String model, String texture, String icon, Map<String, Variant> variants, List<String> slotOverrides) {
+        public AttachmentData(String model, String texture, String icon, String gradientSet, String gradientId, Map<String, Variant> variants, List<String> slotOverrides) {
             this.model = model;
             this.texture = texture;
             this.icon = icon;
+            this.gradientSet = gradientSet;
+            this.gradientId = gradientId;
             this.variants = variants;
             this.slotOverrides = slotOverrides;
         }
@@ -139,6 +176,14 @@ public class AttachmentsRegistry {
         
         public String icon() {
             return icon;
+        }
+        
+        public String gradientSet() {
+            return gradientSet;
+        }
+        
+        public String gradientId() {
+            return gradientId;
         }
         
         public Slot slot() {
@@ -160,25 +205,27 @@ public class AttachmentsRegistry {
         // @param variant The name of the variant to use. If empty, the default texture is used.
         // @return A ModelAttachment ready to be applied to a player model.
         public ModelAttachment makeModel(String variant, String gradientSet, String gradientID) {
+            String model = data.model();
+            String texture = data.texture();
+            String gSet = data.gradientSet() != null ? data.gradientSet() : gradientSet;
+            String gId = data.gradientId() != null ? data.gradientId() : gradientID;
+            
             if(variant.isEmpty()) {
-                return new ModelAttachment(
-                    data.model(),
-                    data.texture(),
-                    gradientSet,
-                    gradientID,
-                    1
-                );
+                return new ModelAttachment(model, texture, gSet, gId, 1);
             }
             
             Variant v = data.variants.get(variant);
             
-            return new ModelAttachment(
-                data.model(),
-                v.texture(),
-                gradientSet,
-                gradientID,
-                1
-            );
+            if (v instanceof ModelVariant mv) {
+                model = mv.model != null ? mv.model : data.model();
+                texture = mv.texture != null ? mv.texture : data.texture();
+            } else if (v instanceof ColorVariant cv) {
+                texture = cv.texture;
+                gSet = cv.gradientSet;
+                gId = cv.gradientId;
+            }
+            
+            return new ModelAttachment(model, texture, gSet, gId, 1);
         }
         
         public ModelAttachment makeModel(String variant) {
@@ -727,6 +774,8 @@ public class AttachmentsRegistry {
                 String.format("%s/%s.blockymodel", attachmentPath, split[1]),
                 String.format("%s/%s.png", attachmentPath, split[1]),
                 String.format("%s/Icon/%s.png", attachmentPath, split[1]),
+                null,
+                null,
                 variants,
                 List.of()
         );
