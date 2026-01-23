@@ -1,6 +1,5 @@
 package com.goodwitchlalya.lalyan_cosmetic_core.util;
 
-import com.goodwitchlalya.lalyan_cosmetic_core.CosmeticCore;
 import com.goodwitchlalya.lalyan_cosmetic_core.component.CosmeticData;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -87,6 +86,236 @@ public class AttachmentsRegistry {
         }
     }
     
+    public static class Colour {
+        private String gradientSet;
+        private String gradientID;
+        
+        public Colour(String gradientSet, String gradientID) {
+            set(gradientSet, gradientID);
+        }
+        
+        public Colour(String gradient) {
+            this.set(gradient);
+        }
+        
+        public void set(String gradient) {
+            String[] split = gradient.split(":");
+            set(split[0], split[1]);
+        }
+        
+        public void set(String gradientSet, String gradientID) {
+            this.gradientSet = gradientSet;
+            this.gradientID = gradientID;
+        }
+        
+        public void setGradientSet(String gradientSet) {
+            set(gradientSet, this.gradientID);
+        }
+        
+        public void setGradientID(String gradientID) {
+            set(this.gradientSet, gradientID);
+        }
+        
+        public String getGradientSet() {
+            return gradientSet;
+        }
+        
+        public String getGradientID() {
+            return gradientID;
+        }
+        
+        public String getF() {
+            return gradientSet + ":" + gradientID;
+        }
+        
+        @Override
+        public String toString() {
+            return getF();
+        }
+    }
+    
+    public static class GradientSet {
+        private final String name;
+        private final List<String> colourList;
+        
+        public GradientSet(String name, List<String> colourList) {
+            this.name = name;
+            this.colourList = colourList;
+        }
+        
+        public GradientSet(String name) {
+            this.name = name;
+            this.colourList = List.of();
+        }
+        
+        public String getName() {
+            return name;
+        }
+        
+        public List<String> getColourList() {
+            return colourList;
+        }
+        
+        public boolean add(String colour) {
+            return colourList.add(colour);
+        }
+        
+        public boolean remove(String colour) {
+            return colourList.remove(colour);
+        }
+        
+        public boolean containsColour(String colour) {
+            return colourList.contains(colour);
+        }
+        
+        @Override
+        public String toString() {
+            return String.format("%s: [%s]", name, colourList);
+        }
+        
+    }
+    
+    public static class ColoursDataSet {
+        
+        private final List<GradientSet> gradientSets;
+        
+        public ColoursDataSet(List<GradientSet> gradientSets) {
+            this.gradientSets = gradientSets;
+        }
+        
+        public ColoursDataSet() {
+            this.gradientSets = List.of();
+        }
+        
+        public boolean add(GradientSet gradientSet) {
+            return gradientSets.add(gradientSet);
+        }
+        
+        public boolean remove(GradientSet gradientSet) {
+            return gradientSets.remove(gradientSet);
+        }
+        
+        public boolean contains(GradientSet gradientSet) {
+            return gradientSets.contains(gradientSet);
+        }
+        
+        public boolean contains(String gradientSet) {
+            return gradientSets.stream().anyMatch((set) -> set.name.equals(gradientSet));
+        }
+        
+        public GradientSet getGradientSet(String gradientSetName) {
+            return gradientSets.stream().filter((set) -> set.name.equals(gradientSetName)).findFirst().orElse(null);
+        }
+        
+    }
+    
+    public static ColoursDataSet coloursDataSet = new ColoursDataSet();
+    
+    private static final GradientSet coloredCottonSet = new GradientSet("Colored_Cotton");
+    public enum coloredCottonSetNames {Black, Blue, Brown, Charcoal, Cream, Green, Grey, Lime, Orange, Pink, Purple, Red, Turquoise, White, Yellow};
+    
+    private static final GradientSet eyesGradientSet = new GradientSet("Eyes_Gradient");
+    public enum eyesGradientSetNames {Black, Blond, Blue, BlueLight, Brown, BrownDark, BrownLight, Green, GreenLight, Grey, Honey, Orange, Pink, Purple, Red, RedDark, Turquoise, White}
+    
+    private static final GradientSet fadedLeatherSet = new GradientSet("Faded_Leather");
+    public enum fadedLeatherSetNames {Black, Blue, BlueDark, Brown, BrownDark, Green, Grey, Lime, Orange, Orange_Tan, Pink, Purple, Red, Turquoise, Violet, White, Yellow}
+    
+    private static final GradientSet fantasyCottonSet = new GradientSet("Fantasy_Cotton");
+    public enum fantasyCottonSetNames {Beige, Black, Blue, Brown, Green, Lime, Orange, Pink, Purple, Red, Turquoise, Yellow}
+    
+    private static final GradientSet fantasyCottonDarkSet = new GradientSet("Fantasy_Cotton_Dark");
+    public enum fantasyCottonDarkSetNames {Black, Blue, BlueDark, Brown, Green, Lime, Orange, Pink, Purple, Red, Turquoise, Yellow}
+    
+    private static final GradientSet flashySyntheticSet = new GradientSet("Flashy_Synthetic");
+    public enum flashySyntheticSetNames {Black, Blue, Green, Grey, Orange, OrangePastel, Pink, PinkPastel, Purple, Red, Turquoise, Violet, White, Yellow}
+    
+    private static final GradientSet hairSet = new GradientSet("Hair");
+    public enum hairSetNames {Black, Blond, BlondCaramel, BlondPlatinum, BlondSand, Blue, Blue_Anthracite, BlueDark, BlueLight, Brown, BrownDark, BrownDarker, BrownLight, BrownSemiDark, BrownSemiLight, Bubblegum, Copper, Green, Grey, GreyAsh, GreyPurple, Lavender, Pink, PinkBerry, PitchBlack, Purple, Red, RedDark, Turquoise, White}
+    
+    private static final GradientSet jeanGenericSet = new GradientSet("Jean_Generic");
+    public enum jeanGenericSetNames {Black, Blue, Blue_Night, BluePastel, GreyBlue, GreyDark, GreyLight, Marine_Blue, Maroon, Turquoise_Dark}
+    
+    private static final GradientSet ornamentedMetalSet = new GradientSet("Ornamented_Metal");
+    public enum ornamentedMetalSetNames {Brass_Purple, Copper_Green, Gold_Red, Iron_Black, Silver_Blue}
+    
+    private static final GradientSet pastelCottonSet = new GradientSet("Pastel_Cotton");
+    public enum pastelCottonSetNames {Black, Blue, Carmin, Green, Grey, Lime, Orange, Pink, PinkPastel, Purple, PurplePastel, Red, Turquoise, White, Yellow}
+    
+    private static final GradientSet rottenFabricSet = new GradientSet("Rotten_Fabric");
+    public enum rottenFabricSetNames {Blue, Brown, Yellow}
+    
+    private static final GradientSet shinyFabricSet = new GradientSet("Shiny_Fabric");
+    public enum shinyFabricSetNames {Black, Blue, Brown, Green, Grey, Lime, Orange, Pink, Purple, Red, Turquoise, Violet, White, Yellow}
+    
+    private static final GradientSet skinSet = new GradientSet("Skin");
+    public enum skinSetNames {
+        s01, s02, s03, s04, s05, s06, s07, s08, s09, s10,
+        s11, s12, s13, s14, s15, s16, s17, s18, s19, s20,
+        s21, s22, s23, s24, s25, s26, s27, s28, s29, s30,
+        s31, s32, s33, s34, s35, s36, s37, s38, s39, s40,
+        s41, s42, s43, s44, s45, s46, s47, s48, s49, s50,
+        s51, s52;
+        
+        public String getName() {
+            return this.name().replace("s", "");
+        }
+    }
+    
+    static {
+        /* Adding Colored_Cotton colours to the set */
+        Arrays.stream(coloredCottonSetNames.values()).forEach(value -> coloredCottonSet.add(value.name()));
+        
+        /* Adding Eyes_Gradient colours to the set */
+        Arrays.stream(eyesGradientSetNames.values()).forEach(value -> eyesGradientSet.add(value.name()));
+        
+        /* Adding Faded_Leather colours to the set */
+        Arrays.stream(fadedLeatherSetNames.values()).forEach(value -> fadedLeatherSet.add(value.name()));
+        
+        /* Adding Fantasy_Cotton colours to the set */
+        Arrays.stream(fantasyCottonSetNames.values()).forEach(value -> fantasyCottonSet.add(value.name()));
+        
+        /* Adding Fantasy_Cotton_Dark colours to the set */
+        Arrays.stream(fantasyCottonDarkSetNames.values()).forEach(value -> fantasyCottonDarkSet.add(value.name()));
+        
+        /* Adding Flashy_Synthetic colours to the set */
+        Arrays.stream(flashySyntheticSetNames.values()).forEach(value -> flashySyntheticSet.add(value.name()));
+        
+        /* Adding Hair colours to the set */
+        Arrays.stream(hairSetNames.values()).forEach(value -> hairSet.add(value.name()));
+        
+        /* Adding Jean_Generic colours to the set */
+        Arrays.stream(jeanGenericSetNames.values()).forEach(value -> jeanGenericSet.add(value.name()));
+        
+        /* Adding Ornamented_Metal colours to the set */
+        Arrays.stream(ornamentedMetalSetNames.values()).forEach(value -> ornamentedMetalSet.add(value.name()));
+        
+        /* Adding Pastel_Cotton colours to the set */
+        Arrays.stream(pastelCottonSetNames.values()).forEach(value -> pastelCottonSet.add(value.name()));
+        
+        /* Adding Rotten_Fabric colours to the set */
+        Arrays.stream(rottenFabricSetNames.values()).forEach(value -> rottenFabricSet.add(value.name()));
+        
+        /* Adding Shiny_Fabric colours to the set */
+        Arrays.stream(shinyFabricSetNames.values()).forEach(value -> shinyFabricSet.add(value.name()));
+        
+        /* Adding Skin colours to the set */
+        Arrays.stream(skinSetNames.values()).forEach(value -> skinSet.add(value.getName()));
+        
+        coloursDataSet.add(coloredCottonSet);
+        coloursDataSet.add(eyesGradientSet);
+        coloursDataSet.add(fadedLeatherSet);
+        coloursDataSet.add(fantasyCottonSet);
+        coloursDataSet.add(fantasyCottonDarkSet);
+        coloursDataSet.add(flashySyntheticSet);
+        coloursDataSet.add(hairSet);
+        coloursDataSet.add(jeanGenericSet);
+        coloursDataSet.add(ornamentedMetalSet);
+        coloursDataSet.add(pastelCottonSet);
+        coloursDataSet.add(rottenFabricSet);
+        coloursDataSet.add(shinyFabricSet);
+        coloursDataSet.add(skinSet);
+    }
+    
     // Provides access to the singleton instance of the registry.
     public static AttachmentsRegistry get() {
         if (INSTANCE == null) INSTANCE = new AttachmentsRegistry();
@@ -159,13 +388,13 @@ public class AttachmentsRegistry {
         // Creates a Hytale ModelAttachment object from this attachment's data.
         // @param variant The name of the variant to use. If empty, the default texture is used.
         // @return A ModelAttachment ready to be applied to a player model.
-        public ModelAttachment makeModel(String variant, String gradientSet, String gradientID) {
+        private ModelAttachment makeModel(String variant, Colour colour) {
             if(variant.isEmpty()) {
                 return new ModelAttachment(
                     data.model(),
                     data.texture(),
-                    gradientSet,
-                    gradientID,
+                    colour.getGradientSet(),
+                    colour.getGradientID(),
                     1
                 );
             }
@@ -175,14 +404,25 @@ public class AttachmentsRegistry {
             return new ModelAttachment(
                 data.model(),
                 v.texture(),
-                gradientSet,
-                gradientID,
+                colour.getGradientSet(),
+                colour.getGradientID(),
                 1
             );
         }
         
         public ModelAttachment makeModel(String variant) {
-            return makeModel(variant, "", "");
+            return makeModel(variant, new Colour("", ""));
+        }
+        
+        public List<ModelAttachment> makeModelsWithColorSet(String colourSet) {
+            List<ModelAttachment> internal = new ArrayList<ModelAttachment>();
+            GradientSet gradientSet = coloursDataSet.getGradientSet(colourSet);
+            
+            gradientSet.colourList.forEach(colour -> {
+                internal.add(makeModel("", new Colour(colourSet, colour)));
+            });
+            
+            return internal;
         }
     }
     
@@ -251,7 +491,7 @@ public class AttachmentsRegistry {
             if (hairColouredSlots.contains(attachment.data().slot())) {
                 String gradientSet = "Hair";
                 String gradientId = playerSkin.haircut.split("\\.")[1];
-                attachments.add(attachment.makeModel(variant, gradientSet, gradientId));
+                attachments.addAll(attachment.makeModelsWithColorSet(gradientSet));
             } else {
                 attachments.add(attachment.makeModel(variant));
             }
