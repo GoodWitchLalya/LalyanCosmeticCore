@@ -4,6 +4,8 @@
 
 An API to register and customize cosmetics without using armor slots
 
+Custom Wardrobe model and texture are made by [EtherealShigure](https://www.curseforge.com/members/etherealshigure).
+
 ## Introduction
 
 This plugin allows players to customize which cosmetic they have equipped, without having to use up their armor slots
@@ -191,6 +193,8 @@ Inside the variant names mentioned above are the definitions of the variant comp
 # Lalyan Cosmetic Core
 
 Un'API per registrare e personalizzare cosmetici senza usare gli slot dell'armatura
+
+Modello e texture del Custom Wardrobe sono fatti da [EtherealShigure](https://www.curseforge.com/members/etherealshigure).
 
 ## Introduzione
 
