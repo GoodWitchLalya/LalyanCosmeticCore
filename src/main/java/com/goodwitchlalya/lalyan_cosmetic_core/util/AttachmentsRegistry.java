@@ -86,54 +86,6 @@ public class AttachmentsRegistry {
         }
     }
     
-    public static class Colour {
-        private String gradientSet;
-        private String gradientID;
-        
-        public Colour(String gradientSet, String gradientID) {
-            set(gradientSet, gradientID);
-        }
-        
-        public Colour(String gradient) {
-            this.set(gradient);
-        }
-        
-        public void set(String gradient) {
-            String[] split = gradient.split(":");
-            set(split[0], split[1]);
-        }
-        
-        public void set(String gradientSet, String gradientID) {
-            this.gradientSet = gradientSet;
-            this.gradientID = gradientID;
-        }
-        
-        public void setGradientSet(String gradientSet) {
-            set(gradientSet, this.gradientID);
-        }
-        
-        public void setGradientID(String gradientID) {
-            set(this.gradientSet, gradientID);
-        }
-        
-        public String getGradientSet() {
-            return gradientSet;
-        }
-        
-        public String getGradientID() {
-            return gradientID;
-        }
-        
-        public String getF() {
-            return gradientSet + ":" + gradientID;
-        }
-        
-        @Override
-        public String toString() {
-            return getF();
-        }
-    }
-    
     public static class GradientSet {
         private final String name;
         private final List<String> colourList;
@@ -145,7 +97,7 @@ public class AttachmentsRegistry {
         
         public GradientSet(String name) {
             this.name = name;
-            this.colourList = List.of();
+            this.colourList = new ArrayList<>();
         }
         
         public String getName() {
@@ -184,7 +136,7 @@ public class AttachmentsRegistry {
         }
         
         public ColoursDataSet() {
-            this.gradientSets = List.of();
+            this.gradientSets = new ArrayList<>();
         }
         
         public boolean add(GradientSet gradientSet) {
@@ -212,40 +164,217 @@ public class AttachmentsRegistry {
     public static ColoursDataSet coloursDataSet = new ColoursDataSet();
     
     private static final GradientSet coloredCottonSet = new GradientSet("Colored_Cotton");
-    public enum coloredCottonSetNames {Black, Blue, Brown, Charcoal, Cream, Green, Grey, Lime, Orange, Pink, Purple, Red, Turquoise, White, Yellow};
+    public enum coloredCottonSetNames {
+        Black,
+        Blue,
+        Brown,
+        Charcoal,
+        Cream,
+        Green,
+        Grey,
+        Lime,
+        Orange,
+        Pink,
+        Purple,
+        Red,
+        Turquoise,
+        White,
+        Yellow
+    };
     
     private static final GradientSet eyesGradientSet = new GradientSet("Eyes_Gradient");
-    public enum eyesGradientSetNames {Black, Blond, Blue, BlueLight, Brown, BrownDark, BrownLight, Green, GreenLight, Grey, Honey, Orange, Pink, Purple, Red, RedDark, Turquoise, White}
+    public enum eyesGradientSetNames {
+        Black,
+        Blond,
+        Blue,
+        BlueLight,
+        Brown,
+        BrownDark,
+        BrownLight,
+        Green,
+        GreenLight,
+        Grey,
+        Honey,
+        Orange,
+        Pink,
+        Purple,
+        Red,
+        RedDark,
+        Turquoise,
+        White
+    }
     
     private static final GradientSet fadedLeatherSet = new GradientSet("Faded_Leather");
-    public enum fadedLeatherSetNames {Black, Blue, BlueDark, Brown, BrownDark, Green, Grey, Lime, Orange, Orange_Tan, Pink, Purple, Red, Turquoise, Violet, White, Yellow}
+    public enum fadedLeatherSetNames {
+        Black,
+        Blue,
+        BlueDark,
+        Brown,
+        BrownDark,
+        Green,
+        Grey,
+        Lime,
+        Orange,
+        Orange_Tan,
+        Pink,
+        Purple,
+        Red,
+        Turquoise,
+        Violet,
+        White,
+        Yellow
+    }
     
     private static final GradientSet fantasyCottonSet = new GradientSet("Fantasy_Cotton");
-    public enum fantasyCottonSetNames {Beige, Black, Blue, Brown, Green, Lime, Orange, Pink, Purple, Red, Turquoise, Yellow}
+    public enum fantasyCottonSetNames {
+        Beige,
+        Black,
+        Blue,
+        Brown,
+        Green,
+        Lime,
+        Orange,
+        Pink,
+        Purple,
+        Red,
+        Turquoise,
+        Yellow
+    }
     
     private static final GradientSet fantasyCottonDarkSet = new GradientSet("Fantasy_Cotton_Dark");
-    public enum fantasyCottonDarkSetNames {Black, Blue, BlueDark, Brown, Green, Lime, Orange, Pink, Purple, Red, Turquoise, Yellow}
+    public enum fantasyCottonDarkSetNames {
+        Black,
+        Blue,
+        BlueDark,
+        Brown,
+        Green,
+        Lime,
+        Orange,
+        Pink,
+        Purple,
+        Red,
+        Turquoise,
+        Yellow
+    }
     
     private static final GradientSet flashySyntheticSet = new GradientSet("Flashy_Synthetic");
-    public enum flashySyntheticSetNames {Black, Blue, Green, Grey, Orange, OrangePastel, Pink, PinkPastel, Purple, Red, Turquoise, Violet, White, Yellow}
+    public enum flashySyntheticSetNames {
+        Black,
+        Blue,
+        Green,
+        Grey,
+        Orange,
+        OrangePastel,
+        Pink,
+        PinkPastel,
+        Purple,
+        Red,
+        Turquoise,
+        Violet,
+        White,
+        Yellow
+    }
     
     private static final GradientSet hairSet = new GradientSet("Hair");
-    public enum hairSetNames {Black, Blond, BlondCaramel, BlondPlatinum, BlondSand, Blue, Blue_Anthracite, BlueDark, BlueLight, Brown, BrownDark, BrownDarker, BrownLight, BrownSemiDark, BrownSemiLight, Bubblegum, Copper, Green, Grey, GreyAsh, GreyPurple, Lavender, Pink, PinkBerry, PitchBlack, Purple, Red, RedDark, Turquoise, White}
+    public enum hairSetNames {
+        Black,
+        Blond,
+        BlondCaramel,
+        BlondPlatinum,
+        BlondSand,
+        Blue,
+        Blue_Anthracite,
+        BlueDark,
+        BlueLight,
+        Brown,
+        BrownDark,
+        BrownDarker,
+        BrownLight,
+        BrownSemiDark,
+        BrownSemiLight,
+        Bubblegum,
+        Copper,
+        Green,
+        Grey,
+        GreyAsh,
+        GreyPurple,
+        Lavender,
+        Pink,
+        PinkBerry,
+        PitchBlack,
+        Purple,
+        Red,
+        RedDark,
+        Turquoise,
+        White
+    }
     
     private static final GradientSet jeanGenericSet = new GradientSet("Jean_Generic");
-    public enum jeanGenericSetNames {Black, Blue, Blue_Night, BluePastel, GreyBlue, GreyDark, GreyLight, Marine_Blue, Maroon, Turquoise_Dark}
+    public enum jeanGenericSetNames {
+        Black,
+        Blue,
+        Blue_Night,
+        BluePastel,
+        GreyBlue,
+        GreyDark,
+        GreyLight,
+        Marine_Blue,
+        Maroon,
+        Turquoise_Dark
+    }
     
     private static final GradientSet ornamentedMetalSet = new GradientSet("Ornamented_Metal");
-    public enum ornamentedMetalSetNames {Brass_Purple, Copper_Green, Gold_Red, Iron_Black, Silver_Blue}
+    public enum ornamentedMetalSetNames {
+        Brass_Purple,
+        Copper_Green,
+        Gold_Red,
+        Iron_Black,
+        Silver_Blue
+    }
     
     private static final GradientSet pastelCottonSet = new GradientSet("Pastel_Cotton");
-    public enum pastelCottonSetNames {Black, Blue, Carmin, Green, Grey, Lime, Orange, Pink, PinkPastel, Purple, PurplePastel, Red, Turquoise, White, Yellow}
+    public enum pastelCottonSetNames {
+        Black,
+        Blue,
+        Carmin,
+        Green,
+        Grey,
+        Lime,
+        Orange,
+        Pink,
+        PinkPastel,
+        Purple,
+        PurplePastel,
+        Red,
+        Turquoise,
+        White,
+        Yellow
+    }
     
     private static final GradientSet rottenFabricSet = new GradientSet("Rotten_Fabric");
-    public enum rottenFabricSetNames {Blue, Brown, Yellow}
+    public enum rottenFabricSetNames {
+        Blue,
+        Brown,
+        Yellow
+    }
     
     private static final GradientSet shinyFabricSet = new GradientSet("Shiny_Fabric");
-    public enum shinyFabricSetNames {Black, Blue, Brown, Green, Grey, Lime, Orange, Pink, Purple, Red, Turquoise, Violet, White, Yellow}
+    public enum shinyFabricSetNames {
+        Black,
+        Blue,
+        Brown,
+        Green,
+        Grey,
+        Lime,
+        Orange,
+        Pink,
+        Purple,
+        Red,
+        Turquoise,
+        Violet,
+        White,
+        Yellow
+    }
     
     private static final GradientSet skinSet = new GradientSet("Skin");
     public enum skinSetNames {
@@ -328,9 +457,109 @@ public class AttachmentsRegistry {
         return attachmentsRegistry;
     }
     
-    // A record to hold data for a single cosmetic variant (texture and icon).
-    public record Variant(@Expose String texture, @Expose String icon) {
+    public static abstract class Alternative {
     
+    }
+    
+    // A record to hold data for a single cosmetic variant (texture and icon).
+    public static final class Variant extends Alternative {
+        @Expose
+        private final String texture;
+        @Expose
+        private final String icon;
+        
+        public Variant(String texture, String icon) {
+            this.texture = texture;
+            this.icon = icon;
+        }
+        
+        public String texture() {
+            return texture;
+        }
+        
+        public String icon() {
+            return icon;
+        }
+        
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) return true;
+            if (obj == null || obj.getClass() != this.getClass()) return false;
+            var that = (Variant) obj;
+            return Objects.equals(this.texture, that.texture) &&
+                    Objects.equals(this.icon, that.icon);
+        }
+        
+        @Override
+        public int hashCode() {
+            return Objects.hash(texture, icon);
+        }
+        
+        @Override
+        public String toString() {
+            return "Variant[" +
+                    "texture=" + texture + ", " +
+                    "icon=" + icon + ']';
+        }
+        
+        
+    }
+    
+    public static final class Coloured extends Alternative {
+        @Expose
+        String gradientSet;
+        
+        public Coloured(String gradientSet) {
+            this.gradientSet = gradientSet;
+        }
+    }
+    
+    public static class Colour {
+        private String gradientSet;
+        private String gradientID;
+        
+        public Colour(String gradientSet, String gradientID) {
+            set(gradientSet, gradientID);
+        }
+        
+        public Colour(String gradient) {
+            this.set(gradient);
+        }
+        
+        public void set(String gradient) {
+            String[] split = gradient.split(":");
+            set(split[0], split[1]);
+        }
+        
+        public void set(String gradientSet, String gradientID) {
+            this.gradientSet = gradientSet;
+            this.gradientID = gradientID;
+        }
+        
+        public void setGradientSet(String gradientSet) {
+            set(gradientSet, this.gradientID);
+        }
+        
+        public void setGradientID(String gradientID) {
+            set(this.gradientSet, gradientID);
+        }
+        
+        public String getGradientSet() {
+            return gradientSet;
+        }
+        
+        public String getGradientID() {
+            return gradientID;
+        }
+        
+        public String getF() {
+            return gradientSet + ":" + gradientID;
+        }
+        
+        @Override
+        public String toString() {
+            return getF();
+        }
     }
     
     // A class holding all the data for a single attachment, loaded from asset files or JSON.
@@ -345,16 +574,19 @@ public class AttachmentsRegistry {
         @Expose
         private final Map<String, Variant> variants;
         @Expose
+        private final String gradientSet;
+        @Expose
         @SerializedName("slot_overrides")
         private final List<String> slotOverrides;
         
         public Slot slot; // The primary slot this attachment belongs to.
         
-        public AttachmentData(String model, String texture, String icon, Map<String, Variant> variants, List<String> slotOverrides) {
+        public AttachmentData(String model, String texture, String icon, Map<String, Variant> variants, String gradientSet, List<String> slotOverrides) {
             this.model = model;
             this.texture = texture;
             this.icon = icon;
             this.variants = variants;
+            this.gradientSet = gradientSet;
             this.slotOverrides = slotOverrides;
         }
         
@@ -1005,6 +1237,36 @@ public class AttachmentsRegistry {
                 String.format("%s/%s.png", attachmentPath, split[1]),
                 String.format("%s/Icon/%s.png", attachmentPath, split[1]),
                 variants,
+                "",
+                new ArrayList<>()
+        );
+        attData.slot = slot;
+        
+        register(name, attData);
+    }
+    
+    // Registers a new attachment with default paths but with specified variants.
+    public void register(String name, Slot slot, String gradientSet) {
+        String attachmentPath = "Resources/";
+        
+        if (slot.getType() == SlotType.CHARACTER) {
+            attachmentPath += "Characters/";
+        } else if (slot.getType() == SlotType.COSMETIC) {
+            attachmentPath += "Cosmetics/";
+        }
+        
+        String[] split = name.split("#");
+        
+        
+        attachmentPath += String.format("%s/%s", slot, split[1]);
+        
+        // Create AttachmentData with conventional paths.
+        AttachmentData attData = new AttachmentData(
+                String.format("%s/%s.blockymodel", attachmentPath, split[1]),
+                String.format("%s/%s.png", attachmentPath, split[1]),
+                String.format("%s/Icon/%s.png", attachmentPath, split[1]),
+                Map.of(),
+                gradientSet,
                 List.of()
         );
         attData.slot = slot;
