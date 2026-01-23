@@ -61,9 +61,9 @@ The base path for cosmetics is `Common/Resources/Cosmetics`, then the folder bas
 
 *   `Capes`
 *   `Ears_Accessories`
-*   `Face_Accessories`
 *   `Gloves`
 *   `Head`
+*   `Face_Accessories`
 *   `Overpants`
 *   `Overtops`
 *   `Pants`
@@ -91,14 +91,13 @@ Custom_Cape/
 
 The base path for character cosmetics is `Common/Resources/Characters`, then the folder based on the slot, which can be:
 
-*   `Eyes`
-*   `Mouth`
-*   `Nose`
+*   `Beards`
+*   `Ears`
 *   `Eyebrows`
+*   `Eyes`
+*   `Faces`
+*   `Mouth`
 *   `Haircuts`
-*   `Hair_Extension`
-*   `Beard`
-*   `Mustache`
 
 Then the folder you made before.
 
