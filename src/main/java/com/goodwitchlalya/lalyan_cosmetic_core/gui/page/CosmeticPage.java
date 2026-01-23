@@ -49,7 +49,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
     private Map<String, AttachmentsRegistry.Variant> variants = new HashMap<>();
     
     //Whether to allow multiple cosmetics of the same type regardless of slot
-    private boolean multiSelect = false;
+    private boolean multiSelect = true;
     
     /**
      * Builds the main UI structure. This method is called to generate the UI commands
@@ -69,7 +69,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         buildCosmeticButtons(cmd, evt);
         buildCosmetics(ref, cmd, evt);
         
-        cmd.set("#Title #MultiSelect #CheckBox.Value", this.multiSelect);
+        cmd.set("#Title #MultiSelect #CheckBox.Value", !this.multiSelect);
         
         evt.addEventBinding(CustomUIEventBindingType.ValueChanged, "#Title #MultiSelect #CheckBox", EventData.of("MultiSelect", "true"));
         

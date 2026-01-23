@@ -476,15 +476,6 @@ public class AttachmentsRegistry {
             // Add the attachment's primary slot and any extra override slots to the override map.
             if (nonOverridingSlots.contains(attachment.data().slot())) {
                 overrides.put(attachment.data().slot(), false);
-            } else {
-                overrides.put(attachment.data().slot(), true);
-            }
-            
-            for (String override : attachment.data().slotOverrides()) {
-                Slot overrideSlot = Slot.valueOf(override);
-                if (overrideSlot != null) {
-                    overrides.put(overrideSlot, true);
-                }
             }
             
             // Create the model attachment and add it to the list.
@@ -771,11 +762,32 @@ public class AttachmentsRegistry {
     
     // Removes a cosmetic (and any of its variants) from a player.
     public void removeCosmetic(Ref<EntityStore> ref, String cosmeticId) {
+        removeCosmetic(ref, cosmeticId, false);
+    }
+
+    private boolean isSlotUsed(CosmeticData data, Slot slot) {
+        for (String c : data.getCosmetics()) {
+            if (c.startsWith("No")) continue;
+            
+            String cBase = c.split("\\$")[0];
+            Attachment att = attachmentsRegistry.get(cBase);
+            if (att != null) {
+                if (att.data().slot() == slot) return true;
+                if (att.data().slotOverrides().contains(slot.name())) return true;
+            }
+        }
+        return false;
+    }
+
+    public void removeCosmetic(Ref<EntityStore> ref, String cosmeticId, boolean multiSelect) {
         Store<EntityStore> store = ref.getStore();
         CosmeticData data = store.getComponent(ref, CosmeticData.INSTANCE);
         
         if (data == null) return;
         
+        String baseId = cosmeticId.split("\\$")[0];
+        Attachment attachment = attachmentsRegistry.get(baseId);
+
         // Find all cosmetics to remove (base ID and any variants).
         List<String> toRemove = new ArrayList<>();
         
@@ -789,44 +801,47 @@ public class AttachmentsRegistry {
             data.removeCosmetic(s);
         }
         
-        // Handle slot overrides removal
-        // If we are removing a "No" cosmetic, we need to check if other cosmetics depended on it.
-        // This logic seems complex and might need review.
         if (cosmeticId.startsWith("No")) {
             Slot slot = Slot.valueOf(cosmeticId.replace("No", ""));
-            if (slot != null) {
+            if (slot != null && !multiSelect) {
                 List<String> dependentCosmetics = new ArrayList<>();
                 for (String cosmetic : data.getCosmetics()) {
                     if (cosmetic.startsWith("No")) continue;
                     
                     String id = cosmetic.split("\\$")[0];
-                    Attachment attachment = attachmentsRegistry.get(id);
-                    if (attachment != null && attachment.data().slotOverrides().contains(slot.name())) {
-                        dependentCosmetics.add(cosmetic);
+                    Attachment att = attachmentsRegistry.get(id);
+                    if (att != null) {
+                        if (att.data().slotOverrides().contains(slot.name()) || att.data().slot() == slot) {
+                            dependentCosmetics.add(cosmetic);
+                        }
                     }
                 }
                 
                 for (String dep : dependentCosmetics) {
-                    removeCosmetic(ref, dep);
+                    removeCosmetic(ref, dep, false);
                 }
             }
-        } else {
-            // If we remove a regular cosmetic, also remove any "No" markers it might have added.
-            String id = cosmeticId.split("\\$")[0];
-            Attachment attachment = attachmentsRegistry.get(id);
-            if (attachment != null) {
-                for (String override : attachment.data().slotOverrides()) {
-                    data.removeCosmetic("No" + override);
-                }
-            }
+        } else if (attachment != null && !multiSelect) {
+             Set<String> slotsToCheck = new HashSet<>();
+             if (attachment.data().slot() != null) {
+                 slotsToCheck.add(attachment.data().slot().name());
+             }
+             slotsToCheck.addAll(attachment.data().slotOverrides());
+             
+             for (String slotName : slotsToCheck) {
+                 Slot s = Slot.valueOf(slotName);
+                 if (s != null && !isSlotUsed(data, s)) {
+                     data.removeCosmetic("No" + slotName);
+                 }
+             }
         }
         
         rebuildSkinWithCosmetics(ref);
     }
     
     // Adds a cosmetic to a player.
-    // @param override If true, clears the slot before adding the new cosmetic.
-    public void addCosmetic(Ref<EntityStore> ref, String cosmeticId, boolean override) {
+    // @param multiSelect If true, does not clear the slot and ignores slot overrides.
+    public void addCosmetic(Ref<EntityStore> ref, String cosmeticId, boolean multiSelect) {
         String cosmId = cosmeticId;
         
         if(cosmeticId.contains("$")) {
@@ -839,13 +854,35 @@ public class AttachmentsRegistry {
         
         if (data == null) return;
         
-        if (override) {
-            clearSlot(ref, cosmId);
+        Attachment attachment = attachmentsRegistry.get(cosmId);
+        Slot slot = attachment != null ? attachment.data().slot() : null;
+        
+        if (slot == null && cosmId.startsWith("No")) {
+             try {
+                 slot = Slot.valueOf(cosmId.replace("No", ""));
+             } catch (Exception e) {}
+        }
+        
+        boolean isNonOverriding = slot != null && nonOverridingSlots.contains(slot);
+        boolean shouldClear = !multiSelect && !isNonOverriding;
+        
+        if (shouldClear) {
+            if (slot != null) {
+                clearSlot(ref, slot);
+                if (!cosmId.startsWith("No")) {
+                    data.addCosmetic("No" + slot.name());
+                }
+            } else {
+                clearSlot(ref, cosmId);
+            }
+        } else {
+            if (slot != null && !cosmId.startsWith("No")) {
+                data.removeCosmetic("No" + slot.name());
+            }
         }
         
         // Add any necessary slot overrides for this cosmetic.
-        Attachment attachment = attachmentsRegistry.get(cosmId);
-        if (attachment != null) {
+        if (attachment != null && !multiSelect) {
             for (String overrideSlot : attachment.data().slotOverrides()) {
                 clearSlot(ref, Slot.valueOf(overrideSlot));
                 data.addCosmetic("No" + overrideSlot);

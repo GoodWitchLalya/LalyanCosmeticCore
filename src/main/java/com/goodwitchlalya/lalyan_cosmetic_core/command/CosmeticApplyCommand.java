@@ -50,7 +50,7 @@ public class CosmeticApplyCommand extends AbstractPlayerCommand {
         
         // Execute the cosmetic application on the world's main thread.
         universe.getWorld(playerRef.getWorldUuid()).execute(() -> {
-            AttachmentsRegistry.get().addCosmetic(ref, cosmeticName.get(commandContext), overrideBool);
+            AttachmentsRegistry.get().addCosmetic(ref, cosmeticName.get(commandContext), !overrideBool);
         });
     }
     
