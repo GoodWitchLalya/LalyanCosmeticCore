@@ -70,6 +70,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         buildCosmetics(ref, cmd, evt);
         
         cmd.set("#Title #MultiSelect #CheckBox.Value", this.multiSelect);
+        
         evt.addEventBinding(CustomUIEventBindingType.ValueChanged, "#Title #MultiSelect #CheckBox", EventData.of("MultiSelect", "true"));
         
         updateCamera();
@@ -242,15 +243,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
                 // Check if a variant is equipped and update the icon accordingly.
                 String equippedVariant = AttachmentsRegistry.get().getEquippedVariant(ref, cosmeticId);
                 if (equippedVariant != null) {
-                    AttachmentsRegistry.Variant v = entry.data().variants().get(equippedVariant);
-                    if (v instanceof AttachmentsRegistry.ModelVariant) {
-                        icon = ((AttachmentsRegistry.ModelVariant) v).icon;
-                    } else if (v instanceof AttachmentsRegistry.ColorVariant) {
-                        // For ColorVariant, we might want to use the base icon or a specific one if available.
-                        // The request mentioned "icon_color" for the mask background, but for the main slot icon,
-                        // we'll stick to the base icon unless specified otherwise.
-                        // If needed, we could use a colored icon here too, but typically color variants just change the model color.
-                    }
+                    icon = entry.data().variants().get(equippedVariant).icon();
                 }
                 
                 cmd.set(slotSelector + " #Icon.AssetPath", icon);
@@ -332,57 +325,19 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         
         // Add buttons for each available variant.
         List<Map.Entry<String, AttachmentsRegistry.Variant>> usableVariants = variants.entrySet().stream().toList();
-        
-        int variantSlotIndex = 1; // Start at 1 because 0 is the default variant
-        
-        for (Map.Entry<String, AttachmentsRegistry.Variant> entry : usableVariants) {
-            AttachmentsRegistry.Variant variant = entry.getValue();
+        for (int i = 0; i < usableVariants.size(); i++) {
+            Map.Entry<String, AttachmentsRegistry.Variant> entry = usableVariants.get(i);
             
-            String variantId = this.variantOriginalId + "$" + entry.getKey();
+            String selector = "#VariantSlot[" + (i + 1) + "]";
             
-            if (variant instanceof AttachmentsRegistry.ColorVariant colorVariant) {
-                String selector = "#VariantSlot[" + variantSlotIndex + "]";
-                cmd.append("#RSidePanel #Content #VariantList #VariantSlot", "Pages/CosmeticGUI/VariantSlot.ui");
-                
-                String icon = original.data().icon();
-                
-                if (variant.icon != null) {
-                    icon = variant.icon;
-                }
-                
-                cmd.set("#RSidePanel #Content #VariantList " + selector + " #Icon.AssetPath", icon);
-                
-                cmd.set("#RSidePanel #Content #VariantList " + selector + " #Button.TooltipText", entry.getKey());
-                cmd.set("#RSidePanel #Content #VariantList " + selector + " #ButtonEnabled.TooltipText", entry.getKey());
-                
-                if (AttachmentsRegistry.get().isEquipped(ref, variantId)) {
-                    cmd.set("#RSidePanel #Content #VariantList " + selector + " #Button.Visible", false);
-                    cmd.set("#RSidePanel #Content #VariantList " + selector + " #ButtonEnabled.Visible", true);
-                } else {
-                    cmd.set("#RSidePanel #Content #VariantList " + selector + " #Button.Visible", true);
-                    cmd.set("#RSidePanel #Content #VariantList " + selector + " #ButtonEnabled.Visible", false);
-                }
-                
-                evt.addEventBinding(CustomUIEventBindingType.Activating, "#RSidePanel #Content #VariantList " + selector + " #Button", EventData.of("CosmeticId", variantId).append("Enabled", "false"));
-                evt.addEventBinding(CustomUIEventBindingType.Activating, "#RSidePanel #Content #VariantList " + selector + " #ButtonEnabled", EventData.of("CosmeticId", variantId).append("Enabled", "true"));
-                
-                variantSlotIndex++;
-                continue;
-            }
-            
-            // ModelVariant or default fallback
-            String selector = "#VariantSlot[" + variantSlotIndex + "]";
             cmd.append("#RSidePanel #Content #VariantList #VariantSlot", "Pages/CosmeticGUI/VariantSlot.ui");
             
-            String icon = original.data().icon();
-            if (variant instanceof AttachmentsRegistry.ModelVariant) {
-                icon = ((AttachmentsRegistry.ModelVariant) variant).icon;
-            }
-            
-            cmd.set("#RSidePanel #Content #VariantList " + selector + " #Icon.AssetPath", icon);
+            cmd.set("#RSidePanel #Content #VariantList " + selector + " #Icon.AssetPath", entry.getValue().icon());
             
             cmd.set("#RSidePanel #Content #VariantList " + selector + " #Button.TooltipText", entry.getKey());
             cmd.set("#RSidePanel #Content #VariantList " + selector + " #ButtonEnabled.TooltipText", entry.getKey());
+            
+            String variantId = this.variantOriginalId + "$" + entry.getKey();
             
             if (AttachmentsRegistry.get().isEquipped(ref, variantId)) {
                 cmd.set("#RSidePanel #Content #VariantList " + selector + " #Button.Visible", false);
@@ -394,8 +349,6 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             
             evt.addEventBinding(CustomUIEventBindingType.Activating, "#RSidePanel #Content #VariantList " + selector + " #Button", EventData.of("CosmeticId", variantId).append("Enabled", "false"));
             evt.addEventBinding(CustomUIEventBindingType.Activating, "#RSidePanel #Content #VariantList " + selector + " #ButtonEnabled", EventData.of("CosmeticId", variantId).append("Enabled", "true"));
-            
-            variantSlotIndex++;
         }
     }
     
@@ -590,6 +543,8 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             // Handle equipping an item.
             AttachmentsRegistry.get().addCosmetic(ref, data.cosmeticId, !multiSelect);
         }
+        
+        
         
         this.sendUpdate();
         this.rebuild();
