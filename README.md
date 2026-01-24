@@ -13,7 +13,9 @@ This plugin allows players to customize which cosmetic they have equipped, witho
 It also allows plugin makers to create their custom cosmetics, without needing any java code!
 
 The plugin features a custom GUI to customize cosmetics, which can be opened by command or, in a more immersive way, by
-interacting with any vanilla wardrobe
+crafting the Cosmetic Wardrobe
+
+The Cosmetic Wardrobe can be crafted in the Builder's Workbench using 4 of any Hardwood
 
 The GUI provides an easy way to select cosmetics and cosmetic variants. Left-click on a cosmetic to equip it, if the
 cosmetic has the variant icon, right-click it to open the variant menu!
@@ -242,7 +244,9 @@ dell'armatura
 Permette anche ai creatori di plugin di creare i loro cosmetici personalizzati, senza aver bisogno di alcun codice Java!
 
 Il plugin fornisce una GUI per personalizzare i cosmetici, che può essere aperta tramite comando o, in un modo più
-immersivo, interagendo con qualsiasi armadio vanilla
+immersivo, interagendo con il Guardaroba Cosmetico
+
+Il Guardaroba Cosmetico può essere craftato in una Builder's Workbench con 4 di qualsiasi Hardwood
 
 La GUI fornisce un modo semplice per selezionare cosmetici e varianti di cosmetici. Fai clic con il pulsante sinistro su
 un cosmetico per equipaggiarlo, se il cosmetico ha l'icona della variante, fai clic con il pulsante destro per aprire il
@@ -407,10 +411,10 @@ Qui la formattazione corretta del cosmetico di esempio
     "texture": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat.png",
     "icon": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat_Icon.png",
     "slot_overrides": [
-        //Insert slots here, for example "Head", "Capes" etc
+        //Inserisci gli slot qui, per esempio "Head", "Capes" ecc...
     ],
     "alternatives": {
-        //THESE 2 ARE MUTUALLY EXCLUSIVE, YOU EITHER HAVE VARIANTS OR COLORS!!!    
+        //QUESTI 2 SONO MUTUALMENTE ESCLUSIVI, O USI LE VARIANTI O I COLORI!!!
         "gradient_set": "Hair",
         "variants": {
             "Variant": {
