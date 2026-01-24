@@ -28,6 +28,7 @@ public class CosmeticCommand extends AbstractPlayerCommand {
         this.addSubCommand(new CosmeticReloadCommand());
         this.addSubCommand(new CosmeticListCommand());
         this.addSubCommand(new CosmeticChangeCommand());
+        this.addSubCommand(new CosmeticReskinCommand());
         this.setPermissionGroup(GameMode.Adventure);
     }
     

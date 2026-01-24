@@ -1,6 +1,8 @@
 package com.goodwitchlalya.lalyan_cosmetic_core.util;
 
 import com.goodwitchlalya.lalyan_cosmetic_core.CosmeticCore;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.hypixel.hytale.assetstore.AssetPack;
 import com.hypixel.hytale.server.core.asset.AssetModule;
 
@@ -130,7 +132,29 @@ public class FileManager {
                                 try {
                                     // Read and deserialize the JSON into AttachmentData
                                     String jsonContent = new String(Files.readAllBytes(jsonFile));
-                                    AttachmentsRegistry.AttachmentData attachmentData = CosmeticCore.GSON.fromJson(jsonContent, AttachmentsRegistry.AttachmentData.class);
+                                    
+                                    // Parse JSON to check for legacy syntax
+                                    JsonObject jsonObject = JsonParser.parseString(jsonContent).getAsJsonObject();
+                                    
+                                    // Ensure alternatives object exists to avoid NPEs in AttachmentData
+                                    JsonObject alternatives;
+                                    if (jsonObject.has("alternatives")) {
+                                        alternatives = jsonObject.getAsJsonObject("alternatives");
+                                    } else {
+                                        alternatives = new JsonObject();
+                                        jsonObject.add("alternatives", alternatives);
+                                    }
+                                    
+                                    // Check if we need to migrate legacy fields
+                                    if (jsonObject.has("variants") && !alternatives.has("variants")) {
+                                        alternatives.add("variants", jsonObject.get("variants"));
+                                    }
+                                    
+                                    if (jsonObject.has("gradient_set") && !alternatives.has("gradient_set")) {
+                                        alternatives.add("gradient_set", jsonObject.get("gradient_set"));
+                                    }
+                                    
+                                    AttachmentsRegistry.AttachmentData attachmentData = CosmeticCore.GSON.fromJson(jsonObject, AttachmentsRegistry.AttachmentData.class);
                                     
                                     // Inject the slot type (inferred from the folder structure)
                                     attachmentData.slot = slot;

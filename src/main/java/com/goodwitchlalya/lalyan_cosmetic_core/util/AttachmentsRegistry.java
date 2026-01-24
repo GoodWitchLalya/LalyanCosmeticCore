@@ -30,12 +30,12 @@ public class AttachmentsRegistry {
     
     // A list of slots that doesn't make the override by default
     public final List<Slot> nonOverridingSlots = List.of(
-            CharacterSlot.Hair_Extension
+        CharacterSlot.Hair_Extension
     );
     
     // A list of slots that use the same hair gradient by default
     public final List<Slot> hairColouredSlots = List.of(
-            CharacterSlot.Hair_Extension
+        CharacterSlot.Hair_Extension
     );
     
     // Enum for top-level UI categories.
@@ -86,54 +86,6 @@ public class AttachmentsRegistry {
         }
     }
     
-    public static class Colour {
-        private String gradientSet;
-        private String gradientID;
-        
-        public Colour(String gradientSet, String gradientID) {
-            set(gradientSet, gradientID);
-        }
-        
-        public Colour(String gradient) {
-            this.set(gradient);
-        }
-        
-        public void set(String gradient) {
-            String[] split = gradient.split(":");
-            set(split[0], split[1]);
-        }
-        
-        public void set(String gradientSet, String gradientID) {
-            this.gradientSet = gradientSet;
-            this.gradientID = gradientID;
-        }
-        
-        public void setGradientSet(String gradientSet) {
-            set(gradientSet, this.gradientID);
-        }
-        
-        public void setGradientID(String gradientID) {
-            set(this.gradientSet, gradientID);
-        }
-        
-        public String getGradientSet() {
-            return gradientSet;
-        }
-        
-        public String getGradientID() {
-            return gradientID;
-        }
-        
-        public String getF() {
-            return gradientSet + ":" + gradientID;
-        }
-        
-        @Override
-        public String toString() {
-            return getF();
-        }
-    }
-    
     public static class GradientSet {
         private final String name;
         private final List<String> colourList;
@@ -145,7 +97,7 @@ public class AttachmentsRegistry {
         
         public GradientSet(String name) {
             this.name = name;
-            this.colourList = List.of();
+            this.colourList = new ArrayList<>();
         }
         
         public String getName() {
@@ -184,7 +136,7 @@ public class AttachmentsRegistry {
         }
         
         public ColoursDataSet() {
-            this.gradientSets = List.of();
+            this.gradientSets = new ArrayList<>();
         }
         
         public boolean add(GradientSet gradientSet) {
@@ -212,42 +164,234 @@ public class AttachmentsRegistry {
     public static ColoursDataSet coloursDataSet = new ColoursDataSet();
     
     private static final GradientSet coloredCottonSet = new GradientSet("Colored_Cotton");
-    public enum coloredCottonSetNames {Black, Blue, Brown, Charcoal, Cream, Green, Grey, Lime, Orange, Pink, Purple, Red, Turquoise, White, Yellow};
+    
+    public enum coloredCottonSetNames {
+        Black,
+        Blue,
+        Brown,
+        Charcoal,
+        Cream,
+        Green,
+        Grey,
+        Lime,
+        Orange,
+        Pink,
+        Purple,
+        Red,
+        Turquoise,
+        White,
+        Yellow
+    }
+    
+    ;
     
     private static final GradientSet eyesGradientSet = new GradientSet("Eyes_Gradient");
-    public enum eyesGradientSetNames {Black, Blond, Blue, BlueLight, Brown, BrownDark, BrownLight, Green, GreenLight, Grey, Honey, Orange, Pink, Purple, Red, RedDark, Turquoise, White}
+    
+    public enum eyesGradientSetNames {
+        Black,
+        Blond,
+        Blue,
+        BlueLight,
+        Brown,
+        BrownDark,
+        BrownLight,
+        Green,
+        GreenLight,
+        Grey,
+        Honey,
+        Orange,
+        Pink,
+        Purple,
+        Red,
+        RedDark,
+        Turquoise,
+        White
+    }
     
     private static final GradientSet fadedLeatherSet = new GradientSet("Faded_Leather");
-    public enum fadedLeatherSetNames {Black, Blue, BlueDark, Brown, BrownDark, Green, Grey, Lime, Orange, Orange_Tan, Pink, Purple, Red, Turquoise, Violet, White, Yellow}
+    
+    public enum fadedLeatherSetNames {
+        Black,
+        Blue,
+        BlueDark,
+        Brown,
+        BrownDark,
+        Green,
+        Grey,
+        Lime,
+        Orange,
+        Orange_Tan,
+        Pink,
+        Purple,
+        Red,
+        Turquoise,
+        Violet,
+        White,
+        Yellow
+    }
     
     private static final GradientSet fantasyCottonSet = new GradientSet("Fantasy_Cotton");
-    public enum fantasyCottonSetNames {Beige, Black, Blue, Brown, Green, Lime, Orange, Pink, Purple, Red, Turquoise, Yellow}
+    
+    public enum fantasyCottonSetNames {
+        Beige,
+        Black,
+        Blue,
+        Brown,
+        Green,
+        Lime,
+        Orange,
+        Pink,
+        Purple,
+        Red,
+        Turquoise,
+        Yellow
+    }
     
     private static final GradientSet fantasyCottonDarkSet = new GradientSet("Fantasy_Cotton_Dark");
-    public enum fantasyCottonDarkSetNames {Black, Blue, BlueDark, Brown, Green, Lime, Orange, Pink, Purple, Red, Turquoise, Yellow}
+    
+    public enum fantasyCottonDarkSetNames {
+        Black,
+        Blue,
+        BlueDark,
+        Brown,
+        Green,
+        Lime,
+        Orange,
+        Pink,
+        Purple,
+        Red,
+        Turquoise,
+        Yellow
+    }
     
     private static final GradientSet flashySyntheticSet = new GradientSet("Flashy_Synthetic");
-    public enum flashySyntheticSetNames {Black, Blue, Green, Grey, Orange, OrangePastel, Pink, PinkPastel, Purple, Red, Turquoise, Violet, White, Yellow}
+    
+    public enum flashySyntheticSetNames {
+        Black,
+        Blue,
+        Green,
+        Grey,
+        Orange,
+        OrangePastel,
+        Pink,
+        PinkPastel,
+        Purple,
+        Red,
+        Turquoise,
+        Violet,
+        White,
+        Yellow
+    }
     
     private static final GradientSet hairSet = new GradientSet("Hair");
-    public enum hairSetNames {Black, Blond, BlondCaramel, BlondPlatinum, BlondSand, Blue, Blue_Anthracite, BlueDark, BlueLight, Brown, BrownDark, BrownDarker, BrownLight, BrownSemiDark, BrownSemiLight, Bubblegum, Copper, Green, Grey, GreyAsh, GreyPurple, Lavender, Pink, PinkBerry, PitchBlack, Purple, Red, RedDark, Turquoise, White}
+    
+    public enum hairSetNames {
+        Black,
+        Blond,
+        BlondCaramel,
+        BlondPlatinum,
+        BlondSand,
+        Blue,
+        Blue_Anthracite,
+        BlueDark,
+        BlueLight,
+        Brown,
+        BrownDark,
+        BrownDarker,
+        BrownLight,
+        BrownSemiDark,
+        BrownSemiLight,
+        Bubblegum,
+        Copper,
+        Green,
+        Grey,
+        GreyAsh,
+        GreyPurple,
+        Lavender,
+        Pink,
+        PinkBerry,
+        PitchBlack,
+        Purple,
+        Red,
+        RedDark,
+        Turquoise,
+        White
+    }
     
     private static final GradientSet jeanGenericSet = new GradientSet("Jean_Generic");
-    public enum jeanGenericSetNames {Black, Blue, Blue_Night, BluePastel, GreyBlue, GreyDark, GreyLight, Marine_Blue, Maroon, Turquoise_Dark}
+    
+    public enum jeanGenericSetNames {
+        Black,
+        Blue,
+        Blue_Night,
+        BluePastel,
+        GreyBlue,
+        GreyDark,
+        GreyLight,
+        Marine_Blue,
+        Maroon,
+        Turquoise_Dark
+    }
     
     private static final GradientSet ornamentedMetalSet = new GradientSet("Ornamented_Metal");
-    public enum ornamentedMetalSetNames {Brass_Purple, Copper_Green, Gold_Red, Iron_Black, Silver_Blue}
+    
+    public enum ornamentedMetalSetNames {
+        Brass_Purple,
+        Copper_Green,
+        Gold_Red,
+        Iron_Black,
+        Silver_Blue
+    }
     
     private static final GradientSet pastelCottonSet = new GradientSet("Pastel_Cotton");
-    public enum pastelCottonSetNames {Black, Blue, Carmin, Green, Grey, Lime, Orange, Pink, PinkPastel, Purple, PurplePastel, Red, Turquoise, White, Yellow}
+    
+    public enum pastelCottonSetNames {
+        Black,
+        Blue,
+        Carmin,
+        Green,
+        Grey,
+        Lime,
+        Orange,
+        Pink,
+        PinkPastel,
+        Purple,
+        PurplePastel,
+        Red,
+        Turquoise,
+        White,
+        Yellow
+    }
     
     private static final GradientSet rottenFabricSet = new GradientSet("Rotten_Fabric");
-    public enum rottenFabricSetNames {Blue, Brown, Yellow}
+    
+    public enum rottenFabricSetNames {
+        Blue,
+        Brown,
+        Yellow
+    }
     
     private static final GradientSet shinyFabricSet = new GradientSet("Shiny_Fabric");
-    public enum shinyFabricSetNames {Black, Blue, Brown, Green, Grey, Lime, Orange, Pink, Purple, Red, Turquoise, Violet, White, Yellow}
+    
+    public enum shinyFabricSetNames {
+        Black,
+        Blue,
+        Brown,
+        Green,
+        Grey,
+        Lime,
+        Orange,
+        Pink,
+        Purple,
+        Red,
+        Turquoise,
+        Violet,
+        White,
+        Yellow
+    }
     
     private static final GradientSet skinSet = new GradientSet("Skin");
+    
     public enum skinSetNames {
         s01, s02, s03, s04, s05, s06, s07, s08, s09, s10,
         s11, s12, s13, s14, s15, s16, s17, s18, s19, s20,
@@ -330,7 +474,62 @@ public class AttachmentsRegistry {
     
     // A record to hold data for a single cosmetic variant (texture and icon).
     public record Variant(@Expose String texture, @Expose String icon) {
+    }
     
+    public static class Alternative {
+        @Expose
+        @SerializedName("gradient_set")
+        public String gradientSet;
+        @Expose
+        public Map<String, Variant> variants;
+    }
+    
+    public static class Colour {
+        private String gradientSet;
+        private String gradientID;
+        
+        public Colour(String gradientSet, String gradientID) {
+            set(gradientSet, gradientID);
+        }
+        
+        public Colour(String gradient) {
+            this.set(gradient);
+        }
+        
+        public void set(String gradient) {
+            String[] split = gradient.split(":");
+            set(split[0], split[1]);
+        }
+        
+        public void set(String gradientSet, String gradientID) {
+            this.gradientSet = gradientSet;
+            this.gradientID = gradientID;
+        }
+        
+        public void setGradientSet(String gradientSet) {
+            set(gradientSet, this.gradientID);
+        }
+        
+        public void setGradientID(String gradientID) {
+            set(this.gradientSet, gradientID);
+        }
+        
+        public String getGradientSet() {
+            return gradientSet;
+        }
+        
+        public String getGradientID() {
+            return gradientID;
+        }
+        
+        public String getF() {
+            return gradientSet + ":" + gradientID;
+        }
+        
+        @Override
+        public String toString() {
+            return getF();
+        }
     }
     
     // A class holding all the data for a single attachment, loaded from asset files or JSON.
@@ -343,19 +542,29 @@ public class AttachmentsRegistry {
         @Expose
         private final String icon;
         @Expose
-        private final Map<String, Variant> variants;
+        private final Alternative alternatives;
         @Expose
         @SerializedName("slot_overrides")
         private final List<String> slotOverrides;
         
         public Slot slot; // The primary slot this attachment belongs to.
         
-        public AttachmentData(String model, String texture, String icon, Map<String, Variant> variants, List<String> slotOverrides) {
+        public AttachmentData(String model, String texture, String icon, Map<String, Variant> variants, String gradientSet, List<String> slotOverrides) {
             this.model = model;
             this.texture = texture;
             this.icon = icon;
-            this.variants = variants;
             this.slotOverrides = slotOverrides;
+            
+            this.alternatives = new Alternative();
+            
+            if (variants != null && !variants.isEmpty()) {
+                this.alternatives.variants = variants;
+                return;
+            }
+            
+            if (gradientSet != null && !gradientSet.isEmpty()) {
+                this.alternatives.gradientSet = gradientSet;
+            }
         }
         
         public String model() {
@@ -375,11 +584,15 @@ public class AttachmentsRegistry {
         }
         
         public Map<String, Variant> variants() {
-            return variants;
+            return alternatives.variants != null ? alternatives.variants : Map.of();
         }
         
         public List<String> slotOverrides() {
-            return slotOverrides != null? slotOverrides: List.of();
+            return slotOverrides != null ? slotOverrides : List.of();
+        }
+        
+        public String gradientSet() {
+            return alternatives.gradientSet != null ? alternatives.gradientSet : "";
         }
     }
     
@@ -389,7 +602,7 @@ public class AttachmentsRegistry {
         // @param variant The name of the variant to use. If empty, the default texture is used.
         // @return A ModelAttachment ready to be applied to a player model.
         private ModelAttachment makeModel(String variant, Colour colour) {
-            if(variant.isEmpty()) {
+            if (variant.isEmpty()) {
                 return new ModelAttachment(
                     data.model(),
                     data.texture(),
@@ -399,7 +612,7 @@ public class AttachmentsRegistry {
                 );
             }
             
-            Variant v = data.variants.get(variant);
+            Variant v = data.variants().get(variant);
             
             return new ModelAttachment(
                 data.model(),
@@ -412,6 +625,10 @@ public class AttachmentsRegistry {
         
         public ModelAttachment makeModel(String variant) {
             return makeModel(variant, new Colour("", ""));
+        }
+        
+        public ModelAttachment makeModel(String set, String id) {
+            return makeModel("", new Colour(set, id));
         }
         
         public List<ModelAttachment> makeModelsWithColorSet(String colourSet) {
@@ -451,7 +668,7 @@ public class AttachmentsRegistry {
             // Handle "empty slot" markers.
             Slot slot = Slot.valueOf(cosmetic.replace("No", ""));
             
-            if(slot != null) {
+            if (slot != null) {
                 overrides.put(slot, true);
                 continue;
             }
@@ -460,10 +677,22 @@ public class AttachmentsRegistry {
             String cosmId = cosmetic;
             String variant = "";
             
-            if(cosmetic.contains("$")) {
+            String gradientSet = "";
+            String gradientId = "";
+            
+            if (cosmetic.contains("$")) {
                 String[] split = cosmetic.split("\\$");
                 cosmId = split[0];
                 variant = split[1];
+            }
+            
+            if (cosmetic.contains("%")) {
+                String[] gradStuff = cosmetic.split("%");
+                String[] split = gradStuff[1].split(":");
+                
+                cosmId = gradStuff[0];
+                gradientSet = split[0];
+                gradientId = split[1];
             }
             
             // Find the attachment in the registry.
@@ -480,12 +709,18 @@ public class AttachmentsRegistry {
             
             // Create the model attachment and add it to the list.
             if (hairColouredSlots.contains(attachment.data().slot())) {
-                String gradientSet = "Hair";
-                String gradientId = playerSkin.haircut.split("\\.")[1];
-                attachments.addAll(attachment.makeModelsWithColorSet(gradientSet));
-            } else {
-                attachments.add(attachment.makeModel(variant));
+                gradientSet = "Hair";
+                gradientId = playerSkin.haircut.split("\\.")[1];
+            } else if (gradientSet.isEmpty() && !attachment.data().gradientSet().isEmpty()) {
+                String set = attachment.data().gradientSet();
+                GradientSet gs = coloursDataSet.getGradientSet(set);
+                if (gs != null && !gs.getColourList().isEmpty()) {
+                    gradientSet = set;
+                    gradientId = gs.getColourList().get(0);
+                }
             }
+            
+            attachments.add(attachment.makeModel(variant, new Colour(gradientSet, gradientId)));
         }
         
         // Clean up any invalid cosmetics from the player's data.
@@ -728,6 +963,8 @@ public class AttachmentsRegistry {
         for (String cosmetic : data.getCosmetics()) {
             if (cosmetic.equals(cosmeticId)) return true;
             if (cosmetic.startsWith(cosmeticId + "$")) return true;
+            if (cosmetic.startsWith(cosmeticId + "#")) return true;
+            if (cosmetic.startsWith(cosmeticId + "%")) return true;
         }
         
         return false;
@@ -764,12 +1001,16 @@ public class AttachmentsRegistry {
     public void removeCosmetic(Ref<EntityStore> ref, String cosmeticId) {
         removeCosmetic(ref, cosmeticId, false);
     }
-
+    
     private boolean isSlotUsed(CosmeticData data, Slot slot) {
         for (String c : data.getCosmetics()) {
             if (c.startsWith("No")) continue;
             
             String cBase = c.split("\\$")[0];
+            if (cBase.contains("%")) {
+                cBase = cBase.split("%")[0];
+            }
+            
             Attachment att = attachmentsRegistry.get(cBase);
             if (att != null) {
                 if (att.data().slot() == slot) return true;
@@ -778,7 +1019,7 @@ public class AttachmentsRegistry {
         }
         return false;
     }
-
+    
     public void removeCosmetic(Ref<EntityStore> ref, String cosmeticId, boolean multiSelect) {
         Store<EntityStore> store = ref.getStore();
         CosmeticData data = store.getComponent(ref, CosmeticData.INSTANCE);
@@ -786,13 +1027,16 @@ public class AttachmentsRegistry {
         if (data == null) return;
         
         String baseId = cosmeticId.split("\\$")[0];
+        if (baseId.contains("%")) {
+            baseId = baseId.split("%")[0];
+        }
         Attachment attachment = attachmentsRegistry.get(baseId);
-
+        
         // Find all cosmetics to remove (base ID and any variants).
         List<String> toRemove = new ArrayList<>();
         
         for (String cosmetic : data.getCosmetics()) {
-            if (cosmetic.equals(cosmeticId) || cosmetic.startsWith(cosmeticId + "$")) {
+            if (cosmetic.equals(cosmeticId) || cosmetic.startsWith(cosmeticId + "$") || cosmetic.startsWith(cosmeticId + "%")) {
                 toRemove.add(cosmetic);
             }
         }
@@ -809,6 +1053,9 @@ public class AttachmentsRegistry {
                     if (cosmetic.startsWith("No")) continue;
                     
                     String id = cosmetic.split("\\$")[0];
+                    if (id.contains("%")) {
+                        id = id.split("%")[0];
+                    }
                     Attachment att = attachmentsRegistry.get(id);
                     if (att != null) {
                         if (att.data().slotOverrides().contains(slot.name()) || att.data().slot() == slot) {
@@ -822,18 +1069,18 @@ public class AttachmentsRegistry {
                 }
             }
         } else if (attachment != null && !multiSelect) {
-             Set<String> slotsToCheck = new HashSet<>();
-             if (attachment.data().slot() != null) {
-                 slotsToCheck.add(attachment.data().slot().name());
-             }
-             slotsToCheck.addAll(attachment.data().slotOverrides());
-             
-             for (String slotName : slotsToCheck) {
-                 Slot s = Slot.valueOf(slotName);
-                 if (s != null && !isSlotUsed(data, s)) {
-                     data.removeCosmetic("No" + slotName);
-                 }
-             }
+            Set<String> slotsToCheck = new HashSet<>();
+            if (attachment.data().slot() != null) {
+                slotsToCheck.add(attachment.data().slot().name());
+            }
+            slotsToCheck.addAll(attachment.data().slotOverrides());
+            
+            for (String slotName : slotsToCheck) {
+                Slot s = Slot.valueOf(slotName);
+                if (s != null && !isSlotUsed(data, s)) {
+                    data.removeCosmetic("No" + slotName);
+                }
+            }
         }
         
         rebuildSkinWithCosmetics(ref);
@@ -844,10 +1091,19 @@ public class AttachmentsRegistry {
     public void addCosmetic(Ref<EntityStore> ref, String cosmeticId, boolean multiSelect) {
         String cosmId = cosmeticId;
         
-        if(cosmeticId.contains("$")) {
+        if (cosmeticId.contains("$")) {
             String[] split = cosmeticId.split("\\$");
             cosmId = split[0];
         }
+        
+        if (cosmeticId.contains("%")) {
+            String[] split = cosmeticId.split("%");
+            cosmId = split[0];
+        }
+        
+        // Fix for Issue 3: Remove any existing version of this cosmetic (base, variant, or gradient)
+        // This ensures we don't retain old colors/variants if we are equipping the base one.
+        removeCosmetic(ref, cosmId, true);
         
         Store<EntityStore> store = ref.getStore();
         CosmeticData data = store.getComponent(ref, CosmeticData.INSTANCE);
@@ -858,9 +1114,10 @@ public class AttachmentsRegistry {
         Slot slot = attachment != null ? attachment.data().slot() : null;
         
         if (slot == null && cosmId.startsWith("No")) {
-             try {
-                 slot = Slot.valueOf(cosmId.replace("No", ""));
-             } catch (Exception e) {}
+            try {
+                slot = Slot.valueOf(cosmId.replace("No", ""));
+            } catch (Exception _) {
+            }
         }
         
         boolean isNonOverriding = slot != null && nonOverridingSlots.contains(slot);
@@ -900,6 +1157,9 @@ public class AttachmentsRegistry {
         if (id.contains("$")) {
             id = id.split("\\$")[0];
         }
+        if (id.contains("%")) {
+            id = id.split("%")[0];
+        }
         
         if (cosmeticId.contains("No")) {
             clearSlot(ref, Slot.valueOf(cosmeticId.replace("No", "")));
@@ -932,6 +1192,9 @@ public class AttachmentsRegistry {
             String id = cosmetic;
             if (id.contains("$")) {
                 id = id.split("\\$")[0];
+            }
+            if (id.contains("%")) {
+                id = id.split("%")[0];
             }
             
             Attachment attachment = attachmentsRegistry.get(id);
@@ -1001,11 +1264,41 @@ public class AttachmentsRegistry {
         
         // Create AttachmentData with conventional paths.
         AttachmentData attData = new AttachmentData(
-                String.format("%s/%s.blockymodel", attachmentPath, split[1]),
-                String.format("%s/%s.png", attachmentPath, split[1]),
-                String.format("%s/Icon/%s.png", attachmentPath, split[1]),
-                variants,
-                List.of()
+            String.format("%s/%s.blockymodel", attachmentPath, split[1]),
+            String.format("%s/%s.png", attachmentPath, split[1]),
+            String.format("%s/Icon/%s.png", attachmentPath, split[1]),
+            variants,
+            "",
+            new ArrayList<>()
+        );
+        attData.slot = slot;
+        
+        register(name, attData);
+    }
+    
+    // Registers a new attachment with default paths but with specified variants.
+    public void register(String name, Slot slot, String gradientSet) {
+        String attachmentPath = "Resources/";
+        
+        if (slot.getType() == SlotType.CHARACTER) {
+            attachmentPath += "Characters/";
+        } else if (slot.getType() == SlotType.COSMETIC) {
+            attachmentPath += "Cosmetics/";
+        }
+        
+        String[] split = name.split("#");
+        
+        
+        attachmentPath += String.format("%s/%s", slot, split[1]);
+        
+        // Create AttachmentData with conventional paths.
+        AttachmentData attData = new AttachmentData(
+            String.format("%s/%s.blockymodel", attachmentPath, split[1]),
+            String.format("%s/%s.png", attachmentPath, split[1]),
+            String.format("%s/Icon/%s.png", attachmentPath, split[1]),
+            Map.of(),
+            gradientSet,
+            List.of()
         );
         attData.slot = slot;
         
