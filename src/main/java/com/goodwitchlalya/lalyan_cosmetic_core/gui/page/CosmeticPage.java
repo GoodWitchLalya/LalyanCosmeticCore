@@ -596,7 +596,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         
         // Handle un-equipping an item.
         if (data.enabled.equals("true")) {
-            if (!data.cosmeticId.contains("$")) {
+            if (!data.cosmeticId.contains("$") && !data.cosmeticId.contains("%")) {
                 this.gradientSet = null;
                 this.variants = new HashMap<>();
                 this.originalId = null;

@@ -30,12 +30,12 @@ public class AttachmentsRegistry {
     
     // A list of slots that doesn't make the override by default
     public final List<Slot> nonOverridingSlots = List.of(
-            CharacterSlot.Hair_Extension
+        CharacterSlot.Hair_Extension
     );
     
     // A list of slots that use the same hair gradient by default
     public final List<Slot> hairColouredSlots = List.of(
-            CharacterSlot.Hair_Extension
+        CharacterSlot.Hair_Extension
     );
     
     // Enum for top-level UI categories.
@@ -164,6 +164,7 @@ public class AttachmentsRegistry {
     public static ColoursDataSet coloursDataSet = new ColoursDataSet();
     
     private static final GradientSet coloredCottonSet = new GradientSet("Colored_Cotton");
+    
     public enum coloredCottonSetNames {
         Black,
         Blue,
@@ -180,9 +181,12 @@ public class AttachmentsRegistry {
         Turquoise,
         White,
         Yellow
-    };
+    }
+    
+    ;
     
     private static final GradientSet eyesGradientSet = new GradientSet("Eyes_Gradient");
+    
     public enum eyesGradientSetNames {
         Black,
         Blond,
@@ -205,6 +209,7 @@ public class AttachmentsRegistry {
     }
     
     private static final GradientSet fadedLeatherSet = new GradientSet("Faded_Leather");
+    
     public enum fadedLeatherSetNames {
         Black,
         Blue,
@@ -226,6 +231,7 @@ public class AttachmentsRegistry {
     }
     
     private static final GradientSet fantasyCottonSet = new GradientSet("Fantasy_Cotton");
+    
     public enum fantasyCottonSetNames {
         Beige,
         Black,
@@ -242,6 +248,7 @@ public class AttachmentsRegistry {
     }
     
     private static final GradientSet fantasyCottonDarkSet = new GradientSet("Fantasy_Cotton_Dark");
+    
     public enum fantasyCottonDarkSetNames {
         Black,
         Blue,
@@ -258,6 +265,7 @@ public class AttachmentsRegistry {
     }
     
     private static final GradientSet flashySyntheticSet = new GradientSet("Flashy_Synthetic");
+    
     public enum flashySyntheticSetNames {
         Black,
         Blue,
@@ -276,6 +284,7 @@ public class AttachmentsRegistry {
     }
     
     private static final GradientSet hairSet = new GradientSet("Hair");
+    
     public enum hairSetNames {
         Black,
         Blond,
@@ -310,6 +319,7 @@ public class AttachmentsRegistry {
     }
     
     private static final GradientSet jeanGenericSet = new GradientSet("Jean_Generic");
+    
     public enum jeanGenericSetNames {
         Black,
         Blue,
@@ -324,6 +334,7 @@ public class AttachmentsRegistry {
     }
     
     private static final GradientSet ornamentedMetalSet = new GradientSet("Ornamented_Metal");
+    
     public enum ornamentedMetalSetNames {
         Brass_Purple,
         Copper_Green,
@@ -333,6 +344,7 @@ public class AttachmentsRegistry {
     }
     
     private static final GradientSet pastelCottonSet = new GradientSet("Pastel_Cotton");
+    
     public enum pastelCottonSetNames {
         Black,
         Blue,
@@ -352,6 +364,7 @@ public class AttachmentsRegistry {
     }
     
     private static final GradientSet rottenFabricSet = new GradientSet("Rotten_Fabric");
+    
     public enum rottenFabricSetNames {
         Blue,
         Brown,
@@ -359,6 +372,7 @@ public class AttachmentsRegistry {
     }
     
     private static final GradientSet shinyFabricSet = new GradientSet("Shiny_Fabric");
+    
     public enum shinyFabricSetNames {
         Black,
         Blue,
@@ -377,6 +391,7 @@ public class AttachmentsRegistry {
     }
     
     private static final GradientSet skinSet = new GradientSet("Skin");
+    
     public enum skinSetNames {
         s01, s02, s03, s04, s05, s06, s07, s08, s09, s10,
         s11, s12, s13, s14, s15, s16, s17, s18, s19, s20,
@@ -457,61 +472,16 @@ public class AttachmentsRegistry {
         return attachmentsRegistry;
     }
     
-    public static abstract class Alternative {
-    
-    }
-    
     // A record to hold data for a single cosmetic variant (texture and icon).
-    public static final class Variant extends Alternative {
-        @Expose
-        private final String texture;
-        @Expose
-        private final String icon;
-        
-        public Variant(String texture, String icon) {
-            this.texture = texture;
-            this.icon = icon;
-        }
-        
-        public String texture() {
-            return texture;
-        }
-        
-        public String icon() {
-            return icon;
-        }
-        
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) return true;
-            if (obj == null || obj.getClass() != this.getClass()) return false;
-            var that = (Variant) obj;
-            return Objects.equals(this.texture, that.texture) &&
-                    Objects.equals(this.icon, that.icon);
-        }
-        
-        @Override
-        public int hashCode() {
-            return Objects.hash(texture, icon);
-        }
-        
-        @Override
-        public String toString() {
-            return "Variant[" +
-                    "texture=" + texture + ", " +
-                    "icon=" + icon + ']';
-        }
-        
-        
+    public record Variant(@Expose String texture, @Expose String icon) {
     }
     
-    public static final class Coloured extends Alternative {
+    public static class Alternative {
         @Expose
-        String gradientSet;
-        
-        public Coloured(String gradientSet) {
-            this.gradientSet = gradientSet;
-        }
+        @SerializedName("gradient_set")
+        public String gradientSet;
+        @Expose
+        public Map<String, Variant> variants;
     }
     
     public static class Colour {
@@ -572,10 +542,7 @@ public class AttachmentsRegistry {
         @Expose
         private final String icon;
         @Expose
-        private final Map<String, Variant> variants;
-        @Expose
-        @SerializedName("gradient_set")
-        private final String gradientSet;
+        private final Alternative alternatives;
         @Expose
         @SerializedName("slot_overrides")
         private final List<String> slotOverrides;
@@ -586,9 +553,18 @@ public class AttachmentsRegistry {
             this.model = model;
             this.texture = texture;
             this.icon = icon;
-            this.variants = variants;
-            this.gradientSet = gradientSet;
             this.slotOverrides = slotOverrides;
+            
+            this.alternatives = new Alternative();
+            
+            if (variants != null && !variants.isEmpty()) {
+                this.alternatives.variants = variants;
+                return;
+            }
+            
+            if (gradientSet != null && !gradientSet.isEmpty()) {
+                this.alternatives.gradientSet = gradientSet;
+            }
         }
         
         public String model() {
@@ -608,15 +584,15 @@ public class AttachmentsRegistry {
         }
         
         public Map<String, Variant> variants() {
-            return variants;
+            return alternatives.variants != null ? alternatives.variants : Map.of();
         }
         
         public List<String> slotOverrides() {
-            return slotOverrides != null? slotOverrides: List.of();
+            return slotOverrides != null ? slotOverrides : List.of();
         }
         
         public String gradientSet() {
-            return gradientSet;
+            return alternatives.gradientSet != null ? alternatives.gradientSet : "";
         }
     }
     
@@ -626,7 +602,7 @@ public class AttachmentsRegistry {
         // @param variant The name of the variant to use. If empty, the default texture is used.
         // @return A ModelAttachment ready to be applied to a player model.
         private ModelAttachment makeModel(String variant, Colour colour) {
-            if(variant.isEmpty()) {
+            if (variant.isEmpty()) {
                 return new ModelAttachment(
                     data.model(),
                     data.texture(),
@@ -636,7 +612,7 @@ public class AttachmentsRegistry {
                 );
             }
             
-            Variant v = data.variants.get(variant);
+            Variant v = data.variants().get(variant);
             
             return new ModelAttachment(
                 data.model(),
@@ -692,7 +668,7 @@ public class AttachmentsRegistry {
             // Handle "empty slot" markers.
             Slot slot = Slot.valueOf(cosmetic.replace("No", ""));
             
-            if(slot != null) {
+            if (slot != null) {
                 overrides.put(slot, true);
                 continue;
             }
@@ -704,13 +680,13 @@ public class AttachmentsRegistry {
             String gradientSet = "";
             String gradientId = "";
             
-            if(cosmetic.contains("$")) {
+            if (cosmetic.contains("$")) {
                 String[] split = cosmetic.split("\\$");
                 cosmId = split[0];
                 variant = split[1];
             }
             
-            if(cosmetic.contains("%")) {
+            if (cosmetic.contains("%")) {
                 String[] gradStuff = cosmetic.split("%");
                 String[] split = gradStuff[1].split(":");
                 
@@ -735,6 +711,13 @@ public class AttachmentsRegistry {
             if (hairColouredSlots.contains(attachment.data().slot())) {
                 gradientSet = "Hair";
                 gradientId = playerSkin.haircut.split("\\.")[1];
+            } else if (gradientSet.isEmpty() && !attachment.data().gradientSet().isEmpty()) {
+                String set = attachment.data().gradientSet();
+                GradientSet gs = coloursDataSet.getGradientSet(set);
+                if (gs != null && !gs.getColourList().isEmpty()) {
+                    gradientSet = set;
+                    gradientId = gs.getColourList().get(0);
+                }
             }
             
             attachments.add(attachment.makeModel(variant, new Colour(gradientSet, gradientId)));
@@ -980,6 +963,8 @@ public class AttachmentsRegistry {
         for (String cosmetic : data.getCosmetics()) {
             if (cosmetic.equals(cosmeticId)) return true;
             if (cosmetic.startsWith(cosmeticId + "$")) return true;
+            if (cosmetic.startsWith(cosmeticId + "#")) return true;
+            if (cosmetic.startsWith(cosmeticId + "%")) return true;
         }
         
         return false;
@@ -1016,12 +1001,16 @@ public class AttachmentsRegistry {
     public void removeCosmetic(Ref<EntityStore> ref, String cosmeticId) {
         removeCosmetic(ref, cosmeticId, false);
     }
-
+    
     private boolean isSlotUsed(CosmeticData data, Slot slot) {
         for (String c : data.getCosmetics()) {
             if (c.startsWith("No")) continue;
             
             String cBase = c.split("\\$")[0];
+            if (cBase.contains("%")) {
+                cBase = cBase.split("%")[0];
+            }
+            
             Attachment att = attachmentsRegistry.get(cBase);
             if (att != null) {
                 if (att.data().slot() == slot) return true;
@@ -1030,7 +1019,7 @@ public class AttachmentsRegistry {
         }
         return false;
     }
-
+    
     public void removeCosmetic(Ref<EntityStore> ref, String cosmeticId, boolean multiSelect) {
         Store<EntityStore> store = ref.getStore();
         CosmeticData data = store.getComponent(ref, CosmeticData.INSTANCE);
@@ -1038,13 +1027,16 @@ public class AttachmentsRegistry {
         if (data == null) return;
         
         String baseId = cosmeticId.split("\\$")[0];
+        if (baseId.contains("%")) {
+            baseId = baseId.split("%")[0];
+        }
         Attachment attachment = attachmentsRegistry.get(baseId);
-
+        
         // Find all cosmetics to remove (base ID and any variants).
         List<String> toRemove = new ArrayList<>();
         
         for (String cosmetic : data.getCosmetics()) {
-            if (cosmetic.equals(cosmeticId) || cosmetic.startsWith(cosmeticId + "$")) {
+            if (cosmetic.equals(cosmeticId) || cosmetic.startsWith(cosmeticId + "$") || cosmetic.startsWith(cosmeticId + "%")) {
                 toRemove.add(cosmetic);
             }
         }
@@ -1061,6 +1053,9 @@ public class AttachmentsRegistry {
                     if (cosmetic.startsWith("No")) continue;
                     
                     String id = cosmetic.split("\\$")[0];
+                    if (id.contains("%")) {
+                        id = id.split("%")[0];
+                    }
                     Attachment att = attachmentsRegistry.get(id);
                     if (att != null) {
                         if (att.data().slotOverrides().contains(slot.name()) || att.data().slot() == slot) {
@@ -1074,18 +1069,18 @@ public class AttachmentsRegistry {
                 }
             }
         } else if (attachment != null && !multiSelect) {
-             Set<String> slotsToCheck = new HashSet<>();
-             if (attachment.data().slot() != null) {
-                 slotsToCheck.add(attachment.data().slot().name());
-             }
-             slotsToCheck.addAll(attachment.data().slotOverrides());
-             
-             for (String slotName : slotsToCheck) {
-                 Slot s = Slot.valueOf(slotName);
-                 if (s != null && !isSlotUsed(data, s)) {
-                     data.removeCosmetic("No" + slotName);
-                 }
-             }
+            Set<String> slotsToCheck = new HashSet<>();
+            if (attachment.data().slot() != null) {
+                slotsToCheck.add(attachment.data().slot().name());
+            }
+            slotsToCheck.addAll(attachment.data().slotOverrides());
+            
+            for (String slotName : slotsToCheck) {
+                Slot s = Slot.valueOf(slotName);
+                if (s != null && !isSlotUsed(data, s)) {
+                    data.removeCosmetic("No" + slotName);
+                }
+            }
         }
         
         rebuildSkinWithCosmetics(ref);
@@ -1096,15 +1091,19 @@ public class AttachmentsRegistry {
     public void addCosmetic(Ref<EntityStore> ref, String cosmeticId, boolean multiSelect) {
         String cosmId = cosmeticId;
         
-        if(cosmeticId.contains("$")) {
+        if (cosmeticId.contains("$")) {
             String[] split = cosmeticId.split("\\$");
             cosmId = split[0];
         }
         
-        if(cosmeticId.contains("%")) {
+        if (cosmeticId.contains("%")) {
             String[] split = cosmeticId.split("%");
             cosmId = split[0];
         }
+        
+        // Fix for Issue 3: Remove any existing version of this cosmetic (base, variant, or gradient)
+        // This ensures we don't retain old colors/variants if we are equipping the base one.
+        removeCosmetic(ref, cosmId, true);
         
         Store<EntityStore> store = ref.getStore();
         CosmeticData data = store.getComponent(ref, CosmeticData.INSTANCE);
@@ -1115,9 +1114,10 @@ public class AttachmentsRegistry {
         Slot slot = attachment != null ? attachment.data().slot() : null;
         
         if (slot == null && cosmId.startsWith("No")) {
-             try {
-                 slot = Slot.valueOf(cosmId.replace("No", ""));
-             } catch (Exception _) {}
+            try {
+                slot = Slot.valueOf(cosmId.replace("No", ""));
+            } catch (Exception _) {
+            }
         }
         
         boolean isNonOverriding = slot != null && nonOverridingSlots.contains(slot);
@@ -1157,6 +1157,9 @@ public class AttachmentsRegistry {
         if (id.contains("$")) {
             id = id.split("\\$")[0];
         }
+        if (id.contains("%")) {
+            id = id.split("%")[0];
+        }
         
         if (cosmeticId.contains("No")) {
             clearSlot(ref, Slot.valueOf(cosmeticId.replace("No", "")));
@@ -1189,6 +1192,9 @@ public class AttachmentsRegistry {
             String id = cosmetic;
             if (id.contains("$")) {
                 id = id.split("\\$")[0];
+            }
+            if (id.contains("%")) {
+                id = id.split("%")[0];
             }
             
             Attachment attachment = attachmentsRegistry.get(id);
@@ -1258,12 +1264,12 @@ public class AttachmentsRegistry {
         
         // Create AttachmentData with conventional paths.
         AttachmentData attData = new AttachmentData(
-                String.format("%s/%s.blockymodel", attachmentPath, split[1]),
-                String.format("%s/%s.png", attachmentPath, split[1]),
-                String.format("%s/Icon/%s.png", attachmentPath, split[1]),
-                variants,
-                "",
-                new ArrayList<>()
+            String.format("%s/%s.blockymodel", attachmentPath, split[1]),
+            String.format("%s/%s.png", attachmentPath, split[1]),
+            String.format("%s/Icon/%s.png", attachmentPath, split[1]),
+            variants,
+            "",
+            new ArrayList<>()
         );
         attData.slot = slot;
         
@@ -1287,12 +1293,12 @@ public class AttachmentsRegistry {
         
         // Create AttachmentData with conventional paths.
         AttachmentData attData = new AttachmentData(
-                String.format("%s/%s.blockymodel", attachmentPath, split[1]),
-                String.format("%s/%s.png", attachmentPath, split[1]),
-                String.format("%s/Icon/%s.png", attachmentPath, split[1]),
-                Map.of(),
-                gradientSet,
-                List.of()
+            String.format("%s/%s.blockymodel", attachmentPath, split[1]),
+            String.format("%s/%s.png", attachmentPath, split[1]),
+            String.format("%s/Icon/%s.png", attachmentPath, split[1]),
+            Map.of(),
+            gradientSet,
+            List.of()
         );
         attData.slot = slot;
         
