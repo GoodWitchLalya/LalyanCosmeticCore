@@ -4,7 +4,7 @@ plugins {
 }
 
 ext {
-    hytaleHome = "C:\\Users\\bella\\AppData\\Roaming\\Hytale"
+    hytaleHome = "D:\\Hytale"
 }
 
 java {
