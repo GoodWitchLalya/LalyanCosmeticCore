@@ -167,6 +167,8 @@ This API also allows you to add multiple colors to a cosmetic!
 
 To add colors you need to change the folder of your cosmetic like this: ``Cosmetic_Id_Colors_GRADIENTSET``
 
+The texture has to be grayscale (completely desaturated).
+
 here's a list of all aviable gradient sets:
 - `Colored_Cotton`
 - `Eyes_Gradient`
@@ -456,6 +458,8 @@ come modello.
 Questa API ti permette anche di aggiungere più colori a un cosmetico!
 
 Per aggiungere colori devi cambiare la cartella del tuo cosmetico così: `Cosmetic_Id_Colors_GRADIENTSET`
+
+La texture dev'essere una scala di grigi (completamente desaturata)
 
 ecco una lista di tutti i set di gradienti disponibili:
 
