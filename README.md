@@ -38,6 +38,8 @@ The plugin has some commands that are mainly for testing purposes:
 
 ## Registering cosmetics
 
+`!Warning! Remember that the name you give to the files is important!`
+
 Registering a cosmetic is quite simple. You'll need to make an asset pack (obviously), and will need 3 files:
 
 * The cosmetic's .blockymodel
@@ -122,11 +124,13 @@ The Hair_Extension slot automatically takes the same gradient as the Hairstyle.
 
 ## Variants (optional)
 
+`!Warning! Variants and colors are mutually exclusive!`
+
+`!Warning! Hair extensions cannot have variants nor colors, they changes according to the hairstyle!`
+
 This API also allows you to add variants.
 
 To add variants, you will need to add the variant texture and icon inside your cosmetic's folder.
-
-`!Warning! Remember that the name you give to the files is important.`
 
 The variant textures must be placed in the cosmetic folder (CustomID) and named as follows:
 
@@ -151,6 +155,52 @@ Propeller_Hat/
     └── Propeller_Hat_Variant_Rainbow.png
 ```
 
+Doing so, the API will load: **Propeller_Hat**, **Propeller_Hat_Variant_Circus**, **Propeller_Hat_Variant_Rainbow**.
+
+They will be seen by the API as variants of the same cosmetic, so they will implicitly use `Propeller_Hat.blockymodel`
+
+## Colors (optional)
+
+`!Warning! Variants and colors are mutually exclusive!`
+
+This API also allows you to add multiple colors to a cosmetic!
+
+To add colors you need to change the folder of your cosmetic like this: ``Cosmetic_Id_Colors_GRADIENTSET``
+
+here's a list of all aviable gradient sets:
+- `Colored_Cotton`
+- `Eyes_Gradient`
+- `Faded_Leather`
+- `Fantasy_Cotton`
+- `Fantasy_Cotton_Dark`
+- `Flashy_Synthetic`
+- `Hair`
+- `Jean_Generic`
+- `Ornamented_Metal`
+- `Pastel_Cotton`
+- `Rotten_Fabric`
+- `Shiny_Fabric`
+- `Skin`
+
+Here's an example:   
+Item name: `Sample_Shirt`   
+Alternative: `Colors`   
+Gradient Set: `Colored_Cotton`   
+
+The folder name is: ``Sample_Shirt_Colors_Colored_Cotton``
+
+The folder structure is:
+
+```
+Sample_Shirt_Colors_Colored_Cotton/
+├── Sample_Shirt.blockymodel
+├── Sample_Shirt.png
+└── Icon/
+    └── Sample_Shirt.png
+```
+
+model, texture and icon's names have to be just the name without `_Colors_GRADIENTSET`
+
 ## Advanced Cosmetics (optional)
 
 Inside your cosmetic folder, you can add a `Cosmetic_Id.json` file. This file allows you to customize even more your
@@ -169,8 +219,10 @@ MORE THAN ONE SLOT!
         //Insert slots here, for example "Head", "Capes" etc
     ],
     "alternatives": {
-        //THESE 2 ARE MUTUALLY EXCLUSIVE, YOU EITHER HAVE VARIANTS OR COLORS!!!    
+        //THESE 2 ARE MUTUALLY EXCLUSIVE, YOU EITHER HAVE VARIANTS OR COLORS!!!
+        //Choice 1 (Colors)
         "gradient_set": "Hair",
+        //Choice 2 (Variants)
         "variants": {
             "Variant": {
               "texture": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant.png",
@@ -209,19 +261,19 @@ Inside the variant names mentioned above are the definitions of the variant comp
 
 
 Gradient List:
-- Colored_Cotton
-- Eyes_Gradient
-- Faded_Leather
-- Fantasy_Cotton
-- Fantasy_Cotton_Dark
-- Flashy_Synthetic
-- Hair
-- Jean_Generic
-- Ornamented_Metal
-- Pastel_Cotton
-- Rotten_Fabric
-- Shiny_Fabric
-- Skin
+- `Colored_Cotton`
+- `Eyes_Gradient`
+- `Faded_Leather`
+- `Fantasy_Cotton`
+- `Fantasy_Cotton_Dark`
+- `Flashy_Synthetic`
+- `Hair`
+- `Jean_Generic`
+- `Ornamented_Metal`
+- `Pastel_Cotton`
+- `Rotten_Fabric`
+- `Shiny_Fabric`
+- `Skin`
 
 #
 
@@ -269,6 +321,8 @@ Il plugin ha alcuni comandi che sono principalmente a scopo di test:
 * `/cosmetic clear` rimuove tutti i cosmetici personalizzati e ripristina la skin predefinita. Richiede OP
 
 ## Registrazione dei cosmetici
+
+`!Attenzione! Ricordati che il nome che dai ad i files è importante.`
 
 Registrare un cosmetico è abbastanza semplice. Dovrai creare un pacchetto di risorse (ovviamente), e avrai bisogno di 3
 file essenziali:
@@ -359,12 +413,12 @@ Lo slot Hair_Extension prende automaticamente il gradiente del'acconciatura.
 
 ## Varianti (opzionale)
 
+`!Attenzione! Varianti e colori si escludono a vicenda!`
+
 Questa API ti consente anche di aggiungere delle varianti.
 
 Per aggiungerle le varianti dovrai aggiungere le textures e le icone delle varianti all'interno della cartella del tuo
 cosmetico.
-
-`!Attenzione! Ricordati che il nome che dai ad i files è importante.`
 
 Le textures delle varianti devono essere messe nella cartella del cosmetico (CustomID) nominate come segue:
 
@@ -395,6 +449,51 @@ Facendo così l'API caricherà: **Propeller\_Hat**, **Propeller\_Hat\_Variant\_C
 Saranno viste dall'API come varianti dello stesso cosmetico quindi implicitamente useranno `Propeller_Hat.blockymodel`
 come modello.
 
+## Colori (opzionale)
+
+`!Attenzione! Varianti e colori si escludono a vicenda!`
+
+Questa API ti permette anche di aggiungere più colori a un cosmetico!
+
+Per aggiungere colori devi cambiare la cartella del tuo cosmetico così: `Cosmetic_Id_Colors_GRADIENTSET`
+
+ecco una lista di tutti i set di gradienti disponibili:
+
+* `Colored_Cotton`
+* `Eyes_Gradient`
+* `Faded_Leather`
+* `Fantasy_Cotton`
+* `Fantasy_Cotton_Dark`
+* `Flashy_Synthetic`
+* `Hair`
+* `Jean_Generic`
+* `Ornamented_Metal`
+* `Pastel_Cotton`
+* `Rotten_Fabric`
+* `Shiny_Fabric`
+* `Skin`
+
+Ecco un esempio:
+
+Nome oggetto: `Sample_Shirt`   
+Alternativa: `Colors`   
+Set Gradiente: `Colored_Cotton`   
+
+Il nome cartella è: `Sample_Shirt_Colors_Colored_Cotton`
+
+La struttura delle cartelle è:
+
+```
+Sample_Shirt_Colors_Colored_Cotton/
+├── Sample_Shirt.blockymodel
+├── Sample_Shirt.png
+└── Icon/
+    └── Sample_Shirt.png
+
+```
+
+I nomi di modello, texture e icona devono essere solo il nome senza `_Colors_GRADIENTSET`
+
 ## Cosmetici Avanzati (opzionale)
 
 All'interno della cartella del tuo cosmetico, puoi aggiungere un file `CustomID.json` (in cui CustomID è l'ID del tuo
@@ -415,7 +514,9 @@ Qui la formattazione corretta del cosmetico di esempio
     ],
     "alternatives": {
         //QUESTI 2 SONO MUTUALMENTE ESCLUSIVI, O USI LE VARIANTI O I COLORI!!!
+        //Scelta 1 (Colori)
         "gradient_set": "Hair",
+        //Scelta 2 (Varianti)
         "variants": {
             "Variant": {
               "texture": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant.png",
@@ -455,16 +556,16 @@ Dentro i nomi delle varianti qui sopra citati ci sono le definizioni dei compone
 **"alternatives" > "gradient_set"** Il gradiente di colorazioni da usare
 
 Lista dei gradienti:
-- Colored_Cotton
-- Eyes_Gradient
-- Faded_Leather
-- Fantasy_Cotton
-- Fantasy_Cotton_Dark
-- Flashy_Synthetic
-- Hair
-- Jean_Generic
-- Ornamented_Metal
-- Pastel_Cotton
-- Rotten_Fabric
-- Shiny_Fabric
-- Skin
+- `Colored_Cotton`
+- `Eyes_Gradient`
+- `Faded_Leather`
+- `Fantasy_Cotton`
+- `Fantasy_Cotton_Dark`
+- `Flashy_Synthetic`
+- `Hair`
+- `Jean_Generic`
+- `Ornamented_Metal`
+- `Pastel_Cotton`
+- `Rotten_Fabric`
+- `Shiny_Fabric`
+- `Skin`
