@@ -170,8 +170,32 @@ public class FileManager {
                             // --- CASE B: Standard Loading (No JSON) ---
                             else {
                                 try (Stream<Path> content = Files.list(itemFolder)) {
-                                    // Verify that the folder is not empty (contains at least one file, e.g., the model or texture)
                                     if (content.findAny().isPresent()) {
+                                        boolean isColoured = false;
+                                        
+                                        // Check if the Item is coloured
+                                        Pattern colourPattern = Pattern.compile("(.*)_Colors_(.*)");
+                                        Matcher colourMatcher = colourPattern.matcher(itemFolder.getFileName().toString());
+                                        String gradientSet = "";
+                                        if (colourMatcher.find()) {
+                                            if (!colourMatcher.group(1).isEmpty() && !colourMatcher.group(2).isEmpty()) {
+                                                
+                                                itemName = colourMatcher.group(1);
+                                                gradientSet = colourMatcher.group(2);
+                                                
+                                                isColoured = true;
+                                                
+                                            } else {
+                                                 if (colourMatcher.group(1).isEmpty()) {
+                                                    r.add(String.format("item: %s, no name found", itemName));
+                                                 }
+                                                 if (colourMatcher.group(2).isEmpty()) {
+                                                    r.add(String.format("item: %s, no gradient found", itemName));
+                                                 }
+                                            }
+                                        }
+                                        
+                                        // Verify that the folder is not empty (contains at least one file, e.g., the model or texture)
                                         // Register using default naming conventions
                                         
                                         // Check if the 'Icon' subfolder exists
@@ -199,40 +223,50 @@ public class FileManager {
                                         // If all required files are present, register the attachment
                                         Map<String, AttachmentsRegistry.Variant> variants = new HashMap<>();
                                         
-                                        try (Stream<Path> itemFolderFiles = Files.list(itemFolder)) {
-                                            itemFolderFiles.filter(Files::isRegularFile).filter((item) -> {// Search for suitable variants
-                                                if (item.getFileName().toString().matches(String.format("%s_Variant_.*\\.png", itemName))) return true;
-                                                else return false;
-                                            }).forEach(variant -> {// For each suitable variant
-                                                // Verify if the variant is valid and get the variant name
-                                                String variantFileName = variant.getFileName().toString();
-                                                String variantName = "";
-                                                Pattern pattern = Pattern.compile("_Variant_(.*)\\.png");
-                                                Matcher matcher = pattern.matcher(variantFileName);
-                                                if (matcher.find()) {
-                                                    variantName = matcher.group(1);
-                                                }
-                                                r.add(String.format("Found a variant (%s) for %s in [%s]\nChecking for an icon", variantName, itemName, variantFileName));
-                                                
-                                                //Getting the variable texture path
-                                                String variantTexturePath = itemFolder.resolve(variantFileName).toString().replace("\\", "/").replaceFirst(".*?(?=Resources)", "");
-                                                r.add(String.format("Variant texture found, path: %s", variantTexturePath));
-                                                
-                                                //Getting the variable icon path
-                                                String variantIconPath = itemFolder.resolve("Icon").resolve(variantFileName).toString().replace("\\", "/").replaceFirst(".*?(?=Resources)", "");
-                                                r.add(String.format("Variant icon found, path: %s", variantIconPath));
-                                                
-                                                variants.put(variantName, new AttachmentsRegistry.Variant(variantTexturePath, variantIconPath));
-                                                r.add("Variant saved!");
-                                            });
-                                            if (variants.isEmpty()) {
-                                                AttachmentsRegistry.get().register(assetPack.getName() + "#" + itemName, slot);
-                                            } else {
-                                                AttachmentsRegistry.get().register(assetPack.getName() + "#" + itemName, slot, new HashMap<>(variants));
+                                        if (isColoured) {
+                                        
+                                        } else {
+                                            try (Stream<Path> itemFolderFiles = Files.list(itemFolder)) {
+                                                String finalItemName = itemName;
+                                                itemFolderFiles.filter(Files::isRegularFile).filter((item) -> {// Search for suitable variants
+                                                    if (item.getFileName().toString().matches(String.format("%s_Variant_.*\\.png", finalItemName))) return true;
+                                                    else return false;
+                                                }).forEach(variant -> {// For each suitable variant
+                                                    // Verify if the variant is valid and get the variant name
+                                                    String variantFileName = variant.getFileName().toString();
+                                                    String variantName = "";
+                                                    Pattern pattern = Pattern.compile("_Variant_(.*)\\.png");
+                                                    Matcher matcher = pattern.matcher(variantFileName);
+                                                    if (matcher.find()) {
+                                                        variantName = matcher.group(1);
+                                                    }
+                                                    r.add(String.format("Found a variant (%s) for %s in [%s]\nChecking for an icon", variantName, finalItemName, variantFileName));
+                                                    
+                                                    //Getting the variable texture path
+                                                    String variantTexturePath = itemFolder.resolve(variantFileName).toString().replace("\\", "/").replaceFirst(".*?(?=Resources)", "");
+                                                    r.add(String.format("Variant texture found, path: %s", variantTexturePath));
+                                                    
+                                                    //Getting the variable icon path
+                                                    String variantIconPath = itemFolder.resolve("Icon").resolve(variantFileName).toString().replace("\\", "/").replaceFirst(".*?(?=Resources)", "");
+                                                    r.add(String.format("Variant icon found, path: %s", variantIconPath));
+                                                    
+                                                    variants.put(variantName, new AttachmentsRegistry.Variant(variantTexturePath, variantIconPath));
+                                                    r.add("Variant saved!");
+                                                });
+                                            } catch (Exception e) {
+                                                r.add(String.format("Cannot access %s for searching variants", itemFolder.getFileName().toString()));
                                             }
-                                        } catch (Exception e) {
-                                            r.add(String.format("Cannot access %s for searching variants", itemFolder.getFileName().toString()));
                                         }
+                                        
+                                        // Register the attachment
+                                        if (isColoured) {
+                                            AttachmentsRegistry.get().register(assetPack.getName() + "#" + itemName, slot, gradientSet);
+                                        } else if (!variants.isEmpty()) {
+                                            AttachmentsRegistry.get().register(assetPack.getName() + "#" + itemName, slot, new HashMap<>(variants));
+                                        } else {
+                                            AttachmentsRegistry.get().register(assetPack.getName() + "#" + itemName, slot);
+                                        }
+                                        
                                     } else {
                                         // Log if the folder is empty
                                         r.add(String.format("Folder '%s' in slot %s is empty. Ignoring.", itemName, slot.name()));

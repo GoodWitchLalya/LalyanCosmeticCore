@@ -1,5 +1,6 @@
 package com.goodwitchlalya.lalyan_cosmetic_core.util;
 
+import com.goodwitchlalya.lalyan_cosmetic_core.CosmeticCore;
 import com.goodwitchlalya.lalyan_cosmetic_core.component.CosmeticData;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -15,6 +16,7 @@ import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.player.PlayerSkinComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
+import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -524,6 +526,10 @@ public class AttachmentsRegistry {
             return gradientSet + ":" + gradientID;
         }
         
+        public static Colour empty() {
+            return new Colour("", "");
+        }
+        
         @Override
         public String toString() {
             return getF();
@@ -708,7 +714,13 @@ public class AttachmentsRegistry {
             // Create the model attachment and add it to the list.
             if (hairColouredSlots.contains(attachment.data().slot())) {
                 gradientSet = "Hair";
-                gradientId = playerSkin.haircut.split("\\.")[1];
+                CosmeticData.FormattedItemData itemData = data.getCosmetic(CharacterSlot.Haircuts);
+                if (itemData != null) {
+                    gradientId = itemData.getColour().getGradientID();
+                } else {
+                    gradientId = playerSkin.haircut.split("\\.")[1];
+                    CosmeticCore.log(String.format(""));
+                }
             } else if (gradientSet.isEmpty() && !attachment.data().gradientSet().isEmpty()) {
                 String set = attachment.data().gradientSet();
                 GradientSet gs = coloursDataSet.getGradientSet(set);
@@ -1286,8 +1298,7 @@ public class AttachmentsRegistry {
         
         String[] split = name.split("#");
         
-        
-        attachmentPath += String.format("%s/%s", slot, split[1]);
+        attachmentPath += String.format("%s/%s_Colors_%s", slot, split[1], gradientSet);
         
         // Create AttachmentData with conventional paths.
         AttachmentData attData = new AttachmentData(
