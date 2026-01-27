@@ -117,10 +117,12 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
                     setupCategoryButton(cmd, evt, "HeadAccessories", AttachmentsRegistry.CosmeticSlot.Head);
                     setupCategoryButton(cmd, evt, "FaceAccessories", AttachmentsRegistry.CosmeticSlot.Face_Accessories);
                     setupCategoryButton(cmd, evt, "EarAccessories", AttachmentsRegistry.CosmeticSlot.Ears_Accessories);
+                    setupCategoryButton(cmd, evt, "Horns", AttachmentsRegistry.CharacterSlot.Horns);
                 }
                 case General -> {
                     setupCategoryButton(cmd, evt, "Underwear", AttachmentsRegistry.CosmeticSlot.Underwears);
                     setupCategoryButton(cmd, evt, "Face", AttachmentsRegistry.CharacterSlot.Faces);
+                    setupCategoryButton(cmd, evt, "FaceDetails", AttachmentsRegistry.CharacterSlot.Face_Details);
                     setupCategoryButton(cmd, evt, "Mouth", AttachmentsRegistry.CharacterSlot.Mouths);
                     setupCategoryButton(cmd, evt, "Ears", AttachmentsRegistry.CharacterSlot.Ears);
                 }
@@ -128,6 +130,8 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
                     setupCategoryButton(cmd, evt, "Undertops", AttachmentsRegistry.CosmeticSlot.Undertops);
                     setupCategoryButton(cmd, evt, "Overtops", AttachmentsRegistry.CosmeticSlot.Overtops);
                     setupCategoryButton(cmd, evt, "Gloves", AttachmentsRegistry.CosmeticSlot.Gloves);
+                    setupCategoryButton(cmd, evt, "Tail", AttachmentsRegistry.CharacterSlot.Tails);
+                    setupCategoryButton(cmd, evt, "Wings", AttachmentsRegistry.CharacterSlot.Wings);
                 }
                 case Legs -> {
                     setupCategoryButton(cmd, evt, "Pants", AttachmentsRegistry.CosmeticSlot.Pants);
@@ -435,11 +439,16 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
                         settings.positionOffset = new Position(0, 0.2, 0);
                         settings.rotation = new Direction(headRot.getYaw(), headRot.getPitch(), headRot.getRoll());
                     }
-                    case Eyebrows, Eyes, Beards, Faces, Mouths -> {
+                    case Eyebrows, Eyes, Beards, Faces, Mouths, Face_Details -> {
                         settings.positionOffset = new Position(0, 0, 0);
                         settings.distance = 1;
                     }
-                    case Ears -> {
+                    case Ears -> {}
+                    case Horns -> {
+                        settings.positionOffset = new Position(0, 0.1, 0);
+                    }
+                    case Tails, Wings -> {
+                        settings.rotation = new Direction(headRot.getYaw(), headRot.getPitch(), headRot.getRoll());
                     }
                 }
             } else if (currentSlot instanceof AttachmentsRegistry.CosmeticSlot) {

@@ -70,7 +70,7 @@ public class AttachmentsRegistry {
     
     // Enum representing slots for built-in character features like eyes and hair.
     public enum CharacterSlot implements Slot {
-        Beards, Ears, Eyebrows, Eyes, Faces, Mouths, Haircuts, Hair_Extension;
+        Beards, Ears, Eyebrows, Eyes, Faces, Mouths, Haircuts, Hair_Extension, Wings, Tails, Horns, Face_Details;
         
         @Override
         public SlotType getType() {

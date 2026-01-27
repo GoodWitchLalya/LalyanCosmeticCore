@@ -103,6 +103,10 @@ The base path for character cosmetics is `Common/Resources/Characters`, then the
 *   `Mouth`
 *   `Haircuts`
 *   `Hair_Extension`
+*   `Wings`
+*   `Tails`
+*   `Horns`
+*   `Face_Details`
 
 Then the folder you made before.
 
@@ -383,6 +387,10 @@ Il percorso base per i cosmetici del personaggio è `Common/Resources/Characters
 *   `Mouth`
 *   `Haircuts`
 *   `Hair_Extension`
+*   `Wings`
+*   `Tails`
+*   `Horns`
+*   `Face_Details`
 
 Scegli quale di questi slots deve occupare la tua parte per il personaggio e inserisci la cartella che hai creato prima.
 
