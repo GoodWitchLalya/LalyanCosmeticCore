@@ -1,50 +1,47 @@
-### English
+### <span style="color:#843FA1;">English</span>
 
-# Lalyan Cosmetic Core
+# <span style="color:#B96AD9;">Lalyan Cosmetic Core</span>
 
 An API to register and customize cosmetics without using armor slots
 
 Custom Wardrobe model and texture are made by [EtherealShigure](https://www.curseforge.com/members/etherealshigure).
 
-## Introduction
+## <span style="color:#3598DB;">Introduction</span>
 
 This plugin allows players to customize which cosmetic they have equipped, without having to use up their armor slots
 
 It also allows plugin makers to create their custom cosmetics, without needing any java code!
 
-The plugin features a custom GUI to customize cosmetics, which can be opened by command or, in a more immersive way, by
-crafting the Cosmetic Wardrobe
+The plugin features a custom GUI to customize cosmetics, which can be opened by command or, in a more immersive way, by crafting the Cosmetic Wardrobe
 
 The Cosmetic Wardrobe can be crafted in the Builder's Workbench using 4 of any Hardwood
 
-The GUI provides an easy way to select cosmetics and cosmetic variants. Left-click on a cosmetic to equip it, if the
-cosmetic has the variant icon, right-click it to open the variant menu!
+The GUI provides an easy way to select cosmetics and cosmetic variants. Left-click on a cosmetic to equip it, if the cosmetic has the variant icon, right-click it to open the variant menu!
 
-## Commands
+## <span style="color:#3598DB;">Commands</span>
 
 The plugin has some commands that are mainly for testing purposes:
 
-* `/cosmetic apply <CosmeticId> [override]` manually applies a certain cosmetic defined by `CosmeticId`, `override` is
-  optional, default is `yes [other value is no]`, determines whether all other cosmetics of its type should be removed.
-  Requires OP
+*   `/cosmetic apply <CosmeticId> [override]` manually applies a certain cosmetic defined by `CosmeticId`, `override` is optional, default is `yes [other value is no]`, determines whether all other cosmetics of its type should be removed. Requires OP
+    
+*   `/cosmetic change` manually opens the Cosmetic Customization UI. Does not require permissions
+    
+*   `/cosmetic list` prints in chat all loaded cosmetic ids. Requires OP
+    
+*   `/cosmetic reload` manually reloads all cosmetics. Requires OP
+    
+*   `/cosmetic clear` removes all custom cosmetics and resets the default skin. Requires OP
+    
 
-* `/cosmetic change` manually opens the Cosmetic Customization UI. Does not require permissions
+## <span style="color:#3598DB;">Registering cosmetics</span>
 
-* `/cosmetic list` prints in chat all loaded cosmetic ids. Requires OP
-
-* `/cosmetic reload` manually reloads all cosmetics. Requires OP
-
-* `/cosmetic clear` removes all custom cosmetics and resets the default skin. Requires OP
-
-## Registering cosmetics
-
-`!Warning! Remember that the name you give to the files is important!`
+<span style="color:#E03E2D;">!Warning! Remember that the name you give to the files is important!</span>
 
 Registering a cosmetic is quite simple. You'll need to make an asset pack (obviously), and will need 3 files:
 
-* The cosmetic's .blockymodel
-* The cosmetic's .png texture
-* The cosmetic's .png icon, which is the same icon you would use for the item!
+*   The cosmetic's .blockymodel
+*   The cosmetic's .png texture
+*   The cosmetic's .png icon, which is the same icon you would use for the item!
 
 These files must be named in the same way, that being CustomID.extension
 
@@ -60,23 +57,23 @@ CustomID/
 
 Then the cosmetic will go in a certain folder, depending on the type:
 
-### Cosmetics
+### <span style="color:#236FA1;">Cosmetics</span>
 
 (things like shirts, caps, pants etc..)
 
 The base path for cosmetics is `Common/Resources/Cosmetics`, then the folder based on the slot, which can be:
 
-* `Capes`
-* `Ears_Accessories`
-* `Gloves`
-* `Head`
-* `Face_Accessories`
-* `Overpants`
-* `Overtops`
-* `Pants`
-* `Shoes`
-* `Undertops`
-* `Underwears`
+*   `Capes`
+*   `Ears_Accessories`
+*   `Gloves`
+*   `Head`
+*   `Face_Accessories`
+*   `Overpants`
+*   `Overtops`
+*   `Pants`
+*   `Shoes`
+*   `Undertops`
+*   `Underwears`
 
 Then the folder you made before.
 
@@ -92,19 +89,20 @@ Custom_Cape/
     └── Custom_Cape.png
 ```
 
-### Characters
+### <span style="color:#236FA1;">Characters</span>
 
 (things like mouth, ears, eyes etc..)
 
 The base path for character cosmetics is `Common/Resources/Characters`, then the folder based on the slot, which can be:
 
-* `Beards`
-* `Ears`
-* `Eyebrows`
-* `Eyes`
-* `Faces`
-* `Mouth`
-* `Haircuts`
+*   `Beards`
+*   `Ears`
+*   `Eyebrows`
+*   `Eyes`
+*   `Faces`
+*   `Mouth`
+*   `Haircuts`
+*   `Hair_Extension`
 
 Then the folder you made before.
 
@@ -120,13 +118,13 @@ Custom_Eyes/
     └── Custom_Eyes.png
 ```
 
-The Hair_Extension slot automatically takes the same gradient as the Hairstyle.
+The Hair\_Extension slot automatically takes the same gradient as the Hairstyle.
 
-## Variants (optional)
+## <span style="color:#3598DB;">Variants (optional)</span>
 
-`!Warning! Variants and colors are mutually exclusive!`
+<span style="color:#E03E2D;">!Warning! Variants and colors are mutually exclusive!</span>
 
-`!Warning! Hair extensions cannot have variants nor colors, they changes according to the hairstyle!`
+<span style="color:#E03E2D;">!Warning! Hair extensions cannot have variants nor colors, they changes according to the hairstyle!</span>
 
 This API also allows you to add variants.
 
@@ -138,8 +136,7 @@ The variant textures must be placed in the cosmetic folder (CustomID) and named 
 CustomID_Variant_VariantName.png
 ```
 
-The variant icons must have the same name given to the variant texture, but unlike the texture, they must be placed
-inside the `Icon/` folder.
+The variant icons must have the same name given to the variant texture, but unlike the texture, they must be placed inside the `Icon/` folder.
 
 Taking the Propeller\_Hat as an example:
 
@@ -155,41 +152,44 @@ Propeller_Hat/
     └── Propeller_Hat_Variant_Rainbow.png
 ```
 
-Doing so, the API will load: **Propeller_Hat**, **Propeller_Hat_Variant_Circus**, **Propeller_Hat_Variant_Rainbow**.
+Doing so, the API will load: **Propeller\_Hat**, **Propeller\_Hat\_Variant\_Circus**, **Propeller\_Hat\_Variant\_Rainbow**.
 
 They will be seen by the API as variants of the same cosmetic, so they will implicitly use `Propeller_Hat.blockymodel`
 
-## Colors (optional)
+## <span style="color:#3598DB;">Colors (optional)</span>
 
-`!Warning! Variants and colors are mutually exclusive!`
+<span style="color:#E03E2D;">!Warning! Variants and colors are mutually exclusive!</span>
+
+<span style="color:#E03E2D;">!Warning! Hair extensions cannot have variants nor colors, they changes according to the hairstyle!</span>
 
 This API also allows you to add multiple colors to a cosmetic!
 
-To add colors you need to change the folder of your cosmetic like this: ``Cosmetic_Id_Colors_GRADIENTSET``
+To add colors you need to change the folder of your cosmetic like this: `Cosmetic_Id_Colors_GRADIENTSET`
 
 The texture has to be grayscale (completely desaturated).
 
 here's a list of all aviable gradient sets:
-- `Colored_Cotton`
-- `Eyes_Gradient`
-- `Faded_Leather`
-- `Fantasy_Cotton`
-- `Fantasy_Cotton_Dark`
-- `Flashy_Synthetic`
-- `Hair`
-- `Jean_Generic`
-- `Ornamented_Metal`
-- `Pastel_Cotton`
-- `Rotten_Fabric`
-- `Shiny_Fabric`
-- `Skin`
 
-Here's an example:   
-Item name: `Sample_Shirt`   
-Alternative: `Colors`   
-Gradient Set: `Colored_Cotton`   
+*   `Colored_Cotton`
+*   `Eyes_Gradient`
+*   `Faded_Leather`
+*   `Fantasy_Cotton`
+*   `Fantasy_Cotton_Dark`
+*   `Flashy_Synthetic`
+*   `Hair`
+*   `Jean_Generic`
+*   `Ornamented_Metal`
+*   `Pastel_Cotton`
+*   `Rotten_Fabric`
+*   `Shiny_Fabric`
+*   `Skin`
 
-The folder name is: ``Sample_Shirt_Colors_Colored_Cotton``
+Here's an example:  
+Item name: `Sample_Shirt`  
+Alternative: `Colors`  
+Gradient Set: `Colored_Cotton`
+
+The folder name is: `Sample_Shirt_Colors_Colored_Cotton`
 
 The folder structure is:
 
@@ -203,14 +203,11 @@ Sample_Shirt_Colors_Colored_Cotton/
 
 model, texture and icon's names have to be just the name without `_Colors_GRADIENTSET`
 
-## Advanced Cosmetics (optional)
+## <span style="color:#3598DB;">Advanced Cosmetics (optional)</span>
 
-Inside your cosmetic folder, you can add a `Cosmetic_Id.json` file. This file allows you to customize even more your
-cosmetics.
+Inside your cosmetic folder, you can add a `Cosmetic_Id.json` file. This file allows you to customize even more your cosmetics.
 
-Within the JSON file, you are able to change the name and path of the model, texture and icon of your cosmetic. And
-that's not all, you'll also be able to define variants and color gradients of your cosmetic and if the cosmetic occupies
-MORE THAN ONE SLOT!
+Within the JSON file, you are able to change the name and path of the model, texture and icon of your cosmetic. And that's not all, you'll also be able to define variants and color gradients of your cosmetic and if the cosmetic occupies MORE THAN ONE SLOT!
 
 ```
 {
@@ -243,7 +240,7 @@ MORE THAN ONE SLOT!
 
 **"alternatives"** Defines that the cosmetic has 1 of 2 alternative styles
 
-### Variant Alternative
+### <span style="color:#236FA1;">Variant Alternative</span>
 
 **"alternatives" > "variants"** Announces the presence of variants that will be listed.
 
@@ -257,81 +254,74 @@ Inside the variant names mentioned above are the definitions of the variant comp
 
 **"alternatives" > "variants" > "variantName" > "icon"** Is the path of the icon of the variant in question.
 
-### Color Alternative
+### <span style="color:#236FA1;">Color Alternative</span>
 
-**"alternatives" > "gradient_set"** Tells the game which gradient set to use
-
+**"alternatives" > "gradient\_set"** Tells the game which gradient set to use
 
 Gradient List:
-- `Colored_Cotton`
-- `Eyes_Gradient`
-- `Faded_Leather`
-- `Fantasy_Cotton`
-- `Fantasy_Cotton_Dark`
-- `Flashy_Synthetic`
-- `Hair`
-- `Jean_Generic`
-- `Ornamented_Metal`
-- `Pastel_Cotton`
-- `Rotten_Fabric`
-- `Shiny_Fabric`
-- `Skin`
 
-#
+*   `Colored_Cotton`
+*   `Eyes_Gradient`
+*   `Faded_Leather`
+*   `Fantasy_Cotton`
+*   `Fantasy_Cotton_Dark`
+*   `Flashy_Synthetic`
+*   `Hair`
+*   `Jean_Generic`
+*   `Ornamented_Metal`
+*   `Pastel_Cotton`
+*   `Rotten_Fabric`
+*   `Shiny_Fabric`
+*   `Skin`
+
+
 
 ***
 
-### Italiano
+### <span style="color:#843FA1;">Italiano</span>
 
-# Lalyan Cosmetic Core
+# <span style="color:#B96AD9;">Lalyan Cosmetic Core</span>
 
 Un'API per registrare e personalizzare cosmetici senza usare gli slot dell'armatura
 
-Modello e texture del Custom Wardrobe sono fatti
-da [EtherealShigure](https://www.curseforge.com/members/etherealshigure).
+Modello e texture del Custom Wardrobe sono fatti da [EtherealShigure](https://www.curseforge.com/members/etherealshigure).
 
-## Introduzione
+## <span style="color:#3598DB;">Introduzione</span>
 
-Questo plugin permette ai giocatori di personalizzare quale cosmetico hanno equipaggiato, senza dover usare i loro slot
-dell'armatura
+Questo plugin permette ai giocatori di personalizzare quale cosmetico hanno equipaggiato, senza dover usare i loro slot dell'armatura
 
 Permette anche ai creatori di plugin di creare i loro cosmetici personalizzati, senza aver bisogno di alcun codice Java!
 
-Il plugin fornisce una GUI per personalizzare i cosmetici, che può essere aperta tramite comando o, in un modo più
-immersivo, interagendo con il Guardaroba Cosmetico
+Il plugin fornisce una GUI per personalizzare i cosmetici, che può essere aperta tramite comando o, in un modo più immersivo, interagendo con il Guardaroba Cosmetico
 
 Il Guardaroba Cosmetico può essere craftato in una Builder's Workbench con 4 di qualsiasi Hardwood
 
-La GUI fornisce un modo semplice per selezionare cosmetici e varianti di cosmetici. Fai clic con il pulsante sinistro su
-un cosmetico per equipaggiarlo, se il cosmetico ha l'icona della variante, fai clic con il pulsante destro per aprire il
-menu delle varianti!
+La GUI fornisce un modo semplice per selezionare cosmetici e varianti di cosmetici. Fai clic con il pulsante sinistro su un cosmetico per equipaggiarlo, se il cosmetico ha l'icona della variante, fai clic con il pulsante destro per aprire il menu delle varianti!
 
-## Comandi
+## <span style="color:#3598DB;">Comandi</span>
 
 Il plugin ha alcuni comandi che sono principalmente a scopo di test:
 
-* `/cosmetic apply <CosmeticId> [override]` applica manualmente un certo cosmetico definito da `CosmeticId`, `override`
-  è opzionale, il valore predefinito è `yes [l'altro valore è no]`, determina se tutti gli altri cosmetici del suo tipo
-  devono essere rimossi. Richiede OP
+*   `/cosmetic apply <CosmeticId> [override]` applica manualmente un certo cosmetico definito da `CosmeticId`, `override` è opzionale, il valore predefinito è `yes [l'altro valore è no]`, determina se tutti gli altri cosmetici del suo tipo devono essere rimossi. Richiede OP
+    
+*   `/cosmetic change` apre manualmente l'interfaccia utente di personalizzazione dei cosmetici. Non richiede permessi
+    
+*   `/cosmetic list` stampa in chat tutti gli ID dei cosmetici caricati. Richiede OP
+    
+*   `/cosmetic reload` ricarica manualmente tutti i cosmetici. Richiede OP
+    
+*   `/cosmetic clear` rimuove tutti i cosmetici personalizzati e ripristina la skin predefinita. Richiede OP
+    
 
-* `/cosmetic change` apre manualmente l'interfaccia utente di personalizzazione dei cosmetici. Non richiede permessi
+## <span style="color:#3598DB;">Registrazione dei cosmetici</span>
 
-* `/cosmetic list` stampa in chat tutti gli ID dei cosmetici caricati. Richiede OP
+<span style="color:#E03E2D;">!Attenzione! Ricordati che il nome che dai ad i files è importante!</span>
 
-* `/cosmetic reload` ricarica manualmente tutti i cosmetici. Richiede OP
+Registrare un cosmetico è abbastanza semplice. Dovrai creare un pacchetto di risorse (ovviamente), e avrai bisogno di 3 file essenziali:
 
-* `/cosmetic clear` rimuove tutti i cosmetici personalizzati e ripristina la skin predefinita. Richiede OP
-
-## Registrazione dei cosmetici
-
-`!Attenzione! Ricordati che il nome che dai ad i files è importante.`
-
-Registrare un cosmetico è abbastanza semplice. Dovrai creare un pacchetto di risorse (ovviamente), e avrai bisogno di 3
-file essenziali:
-
-* Il file .blockymodel del cosmetico
-* La texture .png del cosmetico
-* L'icona .png del cosmetico, che è la stessa icona che useresti per l'oggetto!
+*   Il file .blockymodel del cosmetico
+*   La texture .png del cosmetico
+*   L'icona .png del cosmetico, che è la stessa icona che useresti per l'oggetto!
 
 Questi file devono essere nominati allo stesso modo, ovvero CustomID.extension
 
@@ -347,24 +337,23 @@ CustomID/
 
 La cartella del cosmetico andrà messa all'interno di una certa cartella, a seconda del tipo di cosmetico:
 
-### Cosmetici
+### <span style="color:#236FA1;">Cosmetici</span>
 
 (cose come magliette, cappelli, pantaloni ecc..)
 
-Il percorso base per i cosmetici è `Common/Resources/Cosmetics`, seguito dalla cartella basata sullo slot, che può
-essere:
+Il percorso base per i cosmetici è `Common/Resources/Cosmetics`, seguito dalla cartella basata sullo slot, che può essere:
 
-* `Capes`
-* `Ears_Accessories`
-* `Face_Accessories`
-* `Gloves`
-* `Head`
-* `Overpants`
-* `Overtops`
-* `Pants`
-* `Shoes`
-* `Undertops`
-* `Underwears`
+*   `Capes`
+*   `Ears_Accessories`
+*   `Face_Accessories`
+*   `Gloves`
+*   `Head`
+*   `Overpants`
+*   `Overtops`
+*   `Pants`
+*   `Shoes`
+*   `Undertops`
+*   `Underwears`
 
 Scegli quale di questi slots deve occupare il tuo cosmetico e inserisci la cartella che hai creato prima.
 
@@ -380,26 +369,24 @@ Custom_Cape/
     └── Custom_Cape.png
 ```
 
-### Parti del Personaggio
+### <span style="color:#236FA1;">Parti del Personaggio</span>
 
 (cose come bocca, orecchie, occhi ecc..)
 
-Il percorso base per i cosmetici del personaggio è `Common/Resources/Characters`, seguito dalla cartella basata sullo
-slot, che può essere:
+Il percorso base per i cosmetici del personaggio è `Common/Resources/Characters`, seguito dalla cartella basata sullo slot, che può essere:
 
-* `Eyes`
-* `Mouth`
-* `Nose`
-* `Eyebrows`
-* `Haircuts`
-* `Hair_Extension`
-* `Beard`
-* `Mustache`
+*   `Beards`
+*   `Ears`
+*   `Eyebrows`
+*   `Eyes`
+*   `Faces`
+*   `Mouth`
+*   `Haircuts`
+*   `Hair_Extension`
 
 Scegli quale di questi slots deve occupare la tua parte per il personaggio e inserisci la cartella che hai creato prima.
 
-Quindi, per un cosmetico del personaggio chiamato `Custom_Eyes`, che si trova nello slot `Eyes`, il percorso sarà
-questo:
+Quindi, per un cosmetico del personaggio chiamato `Custom_Eyes`, che si trova nello slot `Eyes`, il percorso sarà questo:
 
 `Common/Resources/Characters/Eyes/Custom_Eyes`, e all'interno della cartella `Custom_Eyes`:
 
@@ -411,16 +398,17 @@ Custom_Eyes/
     └── Custom_Eyes.png
 ```
 
-Lo slot Hair_Extension prende automaticamente il gradiente del'acconciatura.
+Lo slot Hair\_Extension prende automaticamente il gradiente del'acconciatura.
 
-## Varianti (opzionale)
+## <span style="color:#3598DB;">Varianti (opzionale)</span>
 
-`!Attenzione! Varianti e colori si escludono a vicenda!`
+<span style="color:#E03E2D;">!Attenzione! Varianti e colori si escludono a vicenda!</span>
+
+<span style="color:#E03E2D;">!Attenzione! Le estensioni per i capelli (Hair_Extension) non possono avere varianti ne colori, cambiano a seconda del taglio di capelli!</span>
 
 Questa API ti consente anche di aggiungere delle varianti.
 
-Per aggiungerle le varianti dovrai aggiungere le textures e le icone delle varianti all'interno della cartella del tuo
-cosmetico.
+Per aggiungerle le varianti dovrai aggiungere le textures e le icone delle varianti all'interno della cartella del tuo cosmetico.
 
 Le textures delle varianti devono essere messe nella cartella del cosmetico (CustomID) nominate come segue:
 
@@ -428,10 +416,9 @@ Le textures delle varianti devono essere messe nella cartella del cosmetico (Cus
 CustomID_Variant_NomeVariante.png
 ```
 
-Le icone delle varianti devono avere lo stesso nome che abbiamo dato alla texture della variante ma a differenza di essa
-andranno messe dentro la cartella `Icon/`.
+Le icone delle varianti devono avere lo stesso nome che abbiamo dato alla texture della variante ma a differenza di essa andranno messe dentro la cartella `Icon/`.
 
-Facendo un esempio con il Propeller_Hat:
+Facendo un esempio con il Propeller\_Hat:
 
 ```
 Propeller_Hat/
@@ -445,15 +432,15 @@ Propeller_Hat/
     └── Propeller_Hat_Variant_Arcobaleno.png
 ```
 
-Facendo così l'API caricherà: **Propeller\_Hat**, **Propeller\_Hat\_Variant\_Circo**, *
-*Propeller\_Hat\_Variant\_Arcobaleno**.
+Facendo così l'API caricherà: **Propeller\_Hat**, **Propeller\_Hat\_Variant\_Circo**, \* _Propeller\_Hat\_Variant\_Arcobaleno_\*.
 
-Saranno viste dall'API come varianti dello stesso cosmetico quindi implicitamente useranno `Propeller_Hat.blockymodel`
-come modello.
+Saranno viste dall'API come varianti dello stesso cosmetico quindi implicitamente useranno `Propeller_Hat.blockymodel` come modello.
 
-## Colori (opzionale)
+## <span style="color:#3598DB;">Colori (opzionale)</span>
 
-`!Attenzione! Varianti e colori si escludono a vicenda!`
+<span style="color:#E03E2D;">!Attenzione! Varianti e colori si escludono a vicenda!</span>
+
+<span style="color:#E03E2D;">!Attenzione! Le estensioni per i capelli (Hair_Extension) non possono avere varianti ne colori, cambiano a seconda del taglio di capelli!</span>
 
 Questa API ti permette anche di aggiungere più colori a un cosmetico!
 
@@ -463,25 +450,25 @@ La texture dev'essere una scala di grigi (completamente desaturata)
 
 ecco una lista di tutti i set di gradienti disponibili:
 
-* `Colored_Cotton`
-* `Eyes_Gradient`
-* `Faded_Leather`
-* `Fantasy_Cotton`
-* `Fantasy_Cotton_Dark`
-* `Flashy_Synthetic`
-* `Hair`
-* `Jean_Generic`
-* `Ornamented_Metal`
-* `Pastel_Cotton`
-* `Rotten_Fabric`
-* `Shiny_Fabric`
-* `Skin`
+*   `Colored_Cotton`
+*   `Eyes_Gradient`
+*   `Faded_Leather`
+*   `Fantasy_Cotton`
+*   `Fantasy_Cotton_Dark`
+*   `Flashy_Synthetic`
+*   `Hair`
+*   `Jean_Generic`
+*   `Ornamented_Metal`
+*   `Pastel_Cotton`
+*   `Rotten_Fabric`
+*   `Shiny_Fabric`
+*   `Skin`
 
 Ecco un esempio:
 
-Nome oggetto: `Sample_Shirt`   
-Alternativa: `Colors`   
-Set Gradiente: `Colored_Cotton`   
+Nome oggetto: `Sample_Shirt`  
+Alternativa: `Colors`  
+Set Gradiente: `Colored_Cotton`
 
 Il nome cartella è: `Sample_Shirt_Colors_Colored_Cotton`
 
@@ -493,18 +480,15 @@ Sample_Shirt_Colors_Colored_Cotton/
 ├── Sample_Shirt.png
 └── Icon/
     └── Sample_Shirt.png
-
 ```
 
 I nomi di modello, texture e icona devono essere solo il nome senza `_Colors_GRADIENTSET`
 
-## Cosmetici Avanzati (opzionale)
+## <span style="color:#3598DB;">Cosmetici Avanzati (opzionale)</span>
 
-All'interno della cartella del tuo cosmetico, puoi aggiungere un file `CustomID.json` (in cui CustomID è l'ID del tuo
-cosmetico). Questo file ti permetterà di personalizzare ancora di più i tuoi cosmetici.
+All'interno della cartella del tuo cosmetico, puoi aggiungere un file `CustomID.json` (in cui CustomID è l'ID del tuo cosmetico). Questo file ti permetterà di personalizzare ancora di più i tuoi cosmetici.
 
-All'interno del file JSON puoi cambiare il nome e il percorso del modello, della texture e dell'icona del tuo cosmetico.
-E non è tutto, potrai anche definire varianti o colorazioni del tuo cosmetico e decidere se occupa SLOT MULTIPLI!
+All'interno del file JSON puoi cambiare il nome e il percorso del modello, della texture e dell'icona del tuo cosmetico. E non è tutto, potrai anche definire varianti o colorazioni del tuo cosmetico e decidere se occupa SLOT MULTIPLI!
 
 Qui la formattazione corretta del cosmetico di esempio
 
@@ -541,7 +525,7 @@ Qui la formattazione corretta del cosmetico di esempio
 
 **"alternatives"** Definisce che il cosmetico ha 1 di 2 stili di alternative
 
-### Alternativa di Variante
+### <span style="color:#236FA1;">Alternativa di Variante</span>
 
 **"alternatives" >"variants"** Annuncia la presenza di varianti che saranno elencate.
 
@@ -555,21 +539,22 @@ Dentro i nomi delle varianti qui sopra citati ci sono le definizioni dei compone
 
 **"alternatives" >"variants" > "variantName" > "icon"** È il percorso dell'icona della variante in questione.
 
-### Alternativa di Colorazione
+### <span style="color:#236FA1;">Alternativa di Colorazione</span>
 
-**"alternatives" > "gradient_set"** Il gradiente di colorazioni da usare
+**"alternatives" > "gradient\_set"** Il gradiente di colorazioni da usare
 
 Lista dei gradienti:
-- `Colored_Cotton`
-- `Eyes_Gradient`
-- `Faded_Leather`
-- `Fantasy_Cotton`
-- `Fantasy_Cotton_Dark`
-- `Flashy_Synthetic`
-- `Hair`
-- `Jean_Generic`
-- `Ornamented_Metal`
-- `Pastel_Cotton`
-- `Rotten_Fabric`
-- `Shiny_Fabric`
-- `Skin`
+
+*   `Colored_Cotton`
+*   `Eyes_Gradient`
+*   `Faded_Leather`
+*   `Fantasy_Cotton`
+*   `Fantasy_Cotton_Dark`
+*   `Flashy_Synthetic`
+*   `Hair`
+*   `Jean_Generic`
+*   `Ornamented_Metal`
+*   `Pastel_Cotton`
+*   `Rotten_Fabric`
+*   `Shiny_Fabric`
+*   `Skin`
