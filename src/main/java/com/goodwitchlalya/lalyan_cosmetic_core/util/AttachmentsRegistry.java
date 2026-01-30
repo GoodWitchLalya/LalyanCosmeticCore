@@ -711,10 +711,12 @@ public class AttachmentsRegistry {
             if (cosmetic.contains("%")) {
                 String[] gradStuff = cosmetic.split("%");
                 String[] split = gradStuff[1].split(":");
-                
+
                 cosmId = gradStuff[0];
-                gradientSet = split[0];
-                gradientId = split[1];
+                if (split.length >= 2) {
+                    gradientSet = split[0];
+                    gradientId = split[1];
+                }
             }
             
             // Find the attachment in the registry.
