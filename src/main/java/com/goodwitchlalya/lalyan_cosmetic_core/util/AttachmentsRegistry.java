@@ -1,6 +1,5 @@
 package com.goodwitchlalya.lalyan_cosmetic_core.util;
 
-import com.goodwitchlalya.lalyan_cosmetic_core.CosmeticCore;
 import com.goodwitchlalya.lalyan_cosmetic_core.component.CosmeticData;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -16,8 +15,8 @@ import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.player.PlayerSkinComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
-import java.io.File;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 // A singleton registry that manages all custom cosmetic and character attachments.
@@ -35,9 +34,9 @@ public class AttachmentsRegistry {
         CharacterSlot.Hair_Extension
     );
     
-    // A list of slots that use the same hair gradient by default
-    public final List<Slot> hairColouredSlots = List.of(
-        CharacterSlot.Hair_Extension
+    public List<SlotConnection> connections = List.of(
+        new SlotConnection(CharacterSlot.Hair_Extension, CharacterSlot.Haircuts, "Hair", (skin) -> skin.haircut.split("\\.")[1]),
+        new SlotConnection(CharacterSlot.Mouths, null, "Skin", (skin) -> skin.bodyCharacteristic.split("\\.")[1])
     );
     
     // Enum for top-level UI categories.
@@ -476,6 +475,9 @@ public class AttachmentsRegistry {
     public record Variant(@Expose String texture, @Expose String icon) {
     }
     
+    public record SlotConnection(Slot mainSlot, Slot connectedSlot, String gradientSet, Function<PlayerSkin, String> defaultId) {
+    }
+    
     public static class Alternative {
         @Expose
         @SerializedName("gradient_set")
@@ -485,7 +487,11 @@ public class AttachmentsRegistry {
     }
     
     public static class Colour {
+        @Expose
+        @SerializedName("gradient_set")
         private String gradientSet;
+        @Expose
+        @SerializedName("gradient_id")
         private String gradientID;
         
         public Colour(String gradientSet, String gradientID) {
@@ -534,6 +540,10 @@ public class AttachmentsRegistry {
         public String toString() {
             return getF();
         }
+        
+        public String apply(String cosmeticId) {
+            return cosmeticId + "%" + gradientSet + ":" + gradientID;
+        }
     }
     
     // A class holding all the data for a single attachment, loaded from asset files or JSON.
@@ -550,14 +560,18 @@ public class AttachmentsRegistry {
         @Expose
         @SerializedName("slot_overrides")
         private final List<String> slotOverrides;
+        @Expose
+        @SerializedName("default_color")
+        private final Colour defaultColor;
         
         public Slot slot; // The primary slot this attachment belongs to.
         
-        public AttachmentData(String model, String texture, String icon, Map<String, Variant> variants, String gradientSet, List<String> slotOverrides) {
+        public AttachmentData(String model, String texture, String icon, Map<String, Variant> variants, String gradientSet, List<String> slotOverrides, Colour defaultColor) {
             this.model = model;
             this.texture = texture;
             this.icon = icon;
             this.slotOverrides = slotOverrides;
+            this.defaultColor = defaultColor;
             
             this.alternatives = new Alternative();
             
@@ -597,6 +611,10 @@ public class AttachmentsRegistry {
         
         public String gradientSet() {
             return alternatives.gradientSet != null ? alternatives.gradientSet : "";
+        }
+        
+        public Colour defaultColor() {
+            return defaultColor;
         }
     }
     
@@ -711,15 +729,24 @@ public class AttachmentsRegistry {
                 overrides.put(attachment.data().slot(), false);
             }
             
-            // Create the model attachment and add it to the list.
-            if (hairColouredSlots.contains(attachment.data().slot())) {
-                gradientSet = "Hair";
-                CosmeticData.FormattedItemData itemData = data.getCosmetic(CharacterSlot.Haircuts);
-                if (itemData != null) {
+            SlotConnection connection = connections.stream()
+                .filter(c -> c.mainSlot() == attachment.data().slot())
+                .findFirst().orElse(null);
+            
+            if(connection != null) {
+                if(connection.gradientSet == null && connection.connectedSlot == null)
+                    throw new IllegalArgumentException("Cannot have a connection with no gradient set nor connected slot!");
+                
+                gradientSet = connection.gradientSet();
+                CosmeticData.FormattedItemData itemData = null;
+                
+                if(connection.connectedSlot() != null) itemData = data.getCosmetic(connection.connectedSlot());
+            
+                if(itemData != null) {
+                    gradientSet = itemData.getColour().getGradientSet();
                     gradientId = itemData.getColour().getGradientID();
                 } else {
-                    gradientId = playerSkin.haircut.split("\\.")[1];
-                    CosmeticCore.log(String.format(""));
+                    gradientId = connection.defaultId.apply(playerSkin);
                 }
             } else if (gradientSet.isEmpty() && !attachment.data().gradientSet().isEmpty()) {
                 String set = attachment.data().gradientSet();
@@ -730,6 +757,7 @@ public class AttachmentsRegistry {
                 }
             }
             
+            // Create the model attachment and add it to the list.
             attachments.add(attachment.makeModel(variant, new Colour(gradientSet, gradientId)));
         }
         
@@ -1122,6 +1150,7 @@ public class AttachmentsRegistry {
         
         Attachment attachment = attachmentsRegistry.get(cosmId);
         Slot slot = attachment != null ? attachment.data().slot() : null;
+        Colour defColor = attachment != null ? attachment.data().defaultColor() : null;
         
         if (slot == null && cosmId.startsWith("No")) {
             try {
@@ -1155,6 +1184,9 @@ public class AttachmentsRegistry {
                 data.addCosmetic("No" + overrideSlot);
             }
         }
+        
+        if (defColor != null && !cosmeticId.contains("%") && !cosmeticId.contains("$"))
+            cosmeticId = defColor.apply(cosmeticId);
         
         data.addCosmetic(cosmeticId);
         rebuildSkinWithCosmetics(ref);
@@ -1279,7 +1311,8 @@ public class AttachmentsRegistry {
             String.format("%s/Icon/%s.png", attachmentPath, split[1]),
             variants,
             "",
-            new ArrayList<>()
+            new ArrayList<>(),
+            new Colour("", "")
         );
         attData.slot = slot;
         
@@ -1307,7 +1340,8 @@ public class AttachmentsRegistry {
             String.format("%s/Icon/%s.png", attachmentPath, split[1]),
             Map.of(),
             gradientSet,
-            List.of()
+            List.of(),
+            new Colour("", "")
         );
         attData.slot = slot;
         

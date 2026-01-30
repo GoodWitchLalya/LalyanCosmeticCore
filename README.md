@@ -232,6 +232,10 @@ Within the JSON file, you are able to change the name and path of the model, tex
               "icon": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant_Icon.png"
             }
         }
+    },
+    "default_color": {
+        "gradient_set": "Hair",
+        "gradient_id": "Red"
     }
 }
 ```
@@ -243,6 +247,8 @@ Within the JSON file, you are able to change the name and path of the model, tex
 **"icon"** Is the path of the base cosmetic icon.
 
 **"alternatives"** Defines that the cosmetic has 1 of 2 alternative styles
+
+**"default_color"** If your cosmetic is grayscale, this can define which color the main slot should equip
 
 ### <span style="color:#236FA1;">Variant Alternative</span>
 
@@ -519,6 +525,10 @@ Qui la formattazione corretta del cosmetico di esempio
               "icon": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant_Icon.png"
             }
         }
+    },
+    "default_color": {
+        "gradient_set": "Hair",
+        "gradient_id": "Red"
     }
 }
 ```
@@ -532,6 +542,8 @@ Qui la formattazione corretta del cosmetico di esempio
 **"icon"** È il percorso dell'icona del cosmetico base.
 
 **"alternatives"** Definisce che il cosmetico ha 1 di 2 stili di alternative
+
+**"default_color"** Se il cosmetico utilizza texture in bianco e nero, definisce il colore equipaggiato dallo slot principale
 
 ### <span style="color:#236FA1;">Alternativa di Variante</span>
 

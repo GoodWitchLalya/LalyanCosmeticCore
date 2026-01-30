@@ -213,7 +213,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             .toArray(String[]::new);
         
         // Determine if the "unequip" (vanish) button should be shown.
-        boolean showVanish = currentSlot != null && currentSlot.getType() != AttachmentsRegistry.SlotType.CHARACTER;
+        boolean showVanish = currentSlot != null && currentSlot != AttachmentsRegistry.CharacterSlot.Faces;
         int totalItems = entries.length + (showVanish ? 1 : 0);
         
         // Loop to create the grid of items.
