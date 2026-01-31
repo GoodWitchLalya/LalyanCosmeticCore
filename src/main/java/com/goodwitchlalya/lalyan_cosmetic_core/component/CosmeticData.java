@@ -1,5 +1,6 @@
 package com.goodwitchlalya.lalyan_cosmetic_core.component;
 
+import com.goodwitchlalya.lalyan_cosmetic_core.CosmeticCore;
 import com.goodwitchlalya.lalyan_cosmetic_core.util.AttachmentsRegistry;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -164,9 +165,14 @@ public class CosmeticData implements Component<EntityStore> {
                     itemData.setColour(new AttachmentsRegistry.Colour(split[1]));
                 }
             } else {
-                if (AttachmentsRegistry.get().getAttachmentsRegistry().get(item).data().slot.equals(slot)) {
-                    // The slot is correct
-                    itemData.setName(item);
+                try{
+                    if (AttachmentsRegistry.get().getAttachmentsRegistry().get(item).data().slot.equals(slot)) {
+                        // The slot is correct
+                        itemData.setName(item);
+                    }
+                } catch (Exception e) {
+                    CosmeticCore.log(String.format("Item: %s", item));// DEBUG
+                    throw new RuntimeException(e);
                 }
             }
             

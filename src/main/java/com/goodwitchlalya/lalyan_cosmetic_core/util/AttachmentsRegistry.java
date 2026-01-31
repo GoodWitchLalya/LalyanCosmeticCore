@@ -1,5 +1,6 @@
 package com.goodwitchlalya.lalyan_cosmetic_core.util;
 
+import com.goodwitchlalya.lalyan_cosmetic_core.CosmeticCore;
 import com.goodwitchlalya.lalyan_cosmetic_core.component.CosmeticData;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -706,12 +707,11 @@ public class AttachmentsRegistry {
                 String[] split = cosmetic.split("\\$");
                 cosmId = split[0];
                 variant = split[1];
-            }
-            
-            if (cosmetic.contains("%")) {
+            }else if (cosmetic.contains("%")) {
                 String[] gradStuff = cosmetic.split("%");
                 String[] split = gradStuff[1].split(":");
                 
+                CosmeticCore.log(String.format("cosmetic: %s", cosmetic));// DEBUG
                 cosmId = gradStuff[0];
                 gradientSet = split[0];
                 gradientId = split[1];
@@ -1350,6 +1350,7 @@ public class AttachmentsRegistry {
     
     // The core registration method. Adds a fully-formed AttachmentData object to the registry.
     public void register(String name, AttachmentData attachmentData) {
+        CosmeticCore.log(String.format("Registered        Name: %s        Slot: %s", name, attachmentData.slot.name()));// Dev
         attachmentsRegistry.put(name, new Attachment(name, attachmentData));
     }
     
