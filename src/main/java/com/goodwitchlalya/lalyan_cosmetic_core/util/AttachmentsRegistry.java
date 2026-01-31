@@ -543,6 +543,8 @@ public class AttachmentsRegistry {
         }
         
         public String apply(String cosmeticId) {
+            if(gradientSet.isBlank() || gradientID.isBlank()) return cosmeticId;
+            
             return cosmeticId + "%" + gradientSet + ":" + gradientID;
         }
     }
