@@ -130,7 +130,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
                     setupCategoryButton(cmd, evt, "Undertops", AttachmentsRegistry.CosmeticSlot.Undertops);
                     setupCategoryButton(cmd, evt, "Overtops", AttachmentsRegistry.CosmeticSlot.Overtops);
                     setupCategoryButton(cmd, evt, "Gloves", AttachmentsRegistry.CosmeticSlot.Gloves);
-                    setupCategoryButton(cmd, evt, "Tail", AttachmentsRegistry.CharacterSlot.Tails);
+                    setupCategoryButton(cmd, evt, "Tails", AttachmentsRegistry.CharacterSlot.Tails);
                     setupCategoryButton(cmd, evt, "Wings", AttachmentsRegistry.CharacterSlot.Wings);
                 }
                 case Legs -> {
