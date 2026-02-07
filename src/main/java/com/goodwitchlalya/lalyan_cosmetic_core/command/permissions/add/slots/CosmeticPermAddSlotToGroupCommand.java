@@ -17,10 +17,8 @@ import java.util.Set;
  */
 public class CosmeticPermAddSlotToGroupCommand extends CommandBase {
     
-    private final Universe universe = Universe.get();
-    
-    private final RequiredArg<String> slotID;
-    private final RequiredArg<String> group;
+    private RequiredArg<String> slotID;
+    private RequiredArg<String> group;
     
     /**
      *
@@ -38,7 +36,7 @@ public class CosmeticPermAddSlotToGroupCommand extends CommandBase {
         Set<String> permission = CosmeticCore.slotIdToPermissionUse(slotID.get(commandContext));
         String permissionString = CosmeticCore.slotIdToPermissionStringUse(slotID.get(commandContext));
         
-        PermissionsModule.get().addGroupPermission(group.get(commandContext), permission);
+        CosmeticCore.addPerm(group.get(commandContext), permission);
         
         commandContext.sendMessage(Message.raw(String.format("Added the permission (%s) for %s (Group) to %s", permissionString, group.get(commandContext), slotID.get(commandContext))));
     }

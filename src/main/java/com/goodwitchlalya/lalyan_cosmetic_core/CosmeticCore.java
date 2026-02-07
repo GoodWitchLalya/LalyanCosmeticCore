@@ -14,19 +14,17 @@ import com.hypixel.hytale.server.core.command.system.CommandManager;
 import com.hypixel.hytale.server.core.console.ConsoleSender;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
+import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.plugin.PluginManager;
 
 //Luckperms
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import net.luckperms.api.LuckPerms;
-import net.luckperms.api.LuckPermsProvider;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * Main class for the Lalyan Cosmetic Core plugin.
@@ -43,9 +41,7 @@ public class CosmeticCore extends JavaPlugin {
     // Logger for the plugin.
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     
-    public static boolean isLuckpermsLoaded = false;
-    
-    public static Object luckpermsCompatibility;// Object -> LuckpermsCompatibility
+    public static boolean isLuckpermsLoaded;
     
     /**
      * Constructor for the plugin.
@@ -80,49 +76,73 @@ public class CosmeticCore extends JavaPlugin {
         return Set.of(cosmeticIdToPermissionStringUse(cosmeticId));
     }
     public static String slotIdToPermissionStringUse(String slotId) {
-        return "lalyancosmeticcore.slot." + slotId + ".use";
+        if (isLuckpermsLoaded) {
+            return "goodwitchlalya.lalyan cosmetic core.slot." + slotId + ".use";
+        } else {
+            return "lalyancosmeticcore.slot." + slotId + ".use";
+        }
     }
     public static Set<String> slotIdToPermissionUse(String slotId) {
         return Set.of(slotIdToPermissionStringUse(slotId));
     }
     
-    public static void addPerm(UUID uuid, String permission) {
+    public static void addPerm(PlayerRef playerRef, Set<String> permission) {
         if (isLuckpermsLoaded) {
-            //TODO
+            try {
+                LuckpermsCompatibility.getInstance().addPerm(playerRef, permission.stream().findFirst().get());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         } else {
-            //TODO
+            PermissionsModule.get().addUserPermission(playerRef.getUuid(), permission);
         }
     }
     
-    public static void addPerm(PlayerRef playerRef, String permission) {
-        addPerm(playerRef.getUuid(), permission);
-    }
-    
-    public static void addPerm(String group, String permission) {
+    public static void addPerm(String group, Set<String> permission) {
         if (isLuckpermsLoaded) {
-            //TODO
+            try {
+                LuckpermsCompatibility.getInstance().addPerm(group, permission.stream().findFirst().get());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         } else {
-            //TODO
+            PermissionsModule.get().addGroupPermission(group, permission);
         }
     }
     
-    public static void removePerm(UUID uuid, String permission) {
+    public static void removePerm(PlayerRef playerRef, Set<String> permission) {
         if (isLuckpermsLoaded) {
-            //TODO
+            try {
+                LuckpermsCompatibility.getInstance().removePerm(playerRef, permission.stream().findFirst().get());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         } else {
-            //TODO
+            PermissionsModule.get().removeUserPermission(playerRef.getUuid(), permission);
         }
     }
     
-    public static void removePerm(PlayerRef playerRef, String permission) {
-        removePerm(playerRef.getUuid(), permission);
+    public static void removePerm(String group, Set<String> permission) {
+        if (isLuckpermsLoaded) {
+            try {
+                LuckpermsCompatibility.getInstance().removePerm(group, permission.stream().findFirst().get());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            PermissionsModule.get().removeGroupPermission(group, permission);
+        }
     }
     
-    public static void removePerm(String group, String permission) {
+    public static boolean getPerm(PlayerRef playerRef, Set<String> permission) {
         if (isLuckpermsLoaded) {
-            //TODO
+            try {
+                return LuckpermsCompatibility.getInstance().getPerm(playerRef, permission.stream().findFirst().get());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         } else {
-            //TODO
+            return PermissionsModule.get().hasPermission(playerRef.getUuid(), permission.stream().findFirst().get());
         }
     }
     
@@ -135,12 +155,9 @@ public class CosmeticCore extends JavaPlugin {
         try {
             Objects.requireNonNull(PluginManager.get().getPlugin(PluginIdentifier.fromString("LuckPerms:LuckPerms"))).isEnabled();
             isLuckpermsLoaded = true;
+            log("LuckPerms is loaded");
         } catch (Exception e) {
             isLuckpermsLoaded = false;
-        }
-        
-        if (isLuckpermsLoaded) {
-            luckpermsCompatibility = LuckpermsCompatibility.getInstance();
         }
         
         if (Objects.equals(System.getenv("DEV_MODE"), "True")) {

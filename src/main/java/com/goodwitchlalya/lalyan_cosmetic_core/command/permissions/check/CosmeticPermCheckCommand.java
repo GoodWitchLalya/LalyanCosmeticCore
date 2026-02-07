@@ -13,8 +13,6 @@ import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
  */
 public class CosmeticPermCheckCommand extends CommandBase {
     
-    private final Universe universe = Universe.get();
-    
     /**
      *
      */

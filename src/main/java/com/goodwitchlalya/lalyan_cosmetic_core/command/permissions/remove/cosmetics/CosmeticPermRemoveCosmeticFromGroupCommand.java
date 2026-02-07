@@ -10,15 +10,15 @@ import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import com.hypixel.hytale.server.core.universe.Universe;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
+import java.util.Set;
+
 /**
  *
  */
 public class CosmeticPermRemoveCosmeticFromGroupCommand extends CommandBase {
     
-    private final Universe universe = Universe.get();
-    
-    private final RequiredArg<String> cosmeticID;
-    private final RequiredArg<String> group;
+    private RequiredArg<String> cosmeticID;
+    private RequiredArg<String> group;
     
     /**
      *
@@ -32,8 +32,11 @@ public class CosmeticPermRemoveCosmeticFromGroupCommand extends CommandBase {
     
     @Override
     protected void executeSync(@NonNullDecl CommandContext commandContext) {
-        PermissionsModule.get().removeGroupPermission(group.get(commandContext), CosmeticCore.cosmeticIdToPermissionUse(cosmeticID.get(commandContext)));
+        Set<String> permission = CosmeticCore.cosmeticIdToPermissionUse(cosmeticID.get(commandContext));
+        String permissionString = CosmeticCore.cosmeticIdToPermissionStringUse(cosmeticID.get(commandContext));
         
-        commandContext.sendMessage(Message.raw(String.format("Removed the permission (%s) for %s (Group) to %s", CosmeticCore.cosmeticIdToPermissionUse(cosmeticID.get(commandContext)), group.get(commandContext), cosmeticID.get(commandContext))));
+        CosmeticCore.removePerm(group.get(commandContext), permission);
+        
+        commandContext.sendMessage(Message.raw(String.format("Removed the permission (%s) for %s (Group) to %s", permissionString, group.get(commandContext), cosmeticID.get(commandContext))));
     }
 }

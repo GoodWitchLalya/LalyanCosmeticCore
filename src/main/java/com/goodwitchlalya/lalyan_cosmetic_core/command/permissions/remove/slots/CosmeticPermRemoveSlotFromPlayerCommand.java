@@ -19,8 +19,6 @@ import java.util.UUID;
  */
 public class CosmeticPermRemoveSlotFromPlayerCommand extends CommandBase {
     
-    private final Universe universe = Universe.get();
-    
     private RequiredArg<String> slotID;
     private RequiredArg<PlayerRef> player;
     
@@ -43,12 +41,12 @@ public class CosmeticPermRemoveSlotFromPlayerCommand extends CommandBase {
         Set<String> permission = CosmeticCore.slotIdToPermissionUse(slotID.get(commandContext));
         String permissionString = CosmeticCore.slotIdToPermissionStringUse(slotID.get(commandContext));
         
-        if (!PermissionsModule.get().hasPermission(uuid, permissionString)) {
+        if (!CosmeticCore.getPerm(player.get(commandContext), permission)) {
             commandContext.sendMessage(Message.raw(String.format("%s doesn't have the permission (%s) for %s", player.get(commandContext).getUsername(), permissionString, slotID.get(commandContext))));
         } else {
-            PermissionsModule.get().removeUserPermission(uuid, permission);
+            CosmeticCore.removePerm(player.get(commandContext), permission);
             
-            if (!PermissionsModule.get().hasPermission(uuid, permissionString)) {
+            if (!CosmeticCore.getPerm(player.get(commandContext), permission)) {
                 commandContext.sendMessage(Message.raw(String.format("Removed the permission (%s) for %s to %s", permissionString, player.get(commandContext).getUsername(), slotID.get(commandContext))));
             } else {
                 commandContext.sendMessage(Message.raw(String.format("Failed to remove the permission (%s) for %s to %s", permissionString, player.get(commandContext).getUsername(), slotID.get(commandContext))));

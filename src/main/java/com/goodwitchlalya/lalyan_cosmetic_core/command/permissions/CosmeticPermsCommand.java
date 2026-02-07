@@ -1,6 +1,5 @@
 package com.goodwitchlalya.lalyan_cosmetic_core.command.permissions;
 
-import com.goodwitchlalya.lalyan_cosmetic_core.CosmeticCore;
 import com.goodwitchlalya.lalyan_cosmetic_core.command.permissions.add.CosmeticPermAddCommand;
 import com.goodwitchlalya.lalyan_cosmetic_core.command.permissions.add.cosmetics.CosmeticPermAddCosmeticCommand;
 import com.goodwitchlalya.lalyan_cosmetic_core.command.permissions.check.CosmeticPermCheckCommand;
@@ -21,8 +20,6 @@ import static com.goodwitchlalya.lalyan_cosmetic_core.CosmeticCore.log;
  *
  */
 public class CosmeticPermsCommand extends CommandBase {
-    
-    private final Universe universe = Universe.get();
     
     /**
      *

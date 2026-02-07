@@ -19,8 +19,6 @@ import java.util.UUID;
  */
 public class CosmeticPermCheckSlotFromPlayerCommand extends CommandBase {
     
-    private final Universe universe = Universe.get();
-    
     private RequiredArg<String> slotID;
     private RequiredArg<PlayerRef> player;
     
@@ -36,12 +34,11 @@ public class CosmeticPermCheckSlotFromPlayerCommand extends CommandBase {
     
     @Override
     protected void executeSync(@NonNullDecl CommandContext commandContext) {
-        UUID uuid = player.get(commandContext).getUuid();
         
         Set<String> permission = CosmeticCore.slotIdToPermissionUse(slotID.get(commandContext));
         String permissionString = CosmeticCore.slotIdToPermissionStringUse(slotID.get(commandContext));
         
-        if (PermissionsModule.get().hasPermission(uuid, permissionString)) {
+        if (CosmeticCore.getPerm(player.get(commandContext), permission)) {
             commandContext.sendMessage(Message.raw(String.format("%s has the permission (%s) for %s", player.get(commandContext).getUsername(), permissionString, slotID.get(commandContext))));
         } else {
             commandContext.sendMessage(Message.raw(String.format("%s hasn't the permission (%s) for %s", player.get(commandContext).getUsername(), permissionString, slotID.get(commandContext))));

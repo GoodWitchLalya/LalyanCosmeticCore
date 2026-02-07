@@ -23,7 +23,6 @@ import java.util.Map;
  */
 public class CosmeticApplyCommand extends AbstractPlayerCommand {
     
-    private final Universe universe = Universe.get();
     private RequiredArg<String> cosmeticName;
     private OptionalArg<String> override;
     
@@ -49,7 +48,7 @@ public class CosmeticApplyCommand extends AbstractPlayerCommand {
         boolean overrideBool = (override.get(commandContext) == null) || !override.get(commandContext).equals("no");
         
         // Execute the cosmetic application on the world's main thread.
-        universe.getWorld(playerRef.getWorldUuid()).execute(() -> {
+        Universe.get().getWorld(playerRef.getWorldUuid()).execute(() -> {
             AttachmentsRegistry.get().addCosmetic(ref, cosmeticName.get(commandContext), !overrideBool);
         });
     }

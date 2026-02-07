@@ -19,8 +19,6 @@ import java.util.UUID;
  */
 public class CosmeticPermAddCosmeticToPlayerCommand extends CommandBase {
     
-    private final Universe universe = Universe.get();
-    
     private RequiredArg<String> cosmeticID;
     private RequiredArg<PlayerRef> player;
     
@@ -42,12 +40,12 @@ public class CosmeticPermAddCosmeticToPlayerCommand extends CommandBase {
         Set<String> permission = CosmeticCore.cosmeticIdToPermissionUse(cosmeticID.get(commandContext));
         String permissionString = CosmeticCore.cosmeticIdToPermissionStringUse(cosmeticID.get(commandContext));
         
-        if (PermissionsModule.get().hasPermission(uuid, permissionString)) {
+        if (CosmeticCore.getPerm(player.get(commandContext), permission)) {
             commandContext.sendMessage(Message.raw(String.format("%s already have the permission (%s) for %s", player.get(commandContext).getUsername(), permissionString, cosmeticID.get(commandContext))));
         } else {
-            PermissionsModule.get().addUserPermission(uuid, permission);
+            CosmeticCore.addPerm(player.get(commandContext), permission);
             
-            if (PermissionsModule.get().hasPermission(uuid, permissionString)) {
+            if (CosmeticCore.getPerm(player.get(commandContext), permission)) {
                 commandContext.sendMessage(Message.raw(String.format("Added the permission (%s) for %s to %s", permissionString, player.get(commandContext).getUsername(), cosmeticID.get(commandContext))));
             } else {
                 commandContext.sendMessage(Message.raw(String.format("Failed to add the permission (%s) for %s to %s", permissionString, player.get(commandContext).getUsername(), cosmeticID.get(commandContext))));
