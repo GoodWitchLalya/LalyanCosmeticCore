@@ -20,8 +20,6 @@ import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
  */
 public class CosmeticReloadCommand extends AbstractPlayerCommand {
     
-    private final Universe universe = Universe.get();
-    
     /**
      * Constructor for the 'reload' subcommand.
      * Defines the command's description and permissions.
@@ -38,7 +36,7 @@ public class CosmeticReloadCommand extends AbstractPlayerCommand {
     @Override
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
         // Execute the reload on the world's main thread.
-        universe.getWorld(playerRef.getWorldUuid()).execute(() -> {
+        Universe.get().getWorld(playerRef.getWorldUuid()).execute(() -> {
             // Call the FileManager to reload assets and send the resulting log to the command sender.
             commandContext.sendMessage(Message.raw(FileManager.wakeUp()));
             WardrobeLoader.wakeUp();

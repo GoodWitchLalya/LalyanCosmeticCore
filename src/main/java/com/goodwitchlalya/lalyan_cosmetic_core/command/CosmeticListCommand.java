@@ -19,8 +19,6 @@ import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
  */
 public class CosmeticListCommand extends AbstractPlayerCommand {
     
-    private final Universe universe = Universe.get();
-    
     /**
      * Constructor for the 'list' subcommand.
      * Defines the command's description and permissions.
@@ -37,7 +35,7 @@ public class CosmeticListCommand extends AbstractPlayerCommand {
     @Override
     protected void execute(@NonNullDecl CommandContext commandContext, @NonNullDecl Store<EntityStore> store, @NonNullDecl Ref<EntityStore> ref, @NonNullDecl PlayerRef playerRef, @NonNullDecl World world) {
         // Execute the listing on the world's main thread.
-        universe.getWorld(playerRef.getWorldUuid()).execute(() -> {
+        Universe.get().getWorld(playerRef.getWorldUuid()).execute(() -> {
             commandContext.sendMessage(Message.raw("Cosmetics:"));
             // Retrieve the list from the registry and send each entry as a message.
             AttachmentsRegistry.get().getAttachmentsList().forEach(attachment -> {
