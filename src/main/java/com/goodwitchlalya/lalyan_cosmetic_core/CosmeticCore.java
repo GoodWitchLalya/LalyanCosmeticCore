@@ -27,6 +27,7 @@ import com.hypixel.hytale.server.core.plugin.PluginManager;
 
 //Luckperms
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.events.StartWorldEvent;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
@@ -68,12 +69,15 @@ public class CosmeticCore extends JavaPlugin {
     public static String cosmeticIdToPermissionStringUse(String cosmeticId) {
         return "lalyan_cosmetic_core.cosmetic." + cosmeticId + ".use";
     }
+    
     public static Set<String> cosmeticIdToPermissionUse(String cosmeticId) {
         return Set.of(cosmeticIdToPermissionStringUse(cosmeticId));
     }
+    
     public static String slotIdToPermissionStringUse(String slotId) {
         return "lalyan_cosmetic_core.slot." + slotId + ".use";
     }
+    
     public static Set<String> slotIdToPermissionUse(String slotId) {
         return Set.of(slotIdToPermissionStringUse(slotId));
     }
@@ -164,7 +168,6 @@ public class CosmeticCore extends JavaPlugin {
      */
     @Override
     protected void setup() {
-        
         // Register the custom component for storing cosmetic data on entities.
         CosmeticData.INSTANCE = getEntityStoreRegistry().registerComponent(CosmeticData.class, "LCC_CosmeticData", CosmeticData.CODEC);
         
@@ -188,9 +191,11 @@ public class CosmeticCore extends JavaPlugin {
             AttachmentsRegistry.get().rebuildSkinWithCosmetics(event.getPlayerRef());
         });
         
-        // Trigger the initial loading of all cosmetic assets.
-        FileManager.wakeUp();
-        WardrobeLoader.wakeUp();
+        getEventRegistry().registerGlobal(StartWorldEvent.class, event -> {
+            // Trigger the initial loading of all cosmetic assets.
+            FileManager.wakeUp();
+            WardrobeLoader.wakeUp();
+        });
     }
 
     /**
