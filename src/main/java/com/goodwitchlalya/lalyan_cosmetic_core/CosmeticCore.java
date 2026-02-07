@@ -5,8 +5,6 @@ import com.goodwitchlalya.lalyan_cosmetic_core.util.AttachmentsRegistry;
 import com.goodwitchlalya.lalyan_cosmetic_core.util.FileManager;
 import com.goodwitchlalya.lalyan_cosmetic_core.command.CosmeticCommand;
 import com.goodwitchlalya.lalyan_cosmetic_core.component.CosmeticData;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -40,12 +38,6 @@ import java.util.Optional;
  * This class handles the plugin's lifecycle, including initialization, setup, and shutdown.
  */
 public class CosmeticCore extends JavaPlugin {
-    
-    // Gson instance for JSON serialization and deserialization.
-    public static final Gson GSON = new GsonBuilder()
-        .setPrettyPrinting()
-        .excludeFieldsWithoutExposeAnnotation()
-        .create();
     
     // Logger for the plugin.
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();

@@ -1,0 +1,16 @@
+{
+  "Name": "Eyes",
+  "Icon": "UI/Custom/Common/Categories/Categories/Eyes.png",
+  "SelectedIcon": "UI/Custom/Common/Categories/Categories/Selected/Eyes.png",
+  "TopLevelCategory": "Head",
+  "Camera": {
+    "Distance": 1,
+    "Position_Offset": {
+      "X": 0.0,
+      "Y": 0.0,
+      "Z": 0.0
+    },
+    "LookAtBack": false
+  },
+  "CanVanish": true
+}

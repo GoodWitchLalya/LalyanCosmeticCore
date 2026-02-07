@@ -1,0 +1,16 @@
+{
+  "Name": "Faces",
+  "Icon": "UI/Custom/Common/Categories/Categories/Faces.png",
+  "SelectedIcon": "UI/Custom/Common/Categories/Categories/Selected/Faces.png",
+  "TopLevelCategory": "General",
+  "Camera": {
+    "Distance": 1,
+    "Position_Offset": {
+      "X": 0.0,
+      "Y": 0.0,
+      "Z": 0.0
+    },
+    "LookAtBack": false
+  },
+  "CanVanish": false
+}
