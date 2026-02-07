@@ -10,6 +10,7 @@ import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
 import net.luckperms.api.platform.PlayerAdapter;
+import net.luckperms.api.util.Tristate;
 
 public class LuckpermsCompatibility {
 
@@ -77,20 +78,11 @@ public class LuckpermsCompatibility {
     public boolean getPerm(PlayerRef playerRef, String permission) {
         
         User user = playerAdapter.getUser(playerRef);
-        //CachedPermissionData permissionData = playerAdapter.getPermissionData(playerRef);
+        CachedPermissionData permissionData = playerAdapter.getPermissionData(playerRef);
+        Tristate checkResult = permissionData.checkPermission(permission);
         //CachedMetaData metaData = playerAdapter.getMetaData(playerRef);
         
-        return user.getNodes().contains(Node.builder(permission).build());
-        
-    }
-    
-    public boolean getPerm(String groupName, String permission) {
-        
-        Group group = luckPerms.getGroupManager().getGroup(groupName);
-        //CachedMetaData metaData = playerAdapter.getMetaData(playerRef);
-        
-        assert group != null;
-        return group.getNodes().contains(Node.builder(permission).build());
+        return checkResult.asBoolean();
         
     }
 

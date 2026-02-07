@@ -1,5 +1,6 @@
 package com.goodwitchlalya.lalyan_cosmetic_core.gui.page;
 
+import com.goodwitchlalya.lalyan_cosmetic_core.CosmeticCore;
 import com.goodwitchlalya.lalyan_cosmetic_core.util.AttachmentsRegistry;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
@@ -19,6 +20,8 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import java.util.*;
+
+import static com.goodwitchlalya.lalyan_cosmetic_core.CosmeticCore.getPerm;
 
 /**
  * Represents the main interactive UI page for cosmetic customization.
@@ -115,6 +118,9 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         List<AttachmentsRegistry.Slot> slots = AttachmentsRegistry.get().slotFromTopLevelCategory(this.tlc);
         
         for (AttachmentsRegistry.Slot slot : slots) {
+            
+            if (!CosmeticCore.getPerm(playerRef, CosmeticCore.slotIdToPermissionUse(slot.name))) continue;
+
             String selector = "#C" + slot.name;
             String contentSel = "#CategoryPanel #Content " + selector;
             
@@ -163,6 +169,14 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             .filter(a -> {
                 if (this.search == null || this.search.isEmpty()) return true;
                 return a.name().toLowerCase().contains(this.search.toLowerCase());
+            })
+            .filter( a -> {
+                CosmeticCore.log("Player ref: " + playerRef.getUsername());
+                CosmeticCore.log("Cosmetic ID: " + a.name());
+                CosmeticCore.log("Perm: " + CosmeticCore.cosmeticIdToPermissionStringUse(a.name()));
+                boolean cosmeticCheck = getPerm(playerRef, CosmeticCore.cosmeticIdToPermissionUse(a.name()));
+                boolean slotCheck = getPerm(playerRef, CosmeticCore.slotIdToPermissionUse(a.data().slot.name));
+                return cosmeticCheck && slotCheck;
             })
             // Sort the items for a consistent display order.
             .sorted(Comparator.comparing(a -> {
