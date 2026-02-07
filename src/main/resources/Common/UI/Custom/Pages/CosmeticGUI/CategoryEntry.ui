@@ -1,0 +1,31 @@
+$C = "../../Common.ui";
+$Sounds = "../../Sounds.ui";
+
+Group {
+    Padding: (Bottom: 10);
+
+    Button #CategoryButton {
+      Visible: true;
+      Anchor: (Width: 64, Height: 64);
+      Style: (
+          Sounds: $Sounds.@ButtonsLight,
+          Default: (
+              Background: "../../Common/Categories/CategoryIconBackground.png"
+          ),
+          Hovered: (
+              Background: "../../Common/Categories/CategoryIconBackgroundSelected.png"
+          )
+      );
+    }
+
+    AssetImage #Image {
+        Anchor: (Width: 83, Height: 64);
+        AssetPath: "UI/Custom/Common/Categories/Categories/Haircuts.png";
+    }
+
+    AssetImage #ImageSelected {
+        Visible: false;
+        Anchor: (Width: 83, Height: 64);
+        AssetPath: "UI/Custom/Common/Categories/Categories/Selected/Haircuts.png";
+    }
+}

@@ -1,13 +1,14 @@
 package com.goodwitchlalya.lalyan_cosmetic_core.util;
 
 import com.goodwitchlalya.lalyan_cosmetic_core.CosmeticCore;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.hypixel.hytale.assetstore.AssetPack;
+import com.hypixel.hytale.codec.ExtraInfo;
+import com.hypixel.hytale.codec.util.RawJsonReader;
+import com.hypixel.hytale.protocol.Direction;
+import com.hypixel.hytale.protocol.Position;
 import com.hypixel.hytale.server.core.asset.AssetModule;
 
 import java.io.IOException;
-import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -55,29 +56,48 @@ public class FileManager {
         List<String> r = new ArrayList<>();
         String result;
         
+        AssetPack base = AssetModule.get().getAssetPack("GoodWitchLalya:Lalyan Cosmetic Core");
+        
+        loadTopLevelCategories(base);
+        loadSlots(base);
+        
         // Iterate through all asset packs currently loaded by the server
         AssetModule.get().getAssetPacks().forEach(assetPack -> {
             // Filter out base Hytale packs and the plugin itself to avoid conflicts or recursion
-            if (assetPack.getName().contains("Hytale:") || assetPack.getName().contains("GoodWitchLalya:LalyanCosmeticCore"))
+            if (assetPack.getName().contains("Hytale:") || assetPack.getName().contains("GoodWitchLalya:LalyanCosmeticCore")) {
                 return;
+            }
             
             // Skip packs without a valid file system or path
-            boolean inDev = false;
             if (assetPack.getFileSystem() == null) {
                 if (assetPack.getPackLocation() == null) return;
-                else inDev = true;
             }
             
             String s = String.format("Loading asset pack: %s path: (%s)", assetPack.getName(), assetPack.getPackLocation());
             CosmeticCore.log(s);
             r.add(s + "\n");
             
-            // Load Body Parts (mapped to CharacterSlot enum)
-            loadAssets(assetPack, "Common/Resources/Characters", AttachmentsRegistry.CharacterSlot.class, r);
+            loadTopLevelCategories(assetPack);
+            loadSlots(assetPack);
             
-            // Load Cosmetics (mapped to CosmeticSlot enum)
-            loadAssets(assetPack, "Common/Resources/Cosmetics", AttachmentsRegistry.CosmeticSlot.class, r);
+            loadCosmetics(assetPack, "Common/Resources/Characters", r);
+            loadCosmetics(assetPack, "Common/Resources/Cosmetics", r);
+            loadCosmetics(assetPack, "Common/Resources", r);
         });
+        
+        AttachmentsRegistry.TopLevelCategory all = new AttachmentsRegistry.TopLevelCategory();
+        all.name = "All";
+        AttachmentsRegistry.get().registerTLC(all);
+        
+        AttachmentsRegistry.Slot allSlot = new AttachmentsRegistry.Slot();
+        
+        allSlot.name = "All";
+        allSlot.icon = "UI/Custom/Common/Categories/Top/All.png";
+        allSlot.selectedIcon = "UI/Custom/Common/Categories/Top/Selected/All.png";
+        allSlot.tlcName = "All";
+        allSlot.camera = null;
+        
+        AttachmentsRegistry.get().registerSlot(allSlot);
         
         result = String.join("\n", r);
         return result;
@@ -89,11 +109,9 @@ public class FileManager {
      *
      * @param assetPack The asset pack being scanned.
      * @param path The base path to scan (e.g., "Common/Resources/Cosmetics").
-     * @param enumType The Enum class to map folder names to (CosmeticSlot.class or CharacterSlot.class).
      * @param r List to accumulate log messages.
-     * @param <T> Generic type ensuring the class is an Enum and implements the Slot interface.
      */
-    private static <T extends Enum<T> & AttachmentsRegistry.Slot> void loadAssets(AssetPack assetPack, String path, Class<T> enumType, List<String> r) {
+    private static void loadCosmetics(AssetPack assetPack, String path, List<String> r) {
         boolean inDev = false;
         if (assetPack.getFileSystem() == null) {
             if (assetPack.getPackLocation() == null) return;
@@ -112,10 +130,11 @@ public class FileManager {
             Files.list(folderPath).filter(Files::isDirectory).forEach(folder -> {
                 String folderName = folder.getFileName().toString();
                 
+                if(folderName.contains("Character") || folderName.contains("Cosmetic")) return;
+                
                 try {
                     // Attempt to convert the folder name into a valid Enum constant
-                    T slot = Enum.valueOf(enumType, folderName);
-                    r.add(String.format("The folder %s is valid for %s.%s", folderName, enumType.getSimpleName(), slot.name()));
+                    AttachmentsRegistry.Slot slot = AttachmentsRegistry.get().slotFromName(folderName);
                     
                     // 2. Scan for specific items inside the slot folder (e.g., "Alien_Antenna")
                     try (Stream<Path> itemFolders = Files.list(folder)) {
@@ -127,34 +146,15 @@ public class FileManager {
                             
                             // --- CASE A: JSON Configuration Found ---
                             if (Files.exists(jsonFile) && Files.isRegularFile(jsonFile)) {
-                                r.add(String.format("Found item '%s' for slot %s", itemName, slot.name()));
+                                r.add(String.format("Found item '%s' for slot %s", itemName, slot.name));
                                 
                                 try {
                                     // Read and deserialize the JSON into AttachmentData
                                     String jsonContent = new String(Files.readAllBytes(jsonFile));
                                     
-                                    // Parse JSON to check for legacy syntax
-                                    JsonObject jsonObject = JsonParser.parseString(jsonContent).getAsJsonObject();
-                                    
-                                    // Ensure alternatives object exists to avoid NPEs in AttachmentData
-                                    JsonObject alternatives;
-                                    if (jsonObject.has("alternatives")) {
-                                        alternatives = jsonObject.getAsJsonObject("alternatives");
-                                    } else {
-                                        alternatives = new JsonObject();
-                                        jsonObject.add("alternatives", alternatives);
-                                    }
-                                    
-                                    // Check if we need to migrate legacy fields
-                                    if (jsonObject.has("variants") && !alternatives.has("variants")) {
-                                        alternatives.add("variants", jsonObject.get("variants"));
-                                    }
-                                    
-                                    if (jsonObject.has("gradient_set") && !alternatives.has("gradient_set")) {
-                                        alternatives.add("gradient_set", jsonObject.get("gradient_set"));
-                                    }
-                                    
-                                    AttachmentsRegistry.AttachmentData attachmentData = CosmeticCore.GSON.fromJson(jsonObject, AttachmentsRegistry.AttachmentData.class);
+                                    // Parse JSON using Codec system
+                                    RawJsonReader reader = new RawJsonReader(jsonContent.toCharArray());
+                                    AttachmentsRegistry.AttachmentData attachmentData = AttachmentsRegistry.AttachmentData.CODEC.decodeJson(reader, new ExtraInfo());
                                     
                                     // Inject the slot type (inferred from the folder structure)
                                     attachmentData.slot = slot;
@@ -162,9 +162,9 @@ public class FileManager {
                                     // Register using the detailed JSON data
                                     
                                     // If all required files are present, register the attachment
-                                    AttachmentsRegistry.get().register(assetPack.getName() + "#" + itemName, attachmentData);
+                                    AttachmentsRegistry.get().registerJson(assetPack.getName() + "#" + itemName, attachmentData);
                                 } catch (Exception e) {
-                                    r.add(String.format("Error reading or parsing JSON for item '%s' in slot %s: %s", itemName, slot.name(), e.getMessage()));
+                                    r.add(String.format("Error reading or parsing JSON for item '%s' in slot %s: %s", itemName, slot.name, e.getMessage()));
                                 }
                             }
                             // --- CASE B: Standard Loading (No JSON) ---
@@ -258,21 +258,23 @@ public class FileManager {
                                             }
                                         }
                                         
+                                        String attachmentPath = itemFolder.toString().replace("\\", "/").replaceFirst(".*?(?=Resources)", "");
+                                        
                                         // Register the attachment
                                         if (isColoured) {
-                                            AttachmentsRegistry.get().register(assetPack.getName() + "#" + itemName, slot, gradientSet);
+                                            AttachmentsRegistry.get().registerJsonLess(assetPack.getName() + "#" + itemName, slot, attachmentPath, gradientSet);
                                         } else if (!variants.isEmpty()) {
-                                            AttachmentsRegistry.get().register(assetPack.getName() + "#" + itemName, slot, new HashMap<>(variants));
+                                            AttachmentsRegistry.get().registerJsonLess(assetPack.getName() + "#" + itemName, slot, attachmentPath, new HashMap<>(variants));
                                         } else {
-                                            AttachmentsRegistry.get().register(assetPack.getName() + "#" + itemName, slot);
+                                            AttachmentsRegistry.get().registerJsonLess(assetPack.getName() + "#" + itemName, slot, attachmentPath);
                                         }
                                         
                                     } else {
                                         // Log if the folder is empty
-                                        r.add(String.format("Folder '%s' in slot %s is empty. Ignoring.", itemName, slot.name()));
+                                        r.add(String.format("Folder '%s' in slot %s is empty. Ignoring.", itemName, slot.name));
                                     }
                                 } catch (IOException e) {
-                                    r.add(String.format("Error checking folder '%s' in slot %s: %s", itemName, slot.name(), e.getMessage()));
+                                    r.add(String.format("Error checking folder '%s' in slot %s: %s", itemName, slot.name, e.getMessage()));
                                 }
                             }
                         });
@@ -282,6 +284,75 @@ public class FileManager {
                 } catch (IllegalArgumentException e) {
                     // The folder name does not match any valid slot in the Enum
                     r.add(String.format("The folder %s isn't valid", folderName));
+                }
+            });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    private static void loadTopLevelCategories(AssetPack assetPack) {
+        String path = "Common/Resources/CosmeticSlots/TopLevelCategories";
+        
+        boolean inDev = false;
+        if (assetPack.getFileSystem() == null) {
+            if (assetPack.getPackLocation() == null) return;
+            else inDev = true;
+        }
+        
+        Path folderPath;
+        if (inDev) folderPath = assetPack.getPackLocation().resolve(path);
+        else folderPath = assetPack.getFileSystem().getPath(path);
+        
+        if (!Files.exists(folderPath)) return;
+        
+        try {
+            Files.list(folderPath).filter(p -> p.getFileName().toString().endsWith(".json")).forEach(p -> {
+                
+                try {
+                    String jsonContent = new String(Files.readAllBytes(p));
+                    
+                    // Parse JSON using Codec system
+                    RawJsonReader reader = new RawJsonReader(jsonContent.toCharArray());
+                    AttachmentsRegistry.TopLevelCategory tlc = AttachmentsRegistry.TopLevelCategory.CODEC.decodeJson(reader, new ExtraInfo());
+                    
+                    AttachmentsRegistry.get().registerTLC(tlc);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    private static void loadSlots(AssetPack assetPack) {
+        String path = "Common/Resources/CosmeticSlots/Slots";
+        
+        boolean inDev = false;
+        if (assetPack.getFileSystem() == null) {
+            if (assetPack.getPackLocation() == null) return;
+            else inDev = true;
+        }
+        
+        Path folderPath;
+        if (inDev) folderPath = assetPack.getPackLocation().resolve(path);
+        else folderPath = assetPack.getFileSystem().getPath(path);
+        
+        if (!Files.exists(folderPath)) return;
+        
+        try {
+            Files.list(folderPath).filter(p -> p.getFileName().toString().endsWith(".json")).forEach(p -> {
+                try {
+                    String jsonContent = new String(Files.readAllBytes(p));
+                    
+                    // Parse JSON using Codec system
+                    RawJsonReader reader = new RawJsonReader(jsonContent.toCharArray());
+                    AttachmentsRegistry.Slot tlc = AttachmentsRegistry.Slot.CODEC.decodeJson(reader, new ExtraInfo());
+                    
+                    AttachmentsRegistry.get().registerSlot(tlc);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
             });
         } catch (IOException e) {

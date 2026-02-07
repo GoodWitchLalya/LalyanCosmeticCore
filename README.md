@@ -57,11 +57,9 @@ CustomID/
 
 Then the cosmetic will go in a certain folder, depending on the type:
 
-### <span style="color:#236FA1;">Cosmetics</span>
+### <span style="color:#236FA1;">Cosmetics Slots</span>
 
-(things like shirts, caps, pants etc..)
-
-The base path for cosmetics is `Common/Resources/Cosmetics`, then the folder based on the slot, which can be:
+The base path for cosmetics is `Common/Resources/` (For backwards compatibility the folders `Common/Resources/Cosmetics` and `Common/Resources/Characters` are also checked), then the folder based on the slot, which can be:
 
 *   `Capes`
 *   `Ears_Accessories`
@@ -74,27 +72,6 @@ The base path for cosmetics is `Common/Resources/Cosmetics`, then the folder bas
 *   `Shoes`
 *   `Undertops`
 *   `Underwears`
-
-Then the folder you made before.
-
-So, for a cosmetic called Custom\_Cape, which is in the cape slot it would be like this:
-
-`Common/Resources/Cosmetics/Capes/Custom_Cape` and inside the Custom\_Cape folder:
-
-```
-Custom_Cape/
-├── Custom_Cape.blockymodel
-├── Custom_Cape.png
-└── Icon/
-    └── Custom_Cape.png
-```
-
-### <span style="color:#236FA1;">Characters</span>
-
-(things like mouth, ears, eyes etc..)
-
-The base path for character cosmetics is `Common/Resources/Characters`, then the folder based on the slot, which can be:
-
 *   `Beards`
 *   `Ears`
 *   `Eyebrows`
@@ -110,19 +87,19 @@ The base path for character cosmetics is `Common/Resources/Characters`, then the
 
 Then the folder you made before.
 
-So, for a character cosmetic called Custom\_Eyes, which is in the cape slot it would be like this:
+So, for a cosmetic called Custom_Cape, which is in the cape slot it would be like this:
 
-`Common/Resources/Cosmetics/Capes/Custom_Eyes` and inside the Custom\_Eyes folder:
+`Common/Resources/Capes/Custom_Cape` and inside the Custom_Cape folder:
 
 ```
-Custom_Eyes/
-├── Custom_Eyes.blockymodel
-├── Custom_Eyes.png
+Custom_Cape/
+├── Custom_Cape.blockymodel
+├── Custom_Cape.png
 └── Icon/
-    └── Custom_Eyes.png
+    └── Custom_Cape.png
 ```
 
-The Hair\_Extension slot automatically takes the same gradient as the Hairstyle.
+The Hair_Extension slot automatically takes the same gradient as the Hairstyle.
 
 ## <span style="color:#3598DB;">Variants (optional)</span>
 
@@ -142,7 +119,7 @@ CustomID_Variant_VariantName.png
 
 The variant icons must have the same name given to the variant texture, but unlike the texture, they must be placed inside the `Icon/` folder.
 
-Taking the Propeller\_Hat as an example:
+Taking the Propeller_Hat as an example:
 
 ```
 Propeller_Hat/
@@ -156,7 +133,7 @@ Propeller_Hat/
     └── Propeller_Hat_Variant_Rainbow.png
 ```
 
-Doing so, the API will load: **Propeller\_Hat**, **Propeller\_Hat\_Variant\_Circus**, **Propeller\_Hat\_Variant\_Rainbow**.
+Doing so, the API will load: **Propeller_Hat**, **Propeller_Hat_Variant_Circus**, **Propeller_Hat_Variant_Rainbow**.
 
 They will be seen by the API as variants of the same cosmetic, so they will implicitly use `Propeller_Hat.blockymodel`
 
@@ -164,7 +141,7 @@ They will be seen by the API as variants of the same cosmetic, so they will impl
 
 <span style="color:#E03E2D;">!Warning! Variants and colors are mutually exclusive!</span>
 
-<span style="color:#E03E2D;">!Warning! Hair extensions cannot have variants nor colors, they changes according to the hairstyle!</span>
+<span style="color:#E03E2D;">!Warning! Hair extensions cannot have variants nor colors, they change according to the hairstyle!</span>
 
 This API also allows you to add multiple colors to a cosmetic!
 
@@ -172,7 +149,7 @@ To add colors you need to change the folder of your cosmetic like this: `Cosmeti
 
 The texture has to be grayscale (completely desaturated).
 
-here's a list of all aviable gradient sets:
+here's a list of all available gradient sets:
 
 *   `Colored_Cotton`
 *   `Eyes_Gradient`
@@ -284,9 +261,49 @@ Gradient List:
 *   `Shiny_Fabric`
 *   `Skin`
 
-
-
 ***
+
+## <span style="color:#3598DB;">Custom Categories and Slots</span>
+
+Since version 2.0, you can also add custom Categories (The left-most buttons) and Slots (The middle-left buttons).
+
+Categories are purely cosmetic, while slots can also be used when making a cosmetic
+
+Cosmetic json schema:
+```json
+{
+  "Name": "Capes"
+}
+```
+
+`Name`: The name to display when hovering over the button, also used when assigning it to a slot
+
+Slot json schema:
+```json
+{
+  "Name": "Capes",
+  "Icon": "UI/Custom/Common/Categories/Categories/Capes.png",
+  "SelectedIcon": "UI/Custom/Common/Categories/Categories/Selected/Capes.png",
+  "TopLevelCategory": "Capes",
+  "Camera": {
+    "Distance": 2,
+    "Position_Offset": {
+      "X": 0.0,
+      "Y": -0.3,
+      "Z": 0.0
+    },
+    "LookAtBack": true
+  },
+  "CanVanish": true
+}
+```
+
+`Name`: The name to display when hovering over the button, also used when assigning it to a cosmetic <br>
+`Icon`: The icon of the button <br>
+`SelectedIcon`: The icon of the button used when the slot is the current one being displayed <br>
+`TopLevelCategory`: The category that will be assigned to the slot (see above) <br>
+`Camera`: The camera settings used when this slot is selected <br>
+`CanVanish`: Whether the slot has a vanish button (Faces is the only "vanilla" one that doesn't) <br>
 
 ### <span style="color:#843FA1;">Italiano</span>
 
@@ -349,9 +366,7 @@ La cartella del cosmetico andrà messa all'interno di una certa cartella, a seco
 
 ### <span style="color:#236FA1;">Cosmetici</span>
 
-(cose come magliette, cappelli, pantaloni ecc..)
-
-Il percorso base per i cosmetici è `Common/Resources/Cosmetics`, seguito dalla cartella basata sullo slot, che può essere:
+Il percorso base per i cosmetici è `Common/Resources/` (le cartelle `Common/Resources/Cosmetics` e `Common/Resources/Characters` anche sono controllate, per compatibilità con versioni vecchie), seguito dalla cartella basata sullo slot, che può essere:
 
 *   `Capes`
 *   `Ears_Accessories`
@@ -364,6 +379,18 @@ Il percorso base per i cosmetici è `Common/Resources/Cosmetics`, seguito dalla 
 *   `Shoes`
 *   `Undertops`
 *   `Underwears`
+*   `Beards`
+*   `Ears`
+*   `Eyebrows`
+*   `Eyes`
+*   `Faces`
+*   `Mouth`
+*   `Haircuts`
+*   `Hair_Extension`
+*   `Wings`
+*   `Tails`
+*   `Horns`
+*   `Face_Details`
 
 Scegli quale di questi slots deve occupare il tuo cosmetico e inserisci la cartella che hai creato prima.
 
@@ -379,40 +406,7 @@ Custom_Cape/
     └── Custom_Cape.png
 ```
 
-### <span style="color:#236FA1;">Parti del Personaggio</span>
-
-(cose come bocca, orecchie, occhi ecc..)
-
-Il percorso base per i cosmetici del personaggio è `Common/Resources/Characters`, seguito dalla cartella basata sullo slot, che può essere:
-
-*   `Beards`
-*   `Ears`
-*   `Eyebrows`
-*   `Eyes`
-*   `Faces`
-*   `Mouth`
-*   `Haircuts`
-*   `Hair_Extension`
-*   `Wings`
-*   `Tails`
-*   `Horns`
-*   `Face_Details`
-
-Scegli quale di questi slots deve occupare la tua parte per il personaggio e inserisci la cartella che hai creato prima.
-
-Quindi, per un cosmetico del personaggio chiamato `Custom_Eyes`, che si trova nello slot `Eyes`, il percorso sarà questo:
-
-`Common/Resources/Characters/Eyes/Custom_Eyes`, e all'interno della cartella `Custom_Eyes`:
-
-```
-Custom_Eyes/
-├── Custom_Eyes.blockymodel
-├── Custom_Eyes.png
-└── Icon/
-    └── Custom_Eyes.png
-```
-
-Lo slot Hair\_Extension prende automaticamente il gradiente del'acconciatura.
+Lo slot Hair_Extension prende automaticamente il gradiente del'acconciatura.
 
 ## <span style="color:#3598DB;">Varianti (opzionale)</span>
 
@@ -578,3 +572,45 @@ Lista dei gradienti:
 *   `Rotten_Fabric`
 *   `Shiny_Fabric`
 *   `Skin`
+
+## <span style="color:#3598DB;">Categorie e Slot custom</span>
+
+Dalla versione 2.0, hai anche modo di creare categorie (I bottoni più a sinistra) e Slot (I bottoni a centro-sinistra).
+
+Le categorie sono puramente cosmetiche, mentre gli slot sono anche usabili nei cosmetici
+
+Schema json Categoria:
+```json
+{
+  "Name": "Capes"
+}
+```
+
+`Name`: Il nome da mostrare, usato anche nell'assegnazione ad uno slot
+
+Schema json Slot:
+```json
+{
+  "Name": "Capes",
+  "Icon": "UI/Custom/Common/Categories/Categories/Capes.png",
+  "SelectedIcon": "UI/Custom/Common/Categories/Categories/Selected/Capes.png",
+  "TopLevelCategory": "Capes",
+  "Camera": {
+    "Distance": 2,
+    "Position_Offset": {
+      "X": 0.0,
+      "Y": -0.3,
+      "Z": 0.0
+    },
+    "LookAtBack": true
+  },
+  "CanVanish": true
+}
+```
+
+`Name`: Il nome da mostrare, usato anche nell'assegnazione ad un cosmetico <br>
+`Icon`: L'icona del bottone <br>
+`SelectedIcon`: L'icona del bottone quando lo slot è selezionato <br>
+`TopLevelCategory`: La categoria del bottone (Vedi sopra) <br>
+`Camera`: Le impostazioni della camera quando selezioni lo slot <br>
+`CanVanish`: Se lo slot ha un bottone di scomparsa (Lo slot "Faces" è l'unico che lo ha a false) <br>

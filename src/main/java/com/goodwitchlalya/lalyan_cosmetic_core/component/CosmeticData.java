@@ -2,6 +2,7 @@ package com.goodwitchlalya.lalyan_cosmetic_core.component;
 
 import com.goodwitchlalya.lalyan_cosmetic_core.CosmeticCore;
 import com.goodwitchlalya.lalyan_cosmetic_core.util.AttachmentsRegistry;
+import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.Component;
@@ -87,7 +88,7 @@ public class CosmeticData implements Component<EntityStore> {
      * It maps the "internal" array to a "Cosmetics" key in the saved data.
      */
     public static final BuilderCodec<CosmeticData> CODEC = BuilderCodec.builder(CosmeticData.class, CosmeticData::new)
-        .append(new KeyedCodec<>("Cosmetics", BuilderCodec.STRING_ARRAY), (data, value) -> data.internal = value, (data) -> data.internal)
+        .append(new KeyedCodec<>("Cosmetics", Codec.STRING_ARRAY), (data, value) -> data.internal = value, (data) -> data.internal)
         .add()
         .build();
     

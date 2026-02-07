@@ -39,9 +39,8 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
     private static final Map<String, String> colorCodes = new HashMap<>();
     
     // The currently selected cosmetic sub-category (e.g., Haircuts, Capes).
-    private AttachmentsRegistry.Slot currentSlot = AttachmentsRegistry.CharacterSlot.Haircuts;
-    // The currently selected top-level category (e.g., Head, Torso).
-    private AttachmentsRegistry.TopLevelTypes tlt = AttachmentsRegistry.TopLevelTypes.Head;
+    private AttachmentsRegistry.TopLevelCategory tlc = AttachmentsRegistry.get().getTopLevelCategories().getFirst();
+    private AttachmentsRegistry.Slot currentSlot = AttachmentsRegistry.get().slotFromTopLevelCategory(tlc).getFirst();
     
     // The current search term entered by the player.
     private String search;
@@ -71,7 +70,8 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         }
         
         // Build the dynamic parts of the UI.
-        buildCosmeticButtons(cmd, evt);
+        buildTopCategoryButtons(cmd, evt);
+        buildCategoryButtons(cmd, evt);
         buildCosmetics(ref, cmd, evt);
         
         cmd.set("#Title #MultiSelect #CheckBox.Value", !this.singleSelect);
@@ -81,91 +81,62 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         updateCamera();
     }
     
-    /**
-     * Builds the side panels with top-level and sub-category buttons.
-     */
-    private void buildCosmeticButtons(UICommandBuilder cmd, UIEventBuilder evt) {
-        // Iterate through all top-level types (Head, Torso, etc.) to create their buttons.
-        for (AttachmentsRegistry.TopLevelTypes tlt : AttachmentsRegistry.TopLevelTypes.values()) {
-            String selector = "#TL" + tlt.name();
+    private void buildTopCategoryButtons(UICommandBuilder cmd, UIEventBuilder evt) {
+        cmd.clear("#TopCategoryPanel #Content");
+        cmd.clear("#CategoryPanel #Content");
+        
+        for (AttachmentsRegistry.TopLevelCategory tlc : AttachmentsRegistry.get().getTopLevelCategories()) {
+            String selector = "#TLC" + tlc.name;
+            String contentSel = "#TopCategoryPanel #Content " + selector;
             
-            // Append the button UI from a template file.
-            cmd.append("#LLSidePanel #Content " + selector, "Pages/CosmeticGUI/TLButtons/" + tlt.name() + ".ui");
-            evt.addEventBinding(CustomUIEventBindingType.Activating, "#LLSidePanel #Content " + selector + " #CategoryButton", EventData.of("TLT", tlt.name()));
+            cmd.appendInline("#TopCategoryPanel #Content", "Group " + selector + " {}");
+            cmd.append(contentSel, "Pages/CosmeticGUI/TopCategoryEntry.ui");
             
-            // Toggle visibility for enabled/disabled state based on the current selection.
-            if (this.tlt != tlt) {
-                cmd.set("#LLSidePanel #Content " + selector + " #CategoryButton.Visible", true);
-                cmd.set("#LLSidePanel #Content " + selector + " #CategoryButtonEnabled.Visible", false);
+            cmd.set(contentSel + " #Image.AssetPath", "UI/Custom/Common/Categories/Top/" + tlc.name + ".png");
+            cmd.set(contentSel + " #ImageSelected.AssetPath", "UI/Custom/Common/Categories/Top/Selected/" + tlc.name + ".png");
+            
+            cmd.set(contentSel + " #TopCategoryButton.TooltipText", tlc.name);
+            
+            evt.addEventBinding(CustomUIEventBindingType.Activating, contentSel + " #TopCategoryButton", EventData.of("TLC", tlc.name));
+            
+            if (this.tlc != tlc) {
+                cmd.set(contentSel + " #Image.Visible", true);
+                cmd.set(contentSel + " #ImageSelected.Visible", false);
                 continue;
             }
             
-            cmd.set("#LLSidePanel #Content " + selector + " #CategoryButton.Visible", false);
-            cmd.set("#LLSidePanel #Content " + selector + " #CategoryButtonEnabled.Visible", true);
-            
-            // If this is the selected top-level category, build its sub-category buttons.
-            cmd.append("#LSidePanel #Content #CategoryButton", "Pages/CosmeticGUI/Categories/" + tlt.name() + ".ui");
-            
-            // Use a switch to build the correct sub-categories for the selected top-level category.
-            switch (tlt) {
-                case Head -> {
-                    setupCategoryButton(cmd, evt, "Haircut", AttachmentsRegistry.CharacterSlot.Haircuts);
-                    setupCategoryButton(cmd, evt, "HairExtension", AttachmentsRegistry.CharacterSlot.Hair_Extension);
-                    setupCategoryButton(cmd, evt, "Eyebrows", AttachmentsRegistry.CharacterSlot.Eyebrows);
-                    setupCategoryButton(cmd, evt, "Eyes", AttachmentsRegistry.CharacterSlot.Eyes);
-                    setupCategoryButton(cmd, evt, "FacialHair", AttachmentsRegistry.CharacterSlot.Beards);
-                    setupCategoryButton(cmd, evt, "HeadAccessories", AttachmentsRegistry.CosmeticSlot.Head);
-                    setupCategoryButton(cmd, evt, "FaceAccessories", AttachmentsRegistry.CosmeticSlot.Face_Accessories);
-                    setupCategoryButton(cmd, evt, "EarAccessories", AttachmentsRegistry.CosmeticSlot.Ears_Accessories);
-                    setupCategoryButton(cmd, evt, "Horns", AttachmentsRegistry.CharacterSlot.Horns);
-                }
-                case General -> {
-                    setupCategoryButton(cmd, evt, "Underwear", AttachmentsRegistry.CosmeticSlot.Underwears);
-                    setupCategoryButton(cmd, evt, "Face", AttachmentsRegistry.CharacterSlot.Faces);
-                    setupCategoryButton(cmd, evt, "FaceDetails", AttachmentsRegistry.CharacterSlot.Face_Details);
-                    setupCategoryButton(cmd, evt, "Mouth", AttachmentsRegistry.CharacterSlot.Mouths);
-                    setupCategoryButton(cmd, evt, "Ears", AttachmentsRegistry.CharacterSlot.Ears);
-                }
-                case Torso -> {
-                    setupCategoryButton(cmd, evt, "Undertops", AttachmentsRegistry.CosmeticSlot.Undertops);
-                    setupCategoryButton(cmd, evt, "Overtops", AttachmentsRegistry.CosmeticSlot.Overtops);
-                    setupCategoryButton(cmd, evt, "Gloves", AttachmentsRegistry.CosmeticSlot.Gloves);
-                    setupCategoryButton(cmd, evt, "Tails", AttachmentsRegistry.CharacterSlot.Tails);
-                    setupCategoryButton(cmd, evt, "Wings", AttachmentsRegistry.CharacterSlot.Wings);
-                }
-                case Legs -> {
-                    setupCategoryButton(cmd, evt, "Pants", AttachmentsRegistry.CosmeticSlot.Pants);
-                    setupCategoryButton(cmd, evt, "Overpants", AttachmentsRegistry.CosmeticSlot.Overpants);
-                    setupCategoryButton(cmd, evt, "Shoes", AttachmentsRegistry.CosmeticSlot.Shoes);
-                }
-                case Capes -> {
-                    setupCategoryButton(cmd, evt, "Capes", AttachmentsRegistry.CosmeticSlot.Capes);
-                }
-                case All -> {
-                    setupCategoryButton(cmd, evt, "All", null);
-                }
-            }
+            cmd.set(contentSel + " #Image.Visible", false);
+            cmd.set(contentSel + " #ImageSelected.Visible", true);
         }
     }
     
-    /**
-     * Helper method to configure a single sub-category button.
-     *
-     * @param groupName The name of the UI group for this button.
-     * @param slot      The cosmetic slot this button corresponds to.
-     */
-    private void setupCategoryButton(UICommandBuilder cmd, UIEventBuilder evt, String groupName, AttachmentsRegistry.Slot slot) {
-        // Set the button's visibility based on whether it's the currently selected slot.
-        if (this.currentSlot == slot) {
-            cmd.set("#LSidePanel #Content #CategoryButton #" + groupName + " #CategoryButton.Visible", false);
-            cmd.set("#LSidePanel #Content #CategoryButton #" + groupName + " #CategoryButtonEnabled.Visible", true);
-        } else {
-            cmd.set("#LSidePanel #Content #CategoryButton #" + groupName + " #CategoryButton.Visible", true);
-            cmd.set("#LSidePanel #Content #CategoryButton #" + groupName + " #CategoryButtonEnabled.Visible", false);
-        }
+    private void buildCategoryButtons(UICommandBuilder cmd, UIEventBuilder evt) {
+        if (this.tlc == null) return;
+        List<AttachmentsRegistry.Slot> slots = AttachmentsRegistry.get().slotFromTopLevelCategory(this.tlc);
         
-        // Bind a click event to the button.
-        evt.addEventBinding(CustomUIEventBindingType.Activating, "#LSidePanel #Content #CategoryButton #" + groupName + " #CategoryButton", EventData.of("Slot", slot != null ? slot.name() : "All"));
+        for (AttachmentsRegistry.Slot slot : slots) {
+            String selector = "#C" + slot.name;
+            String contentSel = "#CategoryPanel #Content " + selector;
+            
+            cmd.appendInline("#CategoryPanel #Content", "Group " + selector + " {}");
+            cmd.append(contentSel, "Pages/CosmeticGUI/CategoryEntry.ui");
+            
+            cmd.set(contentSel + " #Image.AssetPath", slot.icon);
+            cmd.set(contentSel + " #ImageSelected.AssetPath", slot.selectedIcon);
+            
+            cmd.set(contentSel + " #CategoryButton.TooltipText", slot.name);
+            
+            evt.addEventBinding(CustomUIEventBindingType.Activating, contentSel + " #CategoryButton", EventData.of("Slot", slot.name));
+            
+            if (this.currentSlot != slot) {
+                cmd.set(contentSel + " #Image.Visible", true);
+                cmd.set(contentSel + " #ImageSelected.Visible", false);
+                continue;
+            }
+            
+            cmd.set(contentSel + " #Image.Visible", false);
+            cmd.set(contentSel + " #ImageSelected.Visible", true);
+        }
     }
     
     /**
@@ -185,7 +156,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             .stream()
             // Filter by the currently selected slot.
             .filter(a -> {
-                if (this.tlt == AttachmentsRegistry.TopLevelTypes.All) return true;
+                if (this.tlc.name.equals("All")) return true;
                 return a.data().slot() == currentSlot;
             })
             // Filter by the search term.
@@ -213,7 +184,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             .toArray(String[]::new);
         
         // Determine if the "unequip" (vanish) button should be shown.
-        boolean showVanish = currentSlot != null && currentSlot != AttachmentsRegistry.CharacterSlot.Faces;
+        boolean showVanish = currentSlot != null && currentSlot.canVanish;
         int totalItems = entries.length + (showVanish ? 1 : 0);
         
         // Loop to create the grid of items.
@@ -239,8 +210,8 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
                     cmd.set(slotSelector + " #ButtonEnabled.Visible", true);
                 }
                 
-                evt.addEventBinding(CustomUIEventBindingType.Activating, slotSelector + " #Button", EventData.of("CosmeticId", "No" + currentSlot.name()).append("Enabled", "false"));
-                evt.addEventBinding(CustomUIEventBindingType.Activating, slotSelector + " #ButtonEnabled", EventData.of("CosmeticId", "No" + currentSlot.name()).append("Enabled", "true"));
+                evt.addEventBinding(CustomUIEventBindingType.Activating, slotSelector + " #Button", EventData.of("CosmeticId", "No" + currentSlot.name).append("Enabled", "false"));
+                evt.addEventBinding(CustomUIEventBindingType.Activating, slotSelector + " #ButtonEnabled", EventData.of("CosmeticId", "No" + currentSlot.name).append("Enabled", "true"));
                 cmd.set(slotSelector + " #VariantIcon.Visible", false);
                 
                 continue;
@@ -255,8 +226,11 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             // Check if a variant is equipped and update the icon accordingly.
             String equippedVariant = AttachmentsRegistry.get().getEquippedVariant(ref, cosmeticId);
             if (equippedVariant != null) {
-                icon = entry.data().variants().get(equippedVariant).icon();
+                AttachmentsRegistry.Variant eVar = entry.data().variants().get(equippedVariant);
+                if(eVar.icon != null) icon = eVar.icon();
             }
+            
+            if (icon == null) continue;
             
             cmd.set(slotSelector + " #Icon.AssetPath", icon);
             
@@ -326,7 +300,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         
         AttachmentsRegistry.GradientSet set = AttachmentsRegistry.coloursDataSet.getGradientSet(this.gradientSet.split("%")[1]);
         
-        List<String> colourList = set.getColourList();
+        List<String> colourList = set.colourList();
         for (int i = 0; i < colourList.size(); i++) {
             String color = colourList.get(i);
             
@@ -387,7 +361,8 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             
             cmd.append("#RSidePanel #Content #VariantList #VariantSlot", "Pages/CosmeticGUI/VariantSlot.ui");
             
-            cmd.set("#RSidePanel #Content #VariantList " + selector + " #Icon.AssetPath", entry.getValue().icon());
+            String vIcon = entry.getValue().icon();
+            cmd.set("#RSidePanel #Content #VariantList " + selector + " #Icon.AssetPath", vIcon != null? vIcon: original.data().icon());
             
             cmd.set("#RSidePanel #Content #VariantList " + selector + " #Button.TooltipText", entry.getKey());
             cmd.set("#RSidePanel #Content #VariantList " + selector + " #ButtonEnabled.TooltipText", entry.getKey());
@@ -433,47 +408,15 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         settings.positionOffset = new Position(0, -0.3, 0);
         
         if (currentSlot != null) {
-            if (currentSlot instanceof AttachmentsRegistry.CharacterSlot) {
-                switch ((AttachmentsRegistry.CharacterSlot) currentSlot) {
-                    case Haircuts, Hair_Extension -> {
-                        settings.positionOffset = new Position(0, 0.2, 0);
-                        settings.rotation = new Direction(headRot.getYaw(), headRot.getPitch(), headRot.getRoll());
-                    }
-                    case Eyebrows, Eyes, Beards, Faces, Mouths, Face_Details -> {
-                        settings.positionOffset = new Position(0, 0, 0);
-                        settings.distance = 1;
-                    }
-                    case Ears -> {}
-                    case Horns -> {
-                        settings.positionOffset = new Position(0, 0.1, 0);
-                    }
-                    case Tails, Wings -> {
-                        settings.rotation = new Direction(headRot.getYaw(), headRot.getPitch(), headRot.getRoll());
-                    }
-                }
-            } else if (currentSlot instanceof AttachmentsRegistry.CosmeticSlot) {
-                switch ((AttachmentsRegistry.CosmeticSlot) currentSlot) {
-                    case Head -> {
-                        settings.positionOffset = new Position(0, 0.1, 0);
-                    }
-                    case Face_Accessories -> {
-                        settings.distance = 1;
-                    }
-                    case Ears_Accessories -> {
-                    }
-                    case Underwears, Overpants, Shoes, Pants -> {
-                        settings.positionOffset = new Position(0, -1.2, 0);
-                        settings.distance = 1;
-                    }
-                    case Undertops, Overtops -> {
-                        settings.positionOffset = new Position(0, -0.5, 0);
-                        settings.distance = 1;
-                    }
-                    case Gloves -> {
-                    }
-                    case Capes -> {
-                        settings.rotation = new Direction(headRot.getYaw(), headRot.getPitch(), headRot.getRoll());
-                    }
+            AttachmentsRegistry.SlotCameraProperties camera = currentSlot.camera;
+            
+            if (camera != null) {
+                settings.distance = camera.distance;
+                settings.positionOffset = camera.positionOffset;
+                settings.rotation = camera.rotation;
+                
+                if (camera.lookAtBack) {
+                    settings.rotation = new Direction(headRot.getYaw(), headRot.getPitch(), headRot.getRoll());
                 }
             }
         }
@@ -534,22 +477,14 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         }
         
         // Handle top-level category selection.
-        if (data.tlt != null) {
+        if (data.tlc != null) {
             this.gradientSet = null;
             this.variants = new HashMap<>();
             this.originalId = null;
             this.search = null;
-            this.tlt = AttachmentsRegistry.TopLevelTypes.valueOf(data.tlt);
+            this.tlc = AttachmentsRegistry.get().tlcFromName(data.tlc);
             
-            // Set the default sub-category for the new top-level category.
-            switch (this.tlt) {
-                case Head -> this.currentSlot = AttachmentsRegistry.CharacterSlot.Haircuts;
-                case General -> this.currentSlot = AttachmentsRegistry.CosmeticSlot.Underwears;
-                case Torso -> this.currentSlot = AttachmentsRegistry.CosmeticSlot.Undertops;
-                case Legs -> this.currentSlot = AttachmentsRegistry.CosmeticSlot.Pants;
-                case Capes -> this.currentSlot = AttachmentsRegistry.CosmeticSlot.Capes;
-                case All -> this.currentSlot = null;
-            }
+            this.currentSlot = AttachmentsRegistry.get().slotFromTopLevelCategory(this.tlc).getFirst();
             
             updateCamera();
             this.sendUpdate();
@@ -567,7 +502,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             if (data.slot.equals("All")) {
                 this.currentSlot = null;
             } else {
-                this.currentSlot = AttachmentsRegistry.Slot.valueOf(data.slot);
+                this.currentSlot = AttachmentsRegistry.get().slotFromName(data.slot);
             }
             updateCamera();
             this.sendUpdate();
@@ -641,7 +576,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         
         private String slot;
         
-        private String tlt;
+        private String tlc;
         
         private String search;
         private String variantId;
@@ -657,7 +592,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             .add()
             .append(new KeyedCodec<>("Slot", BuilderCodec.STRING), (data, value) -> data.slot = value, (data) -> data.slot)
             .add()
-            .append(new KeyedCodec<>("TLT", BuilderCodec.STRING), (data, value) -> data.tlt = value, (data) -> data.tlt)
+            .append(new KeyedCodec<>("TLC", BuilderCodec.STRING), (data, value) -> data.tlc = value, (data) -> data.tlc)
             .add()
             .append(new KeyedCodec<>("VariantId", BuilderCodec.STRING), (data, value) -> data.variantId = value, (data) -> data.variantId)
             .add()

@@ -1,0 +1,19 @@
+{
+  "Name": "FaceAccessories",
+  "Icon": "UI/Custom/Common/Categories/Categories/FaceAccessories.png",
+  "SelectedIcon": "UI/Custom/Common/Categories/Categories/Selected/FaceAccessories.png",
+  "TopLevelCategory": "Head",
+  "Camera": {
+    "Distance": 1,
+    "Position_Offset": {
+      "X": 0.0,
+      "Y": -0.3,
+      "Z": 0.0
+    },
+    "LookAtBack": false
+  },
+  "CanVanish": true,
+  "AlternativeName": [
+    "FaceAccessory"
+  ]
+}

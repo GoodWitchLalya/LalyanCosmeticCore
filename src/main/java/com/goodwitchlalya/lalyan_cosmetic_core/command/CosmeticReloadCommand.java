@@ -1,5 +1,6 @@
 package com.goodwitchlalya.lalyan_cosmetic_core.command;
 
+import com.goodwitchlalya.lalyan_cosmetic_core.compat.wardrobe.WardrobeLoader;
 import com.goodwitchlalya.lalyan_cosmetic_core.util.FileManager;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -38,6 +39,7 @@ public class CosmeticReloadCommand extends AbstractPlayerCommand {
         Universe.get().getWorld(playerRef.getWorldUuid()).execute(() -> {
             // Call the FileManager to reload assets and send the resulting log to the command sender.
             commandContext.sendMessage(Message.raw(FileManager.wakeUp()));
+            WardrobeLoader.wakeUp();
         });
     }
     

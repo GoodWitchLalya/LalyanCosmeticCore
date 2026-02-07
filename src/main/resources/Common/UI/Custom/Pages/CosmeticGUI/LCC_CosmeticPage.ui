@@ -52,36 +52,24 @@ $C.@PageOverlay {
         }
     }
 
-    $C.@Container #LLSidePanel {
+    $C.@Container #TopCategoryPanel {
         Anchor: (Width: 100, Height: 800, Left: 505);
 
         #Content {
             Group {
                 Anchor: (Left: 0, Top: 0);
-                LayoutMode: Top;
-                FlexWeight: 1;
-
-                Group #TLHead {}
-                Group #TLGeneral {}
-                Group #TLTorso {}
-                Group #TLLegs {}
-                Group #TLCapes {}
-                Group #TLAll {}
+                LayoutMode: TopScrolling;
             }
         }
     }
 
-    $C.@Container #LSidePanel {
+    $C.@Container #CategoryPanel {
         Anchor: (Width: 100, Height: 800, Left: 610);
 
         #Content {
             Group {
                 Anchor: (Left: 0, Top: 0);
-                LayoutMode: Top;
-                FlexWeight: 1;
-
-                Group #CategoryButton {
-                }
+                LayoutMode: TopScrolling;
             }
         }
     }
@@ -103,7 +91,6 @@ $C.@PageOverlay {
                     Group #VariantSlot {
                         LayoutMode: TopScrolling;
                         ScrollbarStyle: $C.@DefaultScrollbarStyle;
-
                     }
                 }
             }

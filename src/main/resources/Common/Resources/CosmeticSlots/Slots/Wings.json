@@ -1,0 +1,16 @@
+{
+  "Name": "Wings",
+  "Icon": "UI/Custom/Common/Categories/Categories/Wings.png",
+  "SelectedIcon": "UI/Custom/Common/Categories/Categories/Selected/Wings.png",
+  "TopLevelCategory": "Torso",
+  "Camera": {
+    "Distance": 2,
+    "Position_Offset": {
+      "X": 0.0,
+      "Y": -0.3,
+      "Z": 0.0
+    },
+    "LookAtBack": true
+  },
+  "CanVanish": true
+}
