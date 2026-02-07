@@ -4,6 +4,7 @@ import com.goodwitchlalya.lalyan_cosmetic_core.CosmeticCore;
 import com.hypixel.hytale.assetstore.AssetPack;
 import com.hypixel.hytale.codec.ExtraInfo;
 import com.hypixel.hytale.codec.util.RawJsonReader;
+import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.protocol.Direction;
 import com.hypixel.hytale.protocol.Position;
 import com.hypixel.hytale.server.core.asset.AssetModule;
