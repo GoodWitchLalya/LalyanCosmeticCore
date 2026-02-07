@@ -5,35 +5,28 @@ import com.goodwitchlalya.lalyan_cosmetic_core.util.AttachmentsRegistry;
 import com.goodwitchlalya.lalyan_cosmetic_core.util.FileManager;
 import com.goodwitchlalya.lalyan_cosmetic_core.command.CosmeticCommand;
 import com.goodwitchlalya.lalyan_cosmetic_core.component.CosmeticData;
+import com.goodwitchlalya.lalyan_cosmetic_core.util.LuckpermsCompatibility;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.hypixel.hytale.component.Holder;
-import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.common.plugin.PluginIdentifier;
 import com.hypixel.hytale.logger.HytaleLogger;
-import com.hypixel.hytale.protocol.ComponentUpdate;
-import com.hypixel.hytale.protocol.ComponentUpdateType;
-import com.hypixel.hytale.protocol.EntityUpdate;
-import com.hypixel.hytale.protocol.Equipment;
-import com.hypixel.hytale.protocol.packets.entities.EntityUpdates;
 import com.hypixel.hytale.server.core.command.system.CommandManager;
 import com.hypixel.hytale.server.core.console.ConsoleSender;
-import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.event.events.entity.LivingEntityInventoryChangeEvent;
 import com.hypixel.hytale.server.core.event.events.player.PlayerReadyEvent;
-import com.hypixel.hytale.server.core.inventory.ItemStack;
-import com.hypixel.hytale.server.core.inventory.container.ItemContainer;
-import com.hypixel.hytale.server.core.modules.entity.tracker.EntityTrackerSystems;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Interaction;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
+import com.hypixel.hytale.server.core.plugin.PluginManager;
+
+//Luckperms
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.universe.Universe;
-import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Main class for the Lalyan Cosmetic Core plugin.
@@ -49,6 +42,10 @@ public class CosmeticCore extends JavaPlugin {
     
     // Logger for the plugin.
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
+    
+    public static boolean isLuckpermsLoaded = false;
+    
+    public static Object luckpermsCompatibility;// Object -> LuckpermsCompatibility
     
     /**
      * Constructor for the plugin.
@@ -68,11 +65,84 @@ public class CosmeticCore extends JavaPlugin {
     }
     
     /**
+     * Permissions formats:
+     * Cosmetic: lalyancosmeticcore.cosmetic.COSMETIC_ID.use
+     * Slot: lalyancosmeticcore.slot.SLOT_ID.use
+     */
+    public static String cosmeticIdToPermissionStringUse(String cosmeticId) {
+        if (isLuckpermsLoaded) {
+            return "goodwitchlalya.lalyan cosmetic core.cosmetic." + cosmeticId + ".use";
+        } else {
+            return "lalyancosmeticcore.cosmetic." + cosmeticId + ".use";
+        }
+    }
+    public static Set<String> cosmeticIdToPermissionUse(String cosmeticId) {
+        return Set.of(cosmeticIdToPermissionStringUse(cosmeticId));
+    }
+    public static String slotIdToPermissionStringUse(String slotId) {
+        return "lalyancosmeticcore.slot." + slotId + ".use";
+    }
+    public static Set<String> slotIdToPermissionUse(String slotId) {
+        return Set.of(slotIdToPermissionStringUse(slotId));
+    }
+    
+    public static void addPerm(UUID uuid, String permission) {
+        if (isLuckpermsLoaded) {
+            //TODO
+        } else {
+            //TODO
+        }
+    }
+    
+    public static void addPerm(PlayerRef playerRef, String permission) {
+        addPerm(playerRef.getUuid(), permission);
+    }
+    
+    public static void addPerm(String group, String permission) {
+        if (isLuckpermsLoaded) {
+            //TODO
+        } else {
+            //TODO
+        }
+    }
+    
+    public static void removePerm(UUID uuid, String permission) {
+        if (isLuckpermsLoaded) {
+            //TODO
+        } else {
+            //TODO
+        }
+    }
+    
+    public static void removePerm(PlayerRef playerRef, String permission) {
+        removePerm(playerRef.getUuid(), permission);
+    }
+    
+    public static void removePerm(String group, String permission) {
+        if (isLuckpermsLoaded) {
+            //TODO
+        } else {
+            //TODO
+        }
+    }
+    
+    /**
      * Called when the plugin is starting.
      * This is used here to perform initial authentication commands.
      */
     @Override
     protected void start() {
+        try {
+            Objects.requireNonNull(PluginManager.get().getPlugin(PluginIdentifier.fromString("LuckPerms:LuckPerms"))).isEnabled();
+            isLuckpermsLoaded = true;
+        } catch (Exception e) {
+            isLuckpermsLoaded = false;
+        }
+        
+        if (isLuckpermsLoaded) {
+            luckpermsCompatibility = LuckpermsCompatibility.getInstance();
+        }
+        
         if (Objects.equals(System.getenv("DEV_MODE"), "True")) {
             CommandManager.get().handleCommand(ConsoleSender.INSTANCE, "auth login device");
             CommandManager.get().handleCommand(ConsoleSender.INSTANCE, "auth persistence Encrypted");
@@ -86,6 +156,7 @@ public class CosmeticCore extends JavaPlugin {
      */
     @Override
     protected void setup() {
+        
         // Register the custom component for storing cosmetic data on entities.
         CosmeticData.INSTANCE = getEntityStoreRegistry().registerComponent(CosmeticData.class, "LCC_CosmeticData", CosmeticData.CODEC);
         

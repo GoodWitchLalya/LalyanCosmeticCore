@@ -1,5 +1,6 @@
 package com.goodwitchlalya.lalyan_cosmetic_core.command;
 
+import com.goodwitchlalya.lalyan_cosmetic_core.command.permissions.CosmeticPermsCommand;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.GameMode;
@@ -29,6 +30,7 @@ public class CosmeticCommand extends AbstractPlayerCommand {
         this.addSubCommand(new CosmeticListCommand());
         this.addSubCommand(new CosmeticChangeCommand());
         this.addSubCommand(new CosmeticReskinCommand());
+        this.addSubCommand(new CosmeticPermsCommand());
         this.setPermissionGroup(GameMode.Adventure);
     }
     
