@@ -66,21 +66,13 @@ public class CosmeticCore extends JavaPlugin {
      * Slot: lalyancosmeticcore.slot.SLOT_ID.use
      */
     public static String cosmeticIdToPermissionStringUse(String cosmeticId) {
-        if (isLuckpermsLoaded) {
-            return "goodwitchlalya.lalyan cosmetic core.cosmetic." + cosmeticId + ".use";
-        } else {
-            return "lalyancosmeticcore.cosmetic." + cosmeticId + ".use";
-        }
+        return "lalyan_cosmetic_core.cosmetic." + cosmeticId + ".use";
     }
     public static Set<String> cosmeticIdToPermissionUse(String cosmeticId) {
         return Set.of(cosmeticIdToPermissionStringUse(cosmeticId));
     }
     public static String slotIdToPermissionStringUse(String slotId) {
-        if (isLuckpermsLoaded) {
-            return "goodwitchlalya.lalyan cosmetic core.slot." + slotId + ".use";
-        } else {
-            return "lalyancosmeticcore.slot." + slotId + ".use";
-        }
+        return "lalyan_cosmetic_core.slot." + slotId + ".use";
     }
     public static Set<String> slotIdToPermissionUse(String slotId) {
         return Set.of(slotIdToPermissionStringUse(slotId));
