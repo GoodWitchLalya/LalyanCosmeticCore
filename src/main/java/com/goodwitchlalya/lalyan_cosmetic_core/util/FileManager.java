@@ -158,6 +158,7 @@ public class FileManager {
                                     AttachmentsRegistry.AttachmentData attachmentData = AttachmentsRegistry.AttachmentData.CODEC.decodeJson(reader, new ExtraInfo());
                                     
                                     // Inject the slot type (inferred from the folder structure)
+                                    if (attachmentData == null) return;
                                     attachmentData.slot = slot;
                                     
                                     // Register using the detailed JSON data

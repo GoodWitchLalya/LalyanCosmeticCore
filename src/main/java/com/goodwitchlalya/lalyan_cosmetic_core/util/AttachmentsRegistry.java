@@ -1435,6 +1435,10 @@ public class AttachmentsRegistry {
     
     // The core registration method. Adds a fully-formed AttachmentData object to the registry.
     public void registerJson(String name, AttachmentData attachmentData) {
+        if (attachmentData.slot == null) {
+            CosmeticCore.log(String.format("Failed to register %s: Slot is null", name));
+            return;
+        }
         CosmeticCore.log(String.format("Registered        Name: %s        Slot: %s", name, attachmentData.slot.name));// Dev
         attachmentsRegistry.put(name, new Attachment(name, attachmentData));
     }
