@@ -226,7 +226,8 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             // Check if a variant is equipped and update the icon accordingly.
             String equippedVariant = AttachmentsRegistry.get().getEquippedVariant(ref, cosmeticId);
             if (equippedVariant != null) {
-                icon = entry.data().variants().get(equippedVariant).icon();
+                AttachmentsRegistry.Variant eVar = entry.data().variants().get(equippedVariant);
+                if(eVar.icon != null) icon = eVar.icon();
             }
             
             if (icon == null) continue;
@@ -360,7 +361,8 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
             
             cmd.append("#RSidePanel #Content #VariantList #VariantSlot", "Pages/CosmeticGUI/VariantSlot.ui");
             
-            cmd.set("#RSidePanel #Content #VariantList " + selector + " #Icon.AssetPath", entry.getValue().icon());
+            String vIcon = entry.getValue().icon();
+            cmd.set("#RSidePanel #Content #VariantList " + selector + " #Icon.AssetPath", vIcon != null? vIcon: original.data().icon());
             
             cmd.set("#RSidePanel #Content #VariantList " + selector + " #Button.TooltipText", entry.getKey());
             cmd.set("#RSidePanel #Content #VariantList " + selector + " #ButtonEnabled.TooltipText", entry.getKey());

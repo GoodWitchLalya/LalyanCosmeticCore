@@ -1,10 +1,13 @@
 package com.goodwitchlalya.lalyan_cosmetic_core;
 
+import com.goodwitchlalya.lalyan_cosmetic_core.compat.wardrobe.WardrobeCompatLayer;
+import com.goodwitchlalya.lalyan_cosmetic_core.compat.wardrobe.WardrobeLoader;
 import com.goodwitchlalya.lalyan_cosmetic_core.interaction.OpenCosmeticPageInteraction;
 import com.goodwitchlalya.lalyan_cosmetic_core.util.AttachmentsRegistry;
 import com.goodwitchlalya.lalyan_cosmetic_core.util.FileManager;
 import com.goodwitchlalya.lalyan_cosmetic_core.command.CosmeticCommand;
 import com.goodwitchlalya.lalyan_cosmetic_core.component.CosmeticData;
+import com.hypixel.hytale.codec.lookup.Priority;
 import com.hypixel.hytale.component.Holder;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
@@ -69,7 +72,6 @@ public class CosmeticCore extends JavaPlugin {
             CommandManager.get().handleCommand(ConsoleSender.INSTANCE, "auth login device");
             CommandManager.get().handleCommand(ConsoleSender.INSTANCE, "auth persistence Encrypted");
         }
-        
     }
 
     /**
@@ -87,6 +89,15 @@ public class CosmeticCore extends JavaPlugin {
         // Register the custom interaction for opening the cosmetic GUI.
         getCodecRegistry(Interaction.CODEC).register("LCC_OpenCosmetics", OpenCosmeticPageInteraction.class, OpenCosmeticPageInteraction.CODEC);
         
+        getCodecRegistry(WardrobeCompatLayer.Appearance.CODEC)
+            .register(Priority.DEFAULT, "Model", WardrobeCompatLayer.ModelAppearance.class, WardrobeCompatLayer.ModelAppearance.CODEC)
+            .register(Priority.NORMAL, "Variant", WardrobeCompatLayer.VariantAppearance.class, WardrobeCompatLayer.VariantAppearance.CODEC);
+        
+        getCodecRegistry(WardrobeCompatLayer.TextureConfig.CODEC)
+            .register(Priority.DEFAULT, "Static", WardrobeCompatLayer.StaticTextureConfig.class, WardrobeCompatLayer.StaticTextureConfig.CODEC)
+            .register(Priority.NORMAL, "Gradient", WardrobeCompatLayer.GradientTextureConfig.class, WardrobeCompatLayer.GradientTextureConfig.CODEC)
+            .register(Priority.NORMAL, "Variant", WardrobeCompatLayer.VariantTextureConfig.class, WardrobeCompatLayer.VariantTextureConfig.CODEC);
+        
         // Register an event listener for when a player is ready, to apply their saved cosmetics.
         getEventRegistry().registerGlobal(PlayerReadyEvent.class, event -> {
             AttachmentsRegistry.get().rebuildSkinWithCosmetics(event.getPlayerRef());
@@ -94,6 +105,7 @@ public class CosmeticCore extends JavaPlugin {
         
         // Trigger the initial loading of all cosmetic assets.
         FileManager.wakeUp();
+        WardrobeLoader.wakeUp();
     }
 
     /**

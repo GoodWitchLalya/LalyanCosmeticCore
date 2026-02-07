@@ -12,5 +12,8 @@
     },
     "LookAtBack": true
   },
-  "CanVanish": true
+  "CanVanish": true,
+  "AlternativeName": [
+    "Cape"
+  ]
 }

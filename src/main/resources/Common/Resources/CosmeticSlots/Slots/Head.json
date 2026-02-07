@@ -7,10 +7,13 @@
     "Distance": 2,
     "Position_Offset": {
       "X": 0.0,
-      "Y": 0.2,
+      "Y": -0.3,
       "Z": 0.0
     },
-    "LookAtBack": true
+    "LookAtBack": false
   },
-  "CanVanish": true
+  "CanVanish": true,
+  "AlternativeName": [
+    "HeadAccessory"
+  ]
 }

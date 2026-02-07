@@ -95,13 +95,7 @@ public class FileManager {
         allSlot.icon = "UI/Custom/Common/Categories/Top/All.png";
         allSlot.selectedIcon = "UI/Custom/Common/Categories/Top/Selected/All.png";
         allSlot.tlcName = "All";
-        
-        AttachmentsRegistry.SlotCameraProperties cam = new AttachmentsRegistry.SlotCameraProperties();
-        cam.distance = 1;
-        cam.positionOffset = new Position(0, 0, 0);
-        cam.lookAtBack = false;
-        cam.rotation = new Direction(0, 0, 0);
-        allSlot.camera = cam;
+        allSlot.camera = null;
         
         AttachmentsRegistry.get().registerSlot(allSlot);
         

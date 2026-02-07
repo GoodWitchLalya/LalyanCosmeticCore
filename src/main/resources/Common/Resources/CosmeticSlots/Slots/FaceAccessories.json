@@ -12,5 +12,8 @@
     },
     "LookAtBack": false
   },
-  "CanVanish": true
+  "CanVanish": true,
+  "AlternativeName": [
+    "FaceAccessory"
+  ]
 }

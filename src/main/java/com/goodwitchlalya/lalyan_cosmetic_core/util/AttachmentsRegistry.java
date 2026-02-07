@@ -81,6 +81,8 @@ public class AttachmentsRegistry {
             .add()
             .append(new KeyedCodec<>("CanVanish", BuilderCodec.BOOLEAN), (data, value) -> data.canVanish = value, data -> data.canVanish)
             .add()
+            .append(new KeyedCodec<>("AlternativeName", Codec.STRING_ARRAY), (data, value) -> data.alternativeName = value != null ? Arrays.asList(value) : null, (data) -> data.alternativeName != null ? data.alternativeName.toArray(new String[0]) : null)
+            .add()
             .build();
         
         public String name;
@@ -90,6 +92,8 @@ public class AttachmentsRegistry {
         public SlotCameraProperties camera;
         
         public boolean canVanish;
+        
+        public List<String> alternativeName;
     }
     
     private final List<Slot> slots = new ArrayList<>();
@@ -125,7 +129,7 @@ public class AttachmentsRegistry {
     
     public Slot slotFromName(String name) {
         return slots.stream()
-            .filter(s -> s.name.equals(name)).min(Comparator.comparing(s -> s.name)).orElse(null);
+            .filter(s -> s.name.equals(name) || (s.alternativeName != null && s.alternativeName.contains(name))).min(Comparator.comparing(s -> s.name)).orElse(null);
     }
     
     public static class SlotCameraProperties {
