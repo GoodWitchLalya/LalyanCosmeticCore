@@ -7,13 +7,9 @@ import com.goodwitchlalya.lalyan_cosmetic_core.util.AttachmentsRegistry;
 import com.goodwitchlalya.lalyan_cosmetic_core.util.FileManager;
 import com.goodwitchlalya.lalyan_cosmetic_core.command.CosmeticCommand;
 import com.goodwitchlalya.lalyan_cosmetic_core.component.CosmeticData;
+import com.goodwitchlalya.lalyan_cosmetic_core.util.LccConfig;
 import com.hypixel.hytale.codec.lookup.Priority;
-import com.hypixel.hytale.component.Holder;
-import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.component.Store;
 import com.goodwitchlalya.lalyan_cosmetic_core.util.LuckpermsCompatibility;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.hypixel.hytale.common.plugin.PluginIdentifier;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.server.core.command.system.CommandManager;
@@ -28,6 +24,7 @@ import com.hypixel.hytale.server.core.plugin.PluginManager;
 //Luckperms
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.events.StartWorldEvent;
+import com.hypixel.hytale.server.core.util.Config;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
@@ -42,6 +39,10 @@ public class CosmeticCore extends JavaPlugin {
     // Logger for the plugin.
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     
+    private static CosmeticCore instance;
+    
+    private final Config<LccConfig> config = this.withConfig("config.json", LccConfig.CODEC);
+    
     public static boolean isLuckpermsLoaded;
     
     /**
@@ -50,7 +51,16 @@ public class CosmeticCore extends JavaPlugin {
      */
     public CosmeticCore(@Nonnull JavaPluginInit init) {
         super(init);
+        instance = this;
         LOGGER.atInfo().log("Hello from " + this.getName() + " version " + this.getManifest().getVersion().toString());
+    }
+
+    /**
+     * Gets the instance of the plugin.
+     * @return The current instance of CosmeticCore.
+     */
+    public static CosmeticCore getInstance() {
+        return instance;
     }
     
     /**
@@ -142,6 +152,30 @@ public class CosmeticCore extends JavaPlugin {
         }
     }
     
+    public static boolean getSlotPerm(PlayerRef playerRef, AttachmentsRegistry.Slot slot) {
+        CosmeticCore.log("Player ref: " + playerRef.getUsername());
+        CosmeticCore.log("Slot ID: " + slot.name);
+        CosmeticCore.log("Perm: " + CosmeticCore.slotIdToPermissionStringUse(slot.name));
+        
+        boolean permCheck = !CosmeticCore.getPerm(playerRef, CosmeticCore.slotIdToPermissionUse(slot.name));
+        boolean configCheck = !CosmeticCore.instance.config.get().getPermissions();
+        
+        return permCheck || configCheck;
+    }
+    
+    public static boolean getCosmeticPerm(PlayerRef playerRef, AttachmentsRegistry.Attachment attachment) {
+        CosmeticCore.log("Player ref: " + playerRef.getUsername());
+        CosmeticCore.log("Cosmetic ID: " + attachment.name());
+        CosmeticCore.log("Perm: " + CosmeticCore.cosmeticIdToPermissionStringUse(attachment.name()));
+        boolean cosmeticCheck = getPerm(playerRef, CosmeticCore.cosmeticIdToPermissionUse(attachment.name()));
+        boolean slotCheck = getPerm(playerRef, CosmeticCore.slotIdToPermissionUse(attachment.data().slot.name));
+        
+        boolean permCheck = cosmeticCheck && slotCheck;
+        boolean configCheck = !CosmeticCore.instance.config.get().getPermissions();
+        
+        return permCheck || configCheck;
+    }
+    
     /**
      * Called when the plugin is starting.
      * This is used here to perform initial authentication commands.
@@ -168,6 +202,9 @@ public class CosmeticCore extends JavaPlugin {
      */
     @Override
     protected void setup() {
+        
+        config.save();// Ensures the config file is created if it doesn't exist
+        
         // Register the custom component for storing cosmetic data on entities.
         CosmeticData.INSTANCE = getEntityStoreRegistry().registerComponent(CosmeticData.class, "LCC_CosmeticData", CosmeticData.CODEC);
         

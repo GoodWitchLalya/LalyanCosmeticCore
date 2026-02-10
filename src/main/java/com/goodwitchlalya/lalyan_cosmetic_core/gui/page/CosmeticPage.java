@@ -21,8 +21,6 @@ import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 import java.util.*;
 
-import static com.goodwitchlalya.lalyan_cosmetic_core.CosmeticCore.getPerm;
-
 /**
  * Represents the main interactive UI page for cosmetic customization.
  * This class is responsible for building the UI, handling player interactions,
@@ -119,7 +117,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         
         for (AttachmentsRegistry.Slot slot : slots) {
             
-            if (!CosmeticCore.getPerm(playerRef, CosmeticCore.slotIdToPermissionUse(slot.name))) continue;
+            if (CosmeticCore.getSlotPerm(playerRef, slot)) continue;
 
             String selector = "#C" + slot.name;
             String contentSel = "#CategoryPanel #Content " + selector;
@@ -171,12 +169,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
                 return a.name().toLowerCase().contains(this.search.toLowerCase());
             })
             .filter( a -> {
-                CosmeticCore.log("Player ref: " + playerRef.getUsername());
-                CosmeticCore.log("Cosmetic ID: " + a.name());
-                CosmeticCore.log("Perm: " + CosmeticCore.cosmeticIdToPermissionStringUse(a.name()));
-                boolean cosmeticCheck = getPerm(playerRef, CosmeticCore.cosmeticIdToPermissionUse(a.name()));
-                boolean slotCheck = getPerm(playerRef, CosmeticCore.slotIdToPermissionUse(a.data().slot.name));
-                return cosmeticCheck && slotCheck;
+                return CosmeticCore.getCosmeticPerm(playerRef, a);
             })
             // Sort the items for a consistent display order.
             .sorted(Comparator.comparing(a -> {
