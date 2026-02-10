@@ -6,7 +6,7 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 
 public class LccConfig {
     public static final BuilderCodec<LccConfig> CODEC = BuilderCodec.builder(LccConfig.class, LccConfig::new)
-            .append(new KeyedCodec<Boolean>("Permissions", Codec.BOOLEAN),
+            .append(new KeyedCodec<Boolean>("Enable Permissions", Codec.BOOLEAN),
                     (config, value) -> config.permissions = value,// Setter
                     (config -> config.permissions)// Getter
             ).add()
