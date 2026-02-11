@@ -28,20 +28,11 @@ import java.util.*;
  */
 public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
     
-    /**
-     * Constructor for the CosmeticPage.
-     *
-     * @param playerRef A reference to the player for whom this page is being created.
-     */
-    public CosmeticPage(@NonNullDecl PlayerRef playerRef) {
-        super(playerRef, CustomPageLifetime.CanDismiss, Data.CODEC);
-    }
-    
     private static final Map<String, String> colorCodes = new HashMap<>();
     
     // The currently selected cosmetic sub-category (e.g., Haircuts, Capes).
-    private AttachmentsRegistry.TopLevelCategory tlc = AttachmentsRegistry.get().getTopLevelCategories().getFirst();
-    private AttachmentsRegistry.Slot currentSlot = AttachmentsRegistry.get().slotFromTopLevelCategory(tlc).getFirst();
+    private AttachmentsRegistry.TopLevelCategory tlc;
+    private AttachmentsRegistry.Slot currentSlot;
     
     // The current search term entered by the player.
     private String search;
@@ -56,6 +47,25 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
     
     private String gradientSet;
     
+    
+    /**
+     * Constructor for the CosmeticPage.
+     *
+     * @param playerRef A reference to the player for whom this page is being created.
+     */
+    public CosmeticPage(@NonNullDecl PlayerRef playerRef) {
+        super(playerRef, CustomPageLifetime.CanDismiss, Data.CODEC);
+        
+        tlc = AttachmentsRegistry.get().getTopLevelCategories().getFirst();
+        
+        if(tlc == null) return;
+        
+        List<AttachmentsRegistry.Slot> slots = AttachmentsRegistry.get().slotFromTopLevelCategory(tlc);
+        
+        if(slots == null || slots.isEmpty()) return;
+        
+        currentSlot = slots.getFirst();
+    }
     /**
      * Builds the main UI structure. This method is called to generate the UI commands
      * that create the visual elements on the player's screen.
