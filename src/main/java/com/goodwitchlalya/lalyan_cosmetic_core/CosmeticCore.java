@@ -41,7 +41,7 @@ public class CosmeticCore extends JavaPlugin {
     
     private static CosmeticCore instance;
     
-    private final Config<LccConfig> config = this.withConfig("config.json", LccConfig.CODEC);
+    private final Config<LccConfig> config = this.withConfig("config", LccConfig.CODEC);
     
     public static boolean isLuckpermsLoaded;
     
@@ -155,9 +155,9 @@ public class CosmeticCore extends JavaPlugin {
     public static boolean getSlotPerm(PlayerRef playerRef, AttachmentsRegistry.Slot slot) {
         CosmeticCore.log("Player ref: " + playerRef.getUsername());
         CosmeticCore.log("Slot ID: " + slot.name);
-        CosmeticCore.log("Perm: " + CosmeticCore.slotIdToPermissionStringUse(slot.name));
+        CosmeticCore.log("Perm: " + slotIdToPermissionStringUse(slot.name));
         
-        boolean permCheck = !CosmeticCore.getPerm(playerRef, CosmeticCore.slotIdToPermissionUse(slot.name));
+        boolean permCheck = getPerm(playerRef, slotIdToPermissionUse(slot.name));
         boolean configCheck = !CosmeticCore.instance.config.get().getPermissions();
         
         return permCheck || configCheck;
@@ -166,9 +166,9 @@ public class CosmeticCore extends JavaPlugin {
     public static boolean getCosmeticPerm(PlayerRef playerRef, AttachmentsRegistry.Attachment attachment) {
         CosmeticCore.log("Player ref: " + playerRef.getUsername());
         CosmeticCore.log("Cosmetic ID: " + attachment.name());
-        CosmeticCore.log("Perm: " + CosmeticCore.cosmeticIdToPermissionStringUse(attachment.name()));
-        boolean cosmeticCheck = getPerm(playerRef, CosmeticCore.cosmeticIdToPermissionUse(attachment.name()));
-        boolean slotCheck = getPerm(playerRef, CosmeticCore.slotIdToPermissionUse(attachment.data().slot.name));
+        CosmeticCore.log("Perm: " + cosmeticIdToPermissionStringUse(attachment.name()));
+        boolean cosmeticCheck = getPerm(playerRef, cosmeticIdToPermissionUse(attachment.name()));
+        boolean slotCheck = getPerm(playerRef, slotIdToPermissionUse(attachment.data().slot.name));
         
         boolean permCheck = cosmeticCheck && slotCheck;
         boolean configCheck = !CosmeticCore.instance.config.get().getPermissions();

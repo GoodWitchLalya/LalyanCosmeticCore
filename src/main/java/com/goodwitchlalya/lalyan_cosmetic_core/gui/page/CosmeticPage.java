@@ -117,7 +117,7 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
         
         for (AttachmentsRegistry.Slot slot : slots) {
             
-            if (CosmeticCore.getSlotPerm(playerRef, slot)) continue;
+            if (!CosmeticCore.getSlotPerm(playerRef, slot)) continue;
 
             String selector = "#C" + slot.name;
             String contentSel = "#CategoryPanel #Content " + selector;
