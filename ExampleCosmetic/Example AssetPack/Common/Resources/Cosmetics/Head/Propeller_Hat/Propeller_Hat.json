@@ -1,18 +1,18 @@
 {
-    "model": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat.blockymodel",
-    "texture": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat.png",
-    "icon": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat_Icon.png",
-    "variants": {
+    "Model": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat.blockymodel",
+    "Texture": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat.png",
+    "Icon": "Resources/Cosmetics/Head/Propeller_Hat/Propeller_Hat_Icon.png",
+    "Variants": {
         "Variant1": {
-            "texture": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant1.png",
-            "icon": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant1_Icon.png"
+            "Texture": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant1.png",
+            "Icon": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant1_Icon.png"
         },
         "Variant2": {
-            "texture": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant2.png",
-            "icon": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant2_Icon.png"
+            "Texture": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant2.png",
+            "Icon": "Resources/Cosmetics/Head/Propeller_Hat/Variant/Variant2_Icon.png"
         }
     },
-    "slot_overrides": [
+    "Slot_overrides": [
         "Capes"
     ]
 }
