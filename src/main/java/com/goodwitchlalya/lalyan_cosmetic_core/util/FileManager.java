@@ -59,6 +59,10 @@ public class FileManager {
         
         AssetPack base = AssetModule.get().getAssetPack("GoodWitchLalya:Lalyan Cosmetic Core");
         
+        if(base == null) {
+            return "Tried loading cosmetics before mod was loaded???";
+        }
+        
         loadTopLevelCategories(base);
         loadSlots(base);
         
@@ -136,6 +140,11 @@ public class FileManager {
                 try {
                     // Attempt to convert the folder name into a valid Enum constant
                     AttachmentsRegistry.Slot slot = AttachmentsRegistry.get().slotFromName(folderName);
+                    
+                    if(slot == null) {
+                        r.add(String.format("Could not find slot from name: %s, did you forget to make a custom slot?", folderName));
+                        return;
+                    }
                     
                     // 2. Scan for specific items inside the slot folder (e.g., "Alien_Antenna")
                     try (Stream<Path> itemFolders = Files.list(folder)) {
