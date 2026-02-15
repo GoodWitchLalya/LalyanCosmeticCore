@@ -833,8 +833,10 @@ public class AttachmentsRegistry {
                 
                 CosmeticCore.log(String.format("cosmetic: %s", cosmetic));// DEBUG
                 cosmId = gradStuff[0];
-                gradientSet = split[0];
-                gradientId = split[1];
+                if (split.length >= 2) {
+                    gradientSet = split[0];
+                    gradientId = split[1];
+                }
             }
             
             // Find the attachment in the registry.
