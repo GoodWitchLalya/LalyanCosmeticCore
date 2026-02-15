@@ -56,7 +56,10 @@ public class CosmeticPage extends InteractiveCustomUIPage<CosmeticPage.Data> {
     public CosmeticPage(@NonNullDecl PlayerRef playerRef) {
         super(playerRef, CustomPageLifetime.CanDismiss, Data.CODEC);
         
-        tlc = AttachmentsRegistry.get().getTopLevelCategories().getFirst();
+        List<AttachmentsRegistry.TopLevelCategory> tlcs = AttachmentsRegistry.get().getTopLevelCategories();
+        if(tlcs == null || tlcs.isEmpty()) return;
+        
+        tlc = tlcs.getFirst();
         
         if(tlc == null) return;
         

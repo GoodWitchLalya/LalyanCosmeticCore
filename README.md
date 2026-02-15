@@ -276,7 +276,7 @@ Cosmetic json schema:
 }
 ```
 
-`Name`: The name to display when hovering over the button, also used when assigning it to a slot
+`Name`: The name to display when hovering over the button, also used when assigning it to a slot, CAN ONLY HAVE UPPERCASE OR LOWERCASE LETTERS, CANNOT HAVE NUMBERS, UNDERSCORES OR ANY OTHER SPECIAL CHARACTER
 
 Slot json schema:
 ```json
@@ -298,7 +298,7 @@ Slot json schema:
 }
 ```
 
-`Name`: The name to display when hovering over the button, also used when assigning it to a cosmetic <br>
+`Name`: The name to display when hovering over the button, also used when assigning it to a cosmetic, CAN ONLY HAVE UPPERCASE OR LOWERCASE LETTERS, CANNOT HAVE NUMBERS, UNDERSCORES OR ANY OTHER SPECIAL CHARACTER <br>
 `Icon`: The icon of the button <br>
 `SelectedIcon`: The icon of the button used when the slot is the current one being displayed <br>
 `TopLevelCategory`: The category that will be assigned to the slot (see above) <br>
