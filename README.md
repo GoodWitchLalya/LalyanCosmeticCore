@@ -586,7 +586,7 @@ Schema json Categoria:
 }
 ```
 
-`Name`: Il nome da mostrare, usato anche nell'assegnazione ad uno slot
+`Name`: Il nome da mostrare, usato anche nell'assegnazione ad uno slot, ACCETTA SOLO LETTERE GRANDI E PICCOLE, NIENTE NUMERI O CARATTERI SPECIALE
 
 Schema json Slot:
 ```json
@@ -608,7 +608,7 @@ Schema json Slot:
 }
 ```
 
-`Name`: Il nome da mostrare, usato anche nell'assegnazione ad un cosmetico <br>
+`Name`: Il nome da mostrare, usato anche nell'assegnazione ad un cosmetico, ACCETTA SOLO LETTERE GRANDI E PICCOLE, NIENTE NUMERI O CARATTERI SPECIALE <br>
 `Icon`: L'icona del bottone <br>
 `SelectedIcon`: L'icona del bottone quando lo slot è selezionato <br>
 `TopLevelCategory`: La categoria del bottone (Vedi sopra) <br>
